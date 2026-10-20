@@ -1,163 +1,247 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALA TV | بث المباريات</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b1020;
-            color: white;
-        }
-
-        header {
-            background: #151c30;
-            padding: 22px;
-            text-align: center;
-            border-bottom: 3px solid #7048ff;
-        }
-
-        header h1 {
-            margin: 0;
-            color: #8c72ff;
-            font-size: 36px;
-        }
-
-        header p {
-            color: #c5cbe0;
-            margin-bottom: 0;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            padding: 15px;
-            background: #202943;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-        }
-
-        main {
-            max-width: 850px;
-            margin: 30px auto;
-            padding: 15px;
-        }
-
-        .welcome {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .match {
-            background: #171f35;
-            border: 1px solid #303b58;
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 18px;
-            text-align: center;
-        }
-
-        .teams {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            gap: 10px;
-            font-size: 19px;
-            font-weight: bold;
-        }
-
-        .time {
-            color: #b8aaff;
-            margin: 18px 0;
-        }
-
-        .watch {
-            background: #7048ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #aeb6ca;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALA TV | عالم كرة القدم</title>
+<style>
+:root {
+  --bg: #090911;
+  --panel: #141421;
+  --purple: #8b5cf6;
+  --light: #c4b5fd;
+  --text: #f5f3ff;
+  --muted: #aaa6bd;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+header {
+  background: #11101c;
+  border-bottom: 1px solid #29223f;
+  padding: 17px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.logo { font-size: 29px; font-weight: 900; color: white; }
+.logo span { color: var(--purple); }
+nav { display: flex; gap: 20px; flex-wrap: wrap; }
+nav a { color: var(--text); text-decoration: none; font-size: 14px; }
+nav a:hover { color: var(--light); }
+button, select {
+  background: var(--purple);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.hero {
+  margin: 28px auto;
+  width: 90%;
+  max-width: 1200px;
+  padding: 45px 25px;
+  border-radius: 22px;
+  background: radial-gradient(ellipse at top, #422080, #171329 55%, #11101a);
+  text-align: center;
+  border: 1px solid #352450;
+}
+.hero h1 { font-size: clamp(28px, 5vw, 48px); margin: 0 0 15px; }
+.hero h1 span { color: var(--light); }
+.hero p { color: #ddd6fe; line-height: 1.8; }
+.container { width: 90%; max-width: 1200px; margin: 30px auto; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 18px;
+}
+h2 { font-size: 23px; }
+h2:before { content: ""; display: inline-block; width: 5px; height: 22px;
+  background: var(--purple); margin-left: 10px; vertical-align: middle; border-radius: 5px; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; }
+select { background: var(--panel); border: 1px solid #3a3150; }
+.matches {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+}
+.match {
+  background: var(--panel); border: 1px solid #29263a; border-radius: 16px;
+  padding: 20px; text-align: center; transition: .2s;
+}
+.match:hover { border-color: var(--purple); transform: translateY(-3px); }
+.league { color: var(--light); font-size: 12px; margin-bottom: 18px; }
+.teams { display: flex; align-items: center; justify-content: space-around; gap: 8px; }
+.team { font-weight: bold; font-size: 14px; }
+.ball { font-size: 24px; }
+.time { color: var(--muted); font-size: 13px; margin: 18px 0; }
+.status { display: inline-block; background: #28203c; color: var(--light);
+  border-radius: 20px; padding: 6px 12px; font-size: 12px; }
+.player {
+  background: #030307; border: 1px solid #332748; border-radius: 16px;
+  min-height: 260px; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 25px;
+}
+.play-icon {
+  display: grid; place-items: center; width: 65px; height: 65px;
+  background: var(--purple); border-radius: 50%; font-size: 25px;
+  margin: 0 auto 15px;
+}
+.player p { color: var(--muted); line-height: 1.7; }
+.notice { color: var(--muted); font-size: 13px; line-height: 1.7; }
+footer { margin-top: 50px; background: #11101c; padding: 25px 6%;
+  text-align: center; color: var(--muted); border-top: 1px solid #29223f; }
+@media (max-width: 800px) {
+  .matches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  header { justify-content: center; }
+  nav { justify-content: center; }
+}
+@media (max-width: 520px) {
+  .matches { grid-template-columns: 1fr; }
+  .hero { padding: 32px 18px; }
+  .container { width: 92%; }
+}
+</style>
 </head>
-
 <body>
-    <header>
-        <h1>ALA TV</h1>
-        <p>عالم كرة القدم بين يديك</p>
-    </header>
+<header>
+  <div class="logo">ALA <span>TV</span></div>
+  <nav>
+    <a href="#home" data-ar="الرئيسية" data-fr="Accueil">الرئيسية</a>
+    <a href="#matches" data-ar="المباريات" data-fr="Matchs">المباريات</a>
+    <a href="#live" data-ar="البث المباشر" data-fr="Direct">البث المباشر</a>
+  </nav>
+  <button id="langBtn" onclick="toggleLanguage()">Français</button>
+</header>
 
-    <nav>
-        <a href="#">الرئيسية</a>
-        <a href="#matches">المباريات</a>
-        <a href="#about">حول الموقع</a>
-    </nav>
-
-    <main>
-        <section class="welcome">
-            <h2>مرحباً بك في ALA TV ⚽</h2>
-            <p>تابع جدول المباريات من مكان واحد</p>
-        </section>
-        <section class="match">
-    <h2>📺 مشاهدة البث المباشر</h2>
-    <div style="background:#05070c; padding:45px 10px; border-radius:10px;">
-        <p>مشغّل البث المباشر</p>
-        <p style="color:#aaa;">
-            البث المرخّص سيظهر هنا عند توفر رابطه
-        </p>
-    </div>
+<section class="hero" id="home">
+  <h1 id="heroTitle">عالم كرة القدم مع <span>ALA TV</span></h1>
+  <p id="heroText">تابع آخر أخبار المباريات والنتائج في واجهة واحدة.</p>
+  <a href="#matches"><button id="heroBtn">اكتشف المباريات ↓</button></a>
 </section>
-        <section id="matches">
-            <h2>مباريات تجريبية</h2>
 
-            <div class="match">
-                <div class="teams">
-                    <span>ريال مدريد</span>
-                    <span>VS</span>
-                    <span>برشلونة</span>
-                </div>
-                <p class="time">موعد تجريبي — غير مؤكد</p>
-                <button class="watch"
-                    onclick="alert('سيتم إضافة رابط بث مرخّص لاحقاً')">
-                    مشاهدة المباراة
-                </button>
-            </div>
+<main>
+<section class="container" id="matches">
+  <div class="section-head">
+    <h2 id="matchesTitle">المباريات</h2>
+    <div class="filters">
+      <select id="leagueFilter" onchange="filterMatches()">
+        <option value="all">كل الدوريات</option>
+        <option value="europe">أوروبا</option>
+        <option value="arab">عربي</option>
+      </select>
+    </div>
+  </div>
 
-            <div class="match">
-                <div class="teams">
-                    <span>مانشستر سيتي</span>
-                    <span>VS</span>
-                    <span>ليفربول</span>
-                </div>
-                <p class="time">موعد تجريبي — غير مؤكد</p>
-                <button class="watch"
-                    onclick="alert('سيتم إضافة رابط بث مرخّص لاحقاً')">
-                    مشاهدة المباراة
-                </button>
-            </div>
-        </section>
-    </main>
+  <div class="matches" id="matchList">
+    <article class="match" data-league="europe">
+      <div class="league" data-ar="دوري أوروبي — مثال تجريبي" data-fr="Ligue européenne — exemple">
+        دوري أوروبي — مثال تجريبي
+      </div>
+      <div class="teams"><span class="team" data-ar="الفريق الأول" data-fr="Équipe A">الفريق الأول</span><span class="ball">⚽</span><span class="team" data-ar="الفريق الثاني" data-fr="Équipe B">الفريق الثاني</span></div>
+      <div class="time" data-ar="الموعد: غير محدد" data-fr="Horaire : non défini">الموعد: غير محدد</div>
+      <span class="status" data-ar="معلومات تجريبية" data-fr="Données fictives">معلومات تجريبية</span>
+    </article>
 
-    <footer id="about">
-        <p>ALA TV © 2026 — موقع تجريبي لكرة القدم</p>
-    </footer>
+    <article class="match" data-league="arab">
+      <div class="league" data-ar="مباراة عربية — مثال تجريبي" data-fr="Match arabe — exemple">
+        مباراة عربية — مثال تجريبي
+      </div>
+      <div class="teams"><span class="team" data-ar="الفريق الثالث" data-fr="Équipe C">الفريق الثالث</span><span class="ball">⚽</span><span class="team" data-ar="الفريق الرابع" data-fr="Équipe D">الفريق الرابع</span></div>
+      <div class="time" data-ar="الموعد: غير محدد" data-fr="Horaire : non défini">الموعد: غير محدد</div>
+      <span class="status" data-ar="معلومات تجريبية" data-fr="Données fictives">معلومات تجريبية</span>
+    </article>
+
+    <article class="match" data-league="europe">
+      <div class="league" data-ar="مباراة ودية — مثال تجريبي" data-fr="Match amical — exemple">
+        مباراة ودية — مثال تجريبي
+      </div>
+      <div class="teams"><span class="team" data-ar="الفريق الخامس" data-fr="Équipe E">الفريق الخامس</span><span class="ball">⚽</span><span class="team" data-ar="الفريق السادس" data-fr="Équipe F">الفريق السادس</span></div>
+      <div class="time" data-ar="الموعد: غير محدد" data-fr="Horaire : non défini">الموعد: غير محدد</div>
+      <span class="status" data-ar="معلومات تجريبية" data-fr="Données fictives">معلومات تجريبية</span>
+    </article>
+  </div>
+  <p class="notice" id="demoNotice">ملاحظة: هذه بيانات تجريبية وليست جدول مباريات حقيقيًا.</p>
+</section>
+
+<section class="container" id="live">
+  <h2 id="liveTitle">منطقة البث المباشر</h2>
+  <div class="player">
+    <div>
+      <div class="play-icon">▶</div>
+      <h3 id="playerTitle">مساحة البث الخاصة بـ ALA TV</h3>
+      <p id="playerText">سيتم إضافة مشغل بث مرخص هنا في مرحلة لاحقة.<br>لا يوجد بث مباشر حاليًا.</p>
+    </div>
+  </div>
+  <p class="notice" id="legalNotice">لن يتم عرض مباريات محمية بحقوق البث إلا من خلال مصدر مرخص أو رسمي.</p>
+</section>
+</main>
+
+<footer>
+  <div class="logo">ALA <span>TV</span></div>
+  <p id="footerText">كرة القدم تجمعنا — الموقع قيد التطوير.</p>
+  <small>© 2026 ALA TV</small>
+</footer>
+
+<script>
+let language = "ar";
+
+function toggleLanguage() {
+  language = language === "ar" ? "fr" : "ar";
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  document.getElementById("langBtn").textContent =
+    language === "ar" ? "Français" : "العربية";
+
+  document.querySelectorAll("[data-ar]").forEach(el => {
+    el.textContent = el.dataset[language];
+  });
+
+  const isArabic = language === "ar";
+  document.getElementById("heroTitle").innerHTML = isArabic
+    ? 'عالم كرة القدم مع <span>ALA TV</span>'
+    : 'Le monde du football avec <span>ALA TV</span>';
+  document.getElementById("heroText").textContent = isArabic
+    ? "تابع آخر أخبار المباريات والنتائج في واجهة واحدة."
+    : "Suivez les matchs et les résultats sur une seule plateforme.";
+  document.getElementById("heroBtn").textContent = isArabic
+    ? "اكتشف المباريات ↓" : "Découvrir les matchs ↓";
+  document.getElementById("matchesTitle").textContent = isArabic ? "المباريات" : "Les matchs";
+  document.getElementById("liveTitle").textContent = isArabic ? "منطقة البث المباشر" : "Espace de diffusion en direct";
+  document.getElementById("playerTitle").textContent = isArabic
+    ? "مساحة البث الخاصة بـ ALA TV" : "Espace vidéo ALA TV";
+  document.getElementById("playerText").innerHTML = isArabic
+    ? "سيتم إضافة مشغل بث مرخص هنا في مرحلة لاحقة.<br>لا يوجد بث مباشر حاليًا."
+    : "Un lecteur autorisé sera ajouté plus tard.<br>Aucun direct n'est disponible actuellement.";
+  document.getElementById("legalNotice").textContent = isArabic
+    ? "لن يتم عرض مباريات محمية بحقوق البث إلا من خلال مصدر مرخص أو رسمي."
+    : "Les matchs protégés seront proposés uniquement via une source officielle ou autorisée.";
+  document.getElementById("demoNotice").textContent = isArabic
+    ? "ملاحظة: هذه بيانات تجريبية وليست جدول مباريات حقيقيًا."
+    : "Note : ces données sont fictives et ne représentent pas le calendrier réel.";
+  document.getElementById("footerText").textContent = isArabic
+    ? "كرة القدم تجمعنا — الموقع قيد التطوير."
+    : "Le football nous rassemble — site en développement.";
+
+  const filter = document.getElementById("leagueFilter");
+  filter.innerHTML = isArabic
+    ? '<option value="all">كل الدوريات</option><option value="europe">أوروبا</option><option value="arab">عربي</option>'
+    : '<option value="all">Toutes les ligues</option><option value="europe">Europe</option><option value="arab">Arabe</option>';
+  filterMatches();
+}
+
+function filterMatches() {
+  const selected = document.getElementById("leagueFilter").value;
+  document.querySelectorAll(".match").forEach(match => {
+    match.style.display = selected === "all" || match.dataset.league === selected
+      ? "" : "none";
+  });
+}
+</script>
 </body>
 </html>

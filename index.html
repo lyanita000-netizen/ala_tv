@@ -1,569 +1,1220 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALA TV | عالم كرة القدم</title>
-<style>
-:root {
-  --bg:#090911; --panel:#141421; --purple:#8b5cf6;
-  --light:#c4b5fd; --text:#f5f3ff; --muted:#aaa6bd;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{background:#11101c;border-bottom:1px solid #29223f;padding:17px 6%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.logo{font-size:29px;font-weight:900;color:white}
-.logo span{color:var(--purple)}
-nav{display:flex;gap:20px;flex-wrap:wrap}
-nav a{color:var(--text);text-decoration:none;font-size:14px}
-nav a:hover{color:var(--light)}
-button,select{background:var(--purple);color:white;border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:bold}
-button:disabled{opacity:.6;cursor:wait}
-.hero{margin:28px auto;width:90%;max-width:1200px;padding:45px 25px;border-radius:22px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
-.hero h1{font-size:clamp(28px,5vw,48px);margin:0 0 15px}
-.hero h1 span{color:var(--light)}
-.hero p{color:#ddd6fe;line-height:1.8}
-.container{width:90%;max-width:1200px;margin:30px auto}
-.section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
-h2{font-size:23px}
-h2:before{content:"";display:inline-block;width:5px;height:22px;background:var(--purple);margin-left:10px;vertical-align:middle;border-radius:5px}
-.filters{display:flex;gap:10px;flex-wrap:wrap}
-select{background:var(--panel);border:1px solid #3a3150}
-.matches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.match{background:var(--panel);border:1px solid #29263a;border-radius:16px;padding:20px;text-align:center;transition:.2s;min-width:0}
-.match:hover{border-color:var(--purple);transform:translateY(-3px)}
-.league{color:var(--light);font-size:12px;margin-bottom:18px}
-.teams{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
-.team-box{min-width:0;display:flex;flex-direction:column;align-items:center;gap:9px}
-.team-logo{width:54px;height:54px;object-fit:contain}
-.team-name{font-weight:bold;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
-.ball{font-size:20px;white-space:nowrap;font-weight:bold;color:var(--light)}
-.time{color:var(--muted);font-size:13px;margin:18px 0;line-height:1.7}
-.status{display:inline-block;background:#28203c;color:var(--light);border-radius:20px;padding:6px 12px;font-size:12px}
-.notice{color:var(--muted);font-size:13px;line-height:1.7}
-.player{background:#030307;border:1px solid #332748;border-radius:16px;min-height:260px;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px}
-.play-icon{display:grid;place-items:center;width:65px;height:65px;background:var(--purple);border-radius:50%;font-size:25px;margin:0 auto 15px}
-.player p{color:var(--muted);line-height:1.7}
-footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;color:var(--muted);border-top:1px solid #29223f}
-@media(max-width:800px){.matches{grid-template-columns:repeat(2,minmax(0,1fr))}header{justify-content:center}nav{justify-content:center}}
-@media(max-width:520px){.matches{grid-template-columns:1fr}.hero{padding:32px 18px}.container{width:92%}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090611">
+  <meta name="description" content="ALA TV - تابع مباريات كرة القدم ونتائجها ومواعيدها.">
+  <title>ALA TV | مباريات اليوم</title>
+
+  <style>
+    :root {
+      --bg: #090611;
+      --panel: #151020;
+      --panel-light: #201631;
+      --purple: #9147ff;
+      --purple-light: #b77bff;
+      --text: #ffffff;
+      --muted: #b9afc9;
+      --border: rgba(177, 115, 255, 0.25);
+      --green: #35d98b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top, #24103e 0%, transparent 48%),
+        var(--bg);
+      color: var(--text);
+      font-family: Arial, Tahoma, sans-serif;
+      line-height: 1.6;
+    }
+
+    button, select, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1150px, 92%);
+      margin: auto;
+    }
+
+    header {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 6, 17, 0.88);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      color: var(--text);
+      font-size: 29px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--purple-light);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 15px;
+      color: white;
+      background: var(--panel-light);
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      border-color: var(--purple-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7430d7, #a45cff);
+      border: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      padding: 48px 0 28px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 5px 13px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      color: var(--purple-light);
+      background: rgba(145, 71, 255, 0.1);
+      font-size: 13px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span {
+      color: var(--purple-light);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+    }
+
+    .section {
+      padding: 22px 0;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+      font-size: 24px;
+    }
+
+    .section-heading h2 span {
+      color: var(--purple-light);
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-select,
+    .date-input {
+      min-height: 42px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      background: var(--panel);
+      outline: none;
+    }
+
+    .filter-select option {
+      background: var(--panel);
+      color: white;
+    }
+
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .match {
+      position: relative;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: linear-gradient(145deg, #191126, #100b19);
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .match:hover,
+    .match:focus-visible {
+      border-color: var(--purple-light);
+      transform: translateY(-3px);
+    }
+
+    .league {
+      margin-bottom: 17px;
+      color: var(--purple-light);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .team-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-width: 0;
+      text-align: center;
+    }
+
+    .team-logo {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    .team-name {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .ball {
+      min-width: 65px;
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .time {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .status {
+      display: table;
+      margin: 10px auto 0;
+      padding: 3px 11px;
+      border-radius: 20px;
+      color: var(--green);
+      background: rgba(53, 217, 139, 0.1);
+      font-size: 12px;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--muted);
+      background: var(--panel);
+      text-align: center;
+    }
+
+    .player-box {
+      padding: 32px 20px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--panel);
+      text-align: center;
+    }
+
+    .player-box h3 {
+      margin-bottom: 10px;
+      color: var(--purple-light);
+    }
+
+    .player-box p {
+      color: var(--muted);
+      margin-bottom: 15px;
+    }
+
+    footer {
+      margin-top: 45px;
+      padding: 25px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: var(--purple-light);
+    }
+
+   
+    .match-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      padding: 20px;
+      background: rgba(4, 3, 12, 0.88);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .match-modal.active {
+      display: flex;
+    }
+
+    .match-modal-content {
+      position: relative;
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      border: 1px solid #7546b8;
+      border-radius: 20px;
+      color: white;
+      background: linear-gradient(145deg, #171225, #090812);
+      box-shadow: 0 0 35px rgba(130, 70, 220, 0.25);
+    }
+
+    .match-modal-close {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: white;
+      background: #241631;
+      font-size: 25px;
+    }
+
+    .match-modal-title {
+      padding: 5px 45px 18px;
+      color: var(--purple-light);
+      font-size: 23px;
+      text-align: center;
+    }
+
+    .match-modal-teams {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .match-modal-team {
+      min-width: 0;
+    }
+
+    .match-modal-team img {
+      display: block;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 10px;
+      object-fit: contain;
+    }
+
+    .match-modal-team-name {
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .match-modal-muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .match-modal-section {
+      margin-top: 23px;
+    }
+
+    .match-modal-section h3 {
+      margin-bottom: 13px;
+      color: var(--purple-light);
+      font-size: 17px;
+    }
+
+    .match-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .match-modal-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .match-modal-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .match-modal-value {
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .match-modal-lineup {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .match-modal-lineup-team {
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .match-modal-lineup-team strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--purple-light);
+      overflow-wrap: anywhere;
+    }
+
+    .match-modal-lineup-team p {
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 700px) {
+      .matches {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 35px;
+      }
+
+      .match-modal-content {
+        padding: 18px;
+      }
+
+      .match-modal-team img {
+        width: 52px;
+        height: 52px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .match-modal-grid,
+      .match-modal-lineup {
+        grid-template-columns: 1fr;
+      }
+
+      .match-modal-teams {
+        gap: 7px;
+      }
+
+      .match-modal-title {
+        font-size: 19px;
+      }
+
+      .team-logo {
+        width: 43px;
+        height: 43px;
+      }
+
+      .ball {
+        min-width: 48px;
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">ALA <span>TV</span></div>
 
-<header>
-  <div class="logo">ALA <span>TV</span></div>
-  <nav>
-    <a href="#home" data-ar="الرئيسية" data-fr="Accueil">الرئيسية</a>
-    <a href="#matches" data-ar="المباريات" data-fr="Matchs">المباريات</a>
-    <a href="#live" data-ar="البث المباشر" data-fr="Direct">البث المباشر</a>
-  </nav>
-  <button id="langBtn" onclick="toggleLanguage()">Français</button>
-</header>
+      <div class="header-actions">
+        <button class="btn" id="languageButton" type="button"
+          onclick="toggleLanguage()">Français</button>
 
-<section class="hero" id="home">
-  <h1 id="heroTitle">عالم كرة القدم مع <span>ALA TV</span></h1>
-  <p id="heroText">تابع المباريات والنتائج في واجهة واحدة.</p>
-  <a href="#matches"><button id="heroBtn">اكتشف المباريات ↓</button></a>
-</section>
-
-<main>
-<section class="container" id="matches">
-  <div class="section-head">
-    <h2 id="matchesTitle">المباريات</h2>
-    <div class="filters">
-      <select id="leagueFilter" onchange="filterMatches()">
-        <option value="all">كل الدوريات</option>
-        <option value="europe">أوروبا</option>
-        <option value="arab">عربي</option>
-      </select>
-      <button id="refreshBtn" onclick="loadMatches()">تحديث المباريات</button>
+        <button class="btn btn-primary" id="refreshButton" type="button"
+          onclick="loadMatches()">⟳ تحديث المباريات</button>
+      </div>
     </div>
-  </div>
-  <div class="matches" id="matchList">
-    <p class="notice">جاري تحميل المباريات...</p>
-  </div>
-  <p class="notice" id="demoNotice">المباريات محمّلة من مصدر بيانات كرة القدم.</p>
-</section>
+  </header>
 
-<section class="container" id="live">
-  <h2 id="liveTitle">منطقة البث المباشر</h2>
-  <div class="player">
-    <div>
-      <div class="play-icon">▶</div>
-      <h3 id="playerTitle">مساحة البث الخاصة بـ ALA TV</h3>
-      <p id="playerText">سيتم إضافة مشغل بث مرخص هنا لاحقًا.<br>لا يوجد بث مباشر حاليًا.</p>
-    </div>
-  </div>
-  <p class="notice" id="legalNotice">سيتم عرض المحتوى المباشر من مصادر رسمية أو مرخصة فقط.</p>
-</section>
-</main>
+  <main class="container">
+    <section class="hero">
+      <span class="hero-badge" id="heroBadge">عالم كرة القدم بين يديك</span>
 
-<footer>
-  <div class="logo">ALA <span>TV</span></div>
-  <p id="footerText">كرة القدم تجمعنا — الموقع قيد التطوير.</p>
-  <small>© 2026 ALA TV</small>
-</footer>
+      <h1 id="heroTitle">تابع <span>مباريات اليوم</span></h1>
 
-<script>
-const API_URL = "https://ala-tv-api.lyanita000.workers.dev/fixtures";
-let language = "ar";
-let allMatches = [];
+      <p id="heroDescription">
+        اكتشف مواعيد المباريات والنتائج وتفاصيل المواجهات في مكان واحد.
+      </p>
+    </section>
 
-// أسماء عربية للأندية المشهورة.
-// الأندية غير الموجودة هنا تظهر باسمها الأصلي.
+    <section class="section">
+      <div class="section-heading">
+        <h2 id="matchesHeading">⚽ <span>المباريات</span></h2>
+        <input type="date" id="matchDate" class="date-input"
+          aria-label="تاريخ المباريات">
+      </div>
 
-const arabicTeams = {
-  // إنجلترا
-  "Arsenal": "أرسنال",
-  "Arsenal FC": "أرسنال",
-  "Manchester City": "مانشستر سيتي",
-  "Manchester City FC": "مانشستر سيتي",
-  "Manchester United": "مانشستر يونايتد",
-  "Manchester United FC": "مانشستر يونايتد",
-  "Liverpool": "ليفربول",
-  "Liverpool FC": "ليفربول",
-  "Chelsea": "تشيلسي",
-  "Chelsea FC": "تشيلسي",
-  "Tottenham Hotspur": "توتنهام",
-  "Tottenham Hotspur FC": "توتنهام",
-  "Newcastle United": "نيوكاسل يونايتد",
-  "Newcastle United FC": "نيوكاسل يونايتد",
-  "Aston Villa FC": "أستون فيلا",
-  "Aston Villa": "أستون فيلا",
-  "Everton FC": "إيفرتون",
-  "Everton": "إيفرتون",
-  "West Ham United FC": "وست هام يونايتد",
-  "West Ham United": "وست هام يونايتد",
-  "Brighton & Hove Albion": "برايتون",
-  "Brighton and Hove Albion": "برايتون",
-  "Brighton & Hove Albion FC": "برايتون",
-  "Crystal Palace FC": "كريستال بالاس",
-  "Crystal Palace": "كريستال بالاس",
-  "Fulham FC": "فولهام",
-  "Fulham": "فولهام",
-  "Brentford FC": "برينتفورد",
-  "Brentford": "برينتفورد",
-  "Wolverhampton Wanderers FC": "وولفرهامبتون",
-  "Wolverhampton Wanderers": "وولفرهامبتون",
-  "Nottingham Forest FC": "نوتنغهام فورست",
-  "Nottingham Forest": "نوتنغهام فورست",
-  "Leicester City FC": "ليستر سيتي",
-  "Leeds United": "ليدز يونايتد",
-  "Leeds United FC": "ليدز يونايتد",
-  "Bournemouth": "بورنموث",
-  "AFC Bournemouth": "بورنموث",
-  "Sunderland AFC": "سندرلاند",
-  "Burnley FC": "بيرنلي",
-  "Ipswich Town FC": "إيبسويتش تاون",
-  "Southampton FC": "ساوثهامبتون",
+      <div class="filters">
+        <select id="leagueFilter" class="filter-select"
+          aria-label="تصفية المباريات" onchange="filterMatches()">
+          <option value="all">كل المباريات</option>
+          <option value="arab">المباريات العربية</option>
+          <option value="europe">المباريات الأوروبية</option>
+        </select>
+      </div>
 
-  // إسبانيا
-  "Real Madrid": "ريال مدريد",
-  "Real Madrid CF": "ريال مدريد",
-  "Barcelona": "برشلونة",
-  "FC Barcelona": "برشلونة",
-  "Atletico Madrid": "أتلتيكو مدريد",
-  "Atlético Madrid": "أتلتيكو مدريد",
-  "Club Atlético de Madrid": "أتلتيكو مدريد",
-  "Sevilla FC": "إشبيلية",
-  "Sevilla": "إشبيلية",
-  "Girona FC": "جيرونا",
-  "Girona": "جيرونا",
-  "Athletic Club": "أتلتيك بلباو",
-  "Athletic Bilbao": "أتلتيك بلباو",
-  "Real Sociedad": "ريال سوسيداد",
-  "Real Sociedad de Fútbol": "ريال سوسيداد",
-  "Real Betis": "ريال بيتيس",
-  "Real Betis Balompié": "ريال بيتيس",
-  "Valencia CF": "فالنسيا",
-  "Valencia": "فالنسيا",
-  "Villarreal CF": "فياريال",
-  "Villarreal": "فياريال",
-  "Getafe CF": "خيتافي",
-  "CA Osasuna": "أوساسونا",
-  "RCD Mallorca": "ريال مايوركا",
-  "RC Celta de Vigo": "سيلتا فيغو",
-  "Rayo Vallecano": "رايو فاييكانو",
-  "Deportivo Alavés": "ديبورتيفو ألافيس",
-  "UD Las Palmas": "لاس بالماس",
-  "RCD Espanyol": "إسبانيول",
+      <div id="matchList" class="matches">
+        <p class="notice">جاري تحميل المباريات...</p>
+      </div>
+    </section>
 
-  // ألمانيا
-  "FC Bayern München": "بايرن ميونخ",
-  "Bayern Munich": "بايرن ميونخ",
-  "Borussia Dortmund": "بوروسيا دورتموند",
-  "Bayer 04 Leverkusen": "باير ليفركوزن",
-  "RB Leipzig": "لايبزيغ",
-  "Eintracht Frankfurt": "آينتراخت فرانكفورت",
-  "VfB Stuttgart": "شتوتغارت",
-  "SC Freiburg": "فرايبورغ",
-  "VfL Wolfsburg": "فولفسبورغ",
-  "Borussia Mönchengladbach": "بوروسيا مونشنغلادباخ",
-  "TSG 1899 Hoffenheim": "هوفنهايم",
-  "Werder Bremen": "فيردر بريمن",
-  "1. FC Union Berlin": "يونيون برلين",
-  "1. FSV Mainz 05": "ماينز",
-  "FC Augsburg": "أوغسبورغ",
-  "1. FC Köln": "كولن",
-  "Hamburger SV": "هامبورغ",
+    <section class="section">
+      <div class="section-heading">
+        <h2 id="playerHeading">📺 <span>البث المباشر</span></h2>
+      </div>
 
-  // فرنسا
-  "Paris Saint-Germain": "باريس سان جيرمان",
-  "Paris Saint-Germain FC": "باريس سان جيرمان",
-  "Olympique de Marseille": "أولمبيك مارسيليا",
-  "Olympique Lyonnais": "أولمبيك ليون",
-  "AS Monaco FC": "موناكو",
-  "AS Monaco": "موناكو",
-  "Lille OSC": "ليل",
-  "LOSC Lille": "ليل",
-  "OGC Nice": "نيس",
-  "Stade Rennais FC": "رين",
-  "Stade Rennais": "رين",
-  "RC Lens": "لانس",
-  "RC Strasbourg Alsace": "ستراسبورغ",
-  "Toulouse FC": "تولوز",
-  "FC Nantes": "نانت",
-  "Montpellier HSC": "مونبلييه",
-  "Stade Brestois 29": "بريست",
-  "AJ Auxerre": "أوكسير",
-  "Angers SCO": "أنجيه",
-  "Le Havre AC": "لوهافر",
+      <div class="player-box">
+        <h3 id="playerTitle">منطقة البث المباشر</h3>
+        <p id="playerDescription">
+          سيتم عرض البث هنا عند إضافة مصدر بث مرخّص.
+        </p>
+      </div>
+    </section>
+  </main>
 
-  // إيطاليا
-  "Inter": "إنتر ميلان",
-  "FC Internazionale Milano": "إنتر ميلان",
-  "Inter Milan": "إنتر ميلان",
-  "AC Milan": "ميلان",
-  "Milan": "ميلان",
-  "Juventus": "يوفنتوس",
-  "Juventus FC": "يوفنتوس",
-  "SSC Napoli": "نابولي",
-  "Napoli": "نابولي",
-  "AS Roma": "روما",
-  "Roma": "روما",
-  "SS Lazio": "لاتسيو",
-  "Lazio": "لاتسيو",
-  "Atalanta BC": "أتالانتا",
-  "Atalanta": "أتالانتا",
-  "ACF Fiorentina": "فيورنتينا",
-  "Fiorentina": "فيورنتينا",
-  "Bologna FC 1909": "بولونيا",
-  "Torino FC": "تورينو",
-  "Udinese Calcio": "أودينيزي",
-  "Genoa CFC": "جنوى",
-  "Cagliari Calcio": "كالياري",
-  "Parma Calcio 1913": "بارما",
-  "Como 1907": "كومو",
-  "Hellas Verona FC": "هيلاس فيرونا",
-  "US Lecce": "ليتشي",
-  "Empoli FC": "إمبولي",
-  "AC Monza": "مونزا",
+  <footer>
+    <p><strong>ALA TV</strong> — <span id="footerText">كل أخبار ومواعيد كرة القدم في مكان واحد.</span></p>
+    <p>© <span id="footerYear">2026</span> ALA TV</p>
+  </footer>
+  <!-- نافذة تفاصيل المباراة -->
+  <div id="matchModal" class="match-modal" aria-hidden="true">
+    <div class="match-modal-content">
+      <button class="match-modal-close" id="closeMatchModal"
+        type="button" aria-label="Close">×</button>
 
-  // البرتغال وهولندا
-  "Sporting CP": "سبورتينغ لشبونة",
-  "SL Benfica": "بنفيكا",
-  "FC Porto": "بورتو",
-  "SC Braga": "سبورتينغ براغا",
-  "Ajax": "أياكس",
-  "Ajax Amsterdam": "أياكس",
-  "AFC Ajax": "أياكس",
-  "PSV": "آيندهوفن",
-  "PSV Eindhoven": "آيندهوفن",
-  "Feyenoord": "فينورد",
-  "Feyenoord Rotterdam": "فينورد",
-  "AZ Alkmaar": "ألكمار",
-  "FC Twente": "تفينتي",
+      <h2 class="match-modal-title" id="modalTitle">
+        تفاصيل المباراة
+      </h2>
 
-  // تركيا
-  "Galatasaray": "غلطة سراي",
-  "Fenerbahçe": "فنربخشة",
-  "Fenerbahce": "فنربخشة",
-  "Beşiktaş": "بشكتاش",
-  "Besiktas": "بشكتاش",
-  "Trabzonspor": "طرابزون سبور",
+      <div class="match-modal-teams">
+        <div class="match-modal-team">
+          <img id="modalHomeLogo" src="" alt="">
+          <div class="match-modal-team-name" id="modalHomeName">—</div>
+        </div>
 
-  // الجزائر والمنتخبات
-  "Algeria": "الجزائر",
-  "Algeria National Team": "منتخب الجزائر",
-  "Egypt": "مصر",
-  "Egypt National Team": "منتخب مصر",
-  "Morocco": "المغرب",
-  "Morocco National Team": "منتخب المغرب",
-  "Tunisia": "تونس",
-  "Tunisia National Team": "منتخب تونس",
-  "Saudi Arabia": "السعودية",
-  "Saudi Arabia National Team": "منتخب السعودية",
-  "Argentina": "الأرجنتين",
-  "Brazil": "البرازيل",
-  "France": "فرنسا",
-  "Germany": "ألمانيا",
-  "Spain": "إسبانيا",
-  "Portugal": "البرتغال",
-  "Italy": "إيطاليا",
-  "Netherlands": "هولندا",
-  "Belgium": "بلجيكا",
-  "Croatia": "كرواتيا",
-  "Uruguay": "الأوروغواي",
-  "Japan": "اليابان",
-  "South Korea": "كوريا الجنوبية",
-  "England": "إنجلترا",
-  "Scotland": "اسكتلندا",
-  "Wales": "ويلز",
-  "United States": "الولايات المتحدة",
-  "Mexico": "المكسيك",
-  "Canada": "كندا",
-  "Senegal": "السنغال",
-  "Nigeria": "نيجيريا",
-  "Cameroon": "الكاميرون",
-  "Ghana": "غانا",
-  "Ivory Coast": "ساحل العاج",
-  "South Africa": "جنوب أفريقيا"
-};
+        <div>
+          <div id="modalScore" style="font-size:24px;font-weight:800;">VS</div>
+          <div id="modalStatus" class="match-modal-muted">—</div>
+          <div id="modalKickoff" class="match-modal-muted">—</div>
+        </div>
 
+        <div class="match-modal-team">
+          <img id="modalAwayLogo" src="" alt="">
+          <div class="match-modal-team-name" id="modalAwayName">—</div>
+        </div>
+      </div>
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;",
-    '"':"&quot;", "'":"&#39;"
-  })[char]);
-}
+      <section class="match-modal-section">
+        <h3 id="modalInfoHeading">معلومات المباراة</h3>
 
-
-function teamName(team) {
-  const original = team?.name || team?.shortName || "TBD";
-  if (language !== "ar") return original;
-
-  const normalize = value => String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’']/g, "'")
-    .trim()
-    .toLowerCase();
-
-  const key = Object.keys(arabicTeams).find(
-    name => normalize(name) === normalize(original)
-  );
-
-  if (key) return arabicTeams[key];
-
-  const shortKey = Object.keys(arabicTeams).find(
-    name => normalize(name) === normalize(team?.shortName)
-  );
-
-  return shortKey ? arabicTeams[shortKey] : original;
-}
-
-
-function getToday() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-}
-
-function getStatus(match) {
-  const statuses = {
-    SCHEDULED:["قادمة","À venir"],
-    TIMED:["قادمة","À venir"],
-    IN_PLAY:["مباشرة","En direct"],
-    PAUSED:["استراحة","Mi-temps"],
-    FINISHED:["انتهت","Terminée"],
-    POSTPONED:["مؤجلة","Reportée"],
-    CANCELLED:["ملغاة","Annulée"],
-    SUSPENDED:["متوقفة","Suspendue"],
-    AWARDED:["نتيجة معتمدة","Résultat validé"]
-  };
-  return statuses[match.status] || ["غير محددة","Non défini"];
-}
-
-function isArabMatch(match) {
-  const area = match.competition?.area?.name || "";
-  const countries = [
-    "Algeria","Egypt","Saudi Arabia","Morocco","Tunisia",
-    "Qatar","United Arab Emirates","Iraq","Jordan","Oman",
-    "Bahrain","Kuwait","Libya","Sudan","Syria","Lebanon",
-    "Yemen","Palestine","Mauritania"
-  ];
-  return countries.some(c => area.toLowerCase().includes(c.toLowerCase()));
-}
-
-function formatTime(match) {
-  if (!match.utcDate) return language === "ar" ? "غير محدد" : "Non défini";
-  const date = new Date(match.utcDate);
-  if (isNaN(date.getTime())) return language === "ar" ? "غير محدد" : "Non défini";
-
-  return new Intl.DateTimeFormat(language === "ar" ? "ar-DZ" : "fr-FR", {
-    dateStyle:"medium",
-    timeStyle:"short"
-  }).format(date);
-}
-
-function teamLogo(team) {
-  const name = teamName(team);
-  const crest = team?.crest;
-
-  if (!crest) {
-    return `<div class="team-logo" aria-label="${escapeHTML(name)}">⚽</div>`;
-  }
-
-  return `<img class="team-logo"
-    src="${escapeHTML(crest)}"
-    alt="${escapeHTML(name)}"
-    loading="lazy"
-    onerror="this.style.display='none'">`;
-}
-
-function renderMatches(matches) {
-  const list = document.getElementById("matchList");
-
-  if (!matches.length) {
-    list.innerHTML = `<p class="notice">${
-      language === "ar"
-        ? "ما كاين حتى مباراة متاحة لهذا التاريخ."
-        : "Aucun match disponible pour cette date."
-    }</p>`;
-    return;
-  }
-
-  list.innerHTML = matches.map(match => {
-    const home = teamName(match.homeTeam);
-    const away = teamName(match.awayTeam);
-    const competition = match.competition?.name || "Football";
-    const status = getStatus(match);
-    const score = match.score?.fullTime;
-    const hasScore = score && score.home != null && score.away != null;
-    const scoreText = hasScore ? `${score.home} - ${score.away}` : "VS";
-    const leagueType = isArabMatch(match) ? "arab" : "europe";
-    const kickoff = language === "ar" ? "الموعد: " : "Horaire : ";
-
-    return `
-      <article class="match" data-league="${leagueType}">
-        <div class="league">${escapeHTML(competition)}</div>
-        <div class="teams">
-          <div class="team-box">
-            ${teamLogo(match.homeTeam)}
-            <span class="team-name">${escapeHTML(home)}</span>
+        <div class="match-modal-grid">
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelCompetition">البطولة</span>
+            <span class="match-modal-value" id="modalCompetition">—</span>
           </div>
-          <span class="ball">${escapeHTML(scoreText)}</span>
-          <div class="team-box">
-            ${teamLogo(match.awayTeam)}
-            <span class="team-name">${escapeHTML(away)}</span>
+
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelRound">الجولة</span>
+            <span class="match-modal-value" id="modalRound">—</span>
+          </div>
+
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelVenue">الملعب</span>
+            <span class="match-modal-value" id="modalVenue">غير متوفر</span>
+          </div>
+
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelReferee">الحكم</span>
+            <span class="match-modal-value" id="modalReferee">غير متوفر</span>
           </div>
         </div>
-        <div class="time">${kickoff}${escapeHTML(formatTime(match))}</div>
-        <span class="status">${escapeHTML(status[language === "ar" ? 0 : 1])}</span>
-      </article>
-    `;
-  }).join("");
+      </section>
 
-  filterMatches();
-}
+      <section class="match-modal-section">
+        <h3 id="modalBroadcastHeading">النقل التلفزيوني</h3>
 
-async function loadMatches() {
-  const list = document.getElementById("matchList");
-  const refresh = document.getElementById("refreshBtn");
-  const notice = document.getElementById("demoNotice");
+        <div class="match-modal-grid">
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelChannel">القناة الناقلة</span>
+            <span class="match-modal-value" id="modalChannel">غير متوفر</span>
+          </div>
 
-  refresh.disabled = true;
-  refresh.textContent = language === "ar" ? "جاري التحديث..." : "Chargement...";
+          <div class="match-modal-item">
+            <span class="match-modal-label" id="labelCommentator">المعلّق</span>
+            <span class="match-modal-value" id="modalCommentator">غير متوفر</span>
+          </div>
+        </div>
+      </section>
 
-  list.innerHTML = `<p class="notice">${
-    language === "ar" ? "جاري تحميل المباريات..." : "Chargement des matchs..."
-  }</p>`;
+      <section class="match-modal-section">
+        <h3 id="modalLineupHeading">التشكيلة</h3>
 
-  try {
-    const response = await fetch(`${API_URL}?date=${encodeURIComponent(getToday())}`);
-    const data = await response.json();
+        <div class="match-modal-lineup">
+          <div class="match-modal-lineup-team">
+            <strong id="modalHomeLineupTitle">الفريق الأول</strong>
+            <p id="modalHomeFormation" class="match-modal-muted">الخطة غير متوفرة</p>
+            <div id="modalHomeLineup" class="match-modal-muted">
+              التشكيلة غير متوفرة
+            </div>
+          </div>
 
-    if (!response.ok) throw new Error(data.error || "API_ERROR");
-    if (!Array.isArray(data.matches)) throw new Error("INVALID_DATA");
+          <div class="match-modal-lineup-team">
+            <strong id="modalAwayLineupTitle">الفريق الثاني</strong>
+            <p id="modalAwayFormation" class="match-modal-muted">الخطة غير متوفرة</p>
+            <div id="modalAwayLineup" class="match-modal-muted">
+              التشكيلة غير متوفرة
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 
-    allMatches = data.matches;
-    renderMatches(allMatches);
+  <script>
+    // عنوان خدمة المباريات الموجودة في Cloudflare Worker
+    const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
 
-    notice.textContent = language === "ar"
-      ? "المباريات من مصدر بيانات كرة القدم. قد تختلف التغطية حسب البطولة."
-      : "Matchs fournis par une source de données football. La couverture varie selon la compétition.";
-  } catch (error) {
-    console.error("ALA TV API error:", error);
+    let language = "ar";
+    let allMatches = [];
 
-    list.innerHTML = `<p class="notice">${
-      language === "ar"
-        ? "تعذّر تحميل المباريات. تأكد من الإنترنت وحاول مجددًا."
-        : "Impossible de charger les matchs. Vérifiez votre connexion."
-    }</p>`;
-    notice.textContent = language === "ar"
-      ? "تعذّر الاتصال بمصدر المباريات."
-      : "Connexion à la source des matchs impossible.";
-  } finally {
-    refresh.disabled = false;
-    refresh.textContent = language === "ar" ? "تحديث المباريات" : "Actualiser les matchs";
-  }
-}
+    // أسماء بعض الأندية بالعربية
+    const arabicTeams = {
+      "Manchester City": "مانشستر سيتي",
+      "Manchester United": "مانشستر يونايتد",
+      "Liverpool FC": "ليفربول",
+      "Arsenal FC": "أرسنال",
+      "Chelsea FC": "تشيلسي",
+      "Tottenham Hotspur": "توتنهام",
+      "Newcastle United FC": "نيوكاسل",
+      "Real Madrid CF": "ريال مدريد",
+      "FC Barcelona": "برشلونة",
+      "Atletico Madrid": "أتلتيكو مدريد",
+      "Sevilla FC": "إشبيلية",
+      "Girona FC": "جيرونا",
+      "Bayern Munich": "بايرن ميونخ",
+      "Borussia Dortmund": "بوروسيا دورتموند",
+      "Bayer 04 Leverkusen": "باير ليفركوزن",
+      "RB Leipzig": "لايبزيغ",
+      "Paris Saint-Germain FC": "باريس سان جيرمان",
+      "Olympique Marseille": "مارسيليا",
+      "Olympique Lyonnais": "ليون",
+      "Juventus FC": "يوفنتوس",
+      "Inter Milan": "إنتر ميلان",
+      "AC Milan": "إيه سي ميلان",
+      "Atalanta BC": "أتالانتا",
+      "SSC Napoli": "نابولي",
+      "AS Roma": "روما",
+      "SL Benfica": "بنفيكا",
+      "FC Porto": "بورتو",
+      "Sporting CP": "سبورتينغ لشبونة",
+      "Ajax Amsterdam": "أياكس",
+      "PSV": "آيندهوفن",
+      "Feyenoord Rotterdam": "فينورد",
+      "Celtic FC": "سيلتيك",
+      "Rangers FC": "رينجرز",
+      "Algeria": "الجزائر",
+      "Algeria U23": "الجزائر أقل من 23 سنة",
+      "Egypt": "مصر",
+      "Morocco": "المغرب",
+      "Tunisia": "تونس",
+      "Senegal": "السنغال",
+      "Nigeria": "نيجيريا",
+      "Cameroon": "الكاميرون",
+      "Ivory Coast": "كوت ديفوار",
+      "South Africa": "جنوب إفريقيا",
+      "Saudi Arabia": "السعودية",
+      "Qatar": "قطر",
+      "United Arab Emirates": "الإمارات",
+      "UAE": "الإمارات",
+      "Iraq": "العراق",
+      "Jordan": "الأردن",
+      "Palestine": "فلسطين",
+      "Lebanon": "لبنان",
+      "Syria": "سوريا",
+      "Oman": "عُمان",
+      "Kuwait": "الكويت",
+      "Bahrain": "البحرين",
+      "Al Ahly SC": "الأهلي المصري",
+      "Zamalek SC": "الزمالك",
+      "Wydad AC": "الوداد",
+      "Raja Club Athletic": "الرجاء",
+      "Espérance Sportive de Tunis": "الترجي التونسي",
+      "USM Alger": "اتحاد العاصمة",
+      "MC Alger": "مولودية الجزائر",
+      "JS Kabylie": "شبيبة القبائل",
+      "CR Belouizdad": "شباب بلوزداد",
+      "ES Sétif": "وفاق سطيف",
+      "CS Constantine": "شباب قسنطينة",
+      "USM Khenchela": "اتحاد خنشلة",
+      "Olympique Akbou": "أولمبيك أقبو",
+      "Paradou AC": "بارادو",
+      "ASO Chlef": "جمعية الشلف",
+      "MC Oran": "مولودية وهران",
+      "NC Magra": "نجم مقرة",
+      "ES Mostaganem": "ترجي مستغانم",
+      "US Biskra": "اتحاد بسكرة",
+      "JS Saoura": "شبيبة الساورة",
+      "USM Annaba": "اتحاد عنابة",
+      "CA Batna": "شباب باتنة",
+      "MO Béjaïa": "مولودية بجاية",
+      "JSM Béjaïa": "شبيبة بجاية"
+    };
 
-function filterMatches() {
-  const selected = document.getElementById("leagueFilter").value;
-  document.querySelectorAll("#matchList .match").forEach(match => {
-    match.style.display =
-      selected === "all" || match.dataset.league === selected ? "" : "none";
-  });
-}
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, function (char) {
+        const entities = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        };
+        return entities[char];
+      });
+    }
 
-function toggleLanguage() {
-  language = language === "ar" ? "fr" : "ar";
-  const ar = language === "ar";
+    function teamName(team) {
+      if (!team) return language === "ar" ? "فريق غير معروف" : "Équipe inconnue";
 
-  document.documentElement.lang = language;
-  document.documentElement.dir = ar ? "rtl" : "ltr";
-  document.getElementById("langBtn").textContent = ar ? "Français" : "العربية";
+      const name = team.name || "";
+      if (language === "ar") {
+        return arabicTeams[name] || name || "فريق غير معروف";
+      }
 
-  document.querySelectorAll("nav a[data-ar]").forEach(el => {
-    el.textContent = el.dataset[language];
-  });
+      return name || "Équipe inconnue";
+    }
 
-  document.getElementById("heroTitle").innerHTML = ar
-    ? 'عالم كرة القدم مع <span>ALA TV</span>'
-    : 'Le monde du football avec <span>ALA TV</span>';
+    function teamLogo(team) {
+      const name = team?.name || "Team";
+      const crest = team?.crest;
 
-  document.getElementById("heroText").textContent = ar
-    ? "تابع المباريات والنتائج في واجهة واحدة."
-    : "Suivez les matchs et les résultats sur une seule plateforme.";
+      if (crest) {
+        return `<img class="team-logo" src="${escapeHTML(crest)}"
+          alt="${escapeHTML(name)}" loading="lazy"
+          onerror="this.style.display='none'">`;
+      }
 
-  document.getElementById("heroBtn").textContent =
-    ar ? "اكتشف المباريات ↓" : "Découvrir les matchs ↓";
+      return `<div class="team-logo" aria-hidden="true"></div>`;
+    }
 
-  document.getElementById("matchesTitle").textContent =
-    ar ? "المباريات" : "Les matchs";
+    function formatTime(match) {
+      if (!match?.utcDate) {
+        return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
+      }
 
-  document.getElementById("liveTitle").textContent =
-    ar ? "منطقة البث المباشر" : "Espace de diffusion en direct";
+      const date = new Date(match.utcDate);
 
-  document.getElementById("playerTitle").textContent =
-    ar ? "مساحة البث الخاصة بـ ALA TV" : "Espace vidéo ALA TV";
+      if (Number.isNaN(date.getTime())) {
+        return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
+      }
 
-  document.getElementById("playerText").innerHTML = ar
-    ? "سيتم إضافة مشغل بث مرخص هنا لاحقًا.<br>لا يوجد بث مباشر حاليًا."
-    : "Un lecteur autorisé sera ajouté plus tard.<br>Aucun direct actuellement.";
+      return new Intl.DateTimeFormat(
+        language === "ar" ? "ar-DZ" : "fr-FR",
+        {
+          timeZone: "Africa/Algiers",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }
+      ).format(date);
+    }
 
-  document.getElementById("legalNotice").textContent = ar
-    ? "سيتم عرض المحتوى المباشر من مصادر رسمية أو مرخصة فقط."
-    : "Le contenu en direct proviendra uniquement de sources officielles ou autorisées.";
+    function getStatus(match) {
+      const status = match?.status || "SCHEDULED";
 
-  document.getElementById("footerText").textContent = ar
-    ? "كرة القدم تجمعنا — الموقع قيد التطوير."
-    : "Le football nous rassemble — site en développement.";
+      const statuses = {
+        SCHEDULED: ["لم تبدأ", "À venir"],
+        TIMED: ["مبرمجة", "Programmée"],
+        IN_PLAY: ["مباشرة الآن", "En direct"],
+        PAUSED: ["استراحة", "Mi-temps"],
+        FINISHED: ["انتهت", "Terminée"],
+        POSTPONED: ["مؤجلة", "Reportée"],
+        SUSPENDED: ["متوقفة", "Suspendue"],
+        CANCELLED: ["أُلغيت", "Annulée"],
+        AWARDED: ["نتيجة معتمدة", "Résultat homologué"]
+      };
 
-  document.getElementById("leagueFilter").innerHTML = ar
-    ? '<option value="all">كل الدوريات</option><option value="europe">أوروبا</option><option value="arab">عربي</option>'
-    : '<option value="all">Toutes les ligues</option><option value="europe">Europe</option><option value="arab">Arabe</option>';
+      return statuses[status] || ["غير معروف", "Inconnu"];
+    }
 
-  document.getElementById("refreshBtn").textContent =
-    ar ? "تحديث المباريات" : "Actualiser les matchs";
+    function isArabMatch(match) {
+      const arabicKeywords = [
+        "Algeria", "Egypt", "Morocco", "Tunisia", "Saudi",
+        "Qatar", "UAE", "United Arab Emirates", "Iraq",
+        "Jordan", "Palestine", "Lebanon", "Syria", "Oman",
+        "Kuwait", "Bahrain", "Al Ahly", "Zamalek",
+        "Wydad", "Raja", "USM Alger", "MC Alger",
+        "JS Kabylie", "CR Belouizdad", "ES Sétif",
+        "CS Constantine", "USM Khenchela"
+      ];
 
-  renderMatches(allMatches);
-}
+      const home = match?.homeTeam?.name || "";
+      const away = match?.awayTeam?.name || "";
+      const competition = match?.competition?.name || "";
 
-loadMatches();
-</script>
+      return arabicKeywords.some(keyword =>
+        home.includes(keyword) ||
+        away.includes(keyword) ||
+        competition.includes(keyword)
+      );
+    }
+    function renderMatches(matches) {
+      const list = document.getElementById("matchList");
+
+      if (!matches.length) {
+        list.innerHTML = `<p class="notice">${
+          language === "ar"
+            ? "ما كاين حتى مباراة متاحة لهذا التاريخ."
+            : "Aucun match disponible pour cette date."
+        }</p>`;
+        return;
+      }
+
+      list.innerHTML = matches.map((match, index) => {
+        const home = teamName(match.homeTeam);
+        const away = teamName(match.awayTeam);
+        const competition = match.competition?.name || "Football";
+        const status = getStatus(match);
+        const score = match.score?.fullTime;
+        const hasScore = score?.home != null && score?.away != null;
+        const scoreText = hasScore
+          ? `${score.home} - ${score.away}`
+          : "VS";
+
+        const leagueType = isArabMatch(match) ? "arab" : "europe";
+
+        const kickoff = language === "ar" ? "الموعد: " : "Horaire : ";
+
+        return `
+          <article class="match"
+            data-league="${leagueType}"
+            data-match-index="${index}"
+            tabindex="0"
+            role="button"
+            aria-label="${escapeHTML(home + ' - ' + away)}">
+
+            <div class="league">${escapeHTML(competition)}</div>
+
+            <div class="teams">
+              <div class="team-box">
+                ${teamLogo(match.homeTeam)}
+                <span class="team-name">${escapeHTML(home)}</span>
+              </div>
+
+              <span class="ball">${escapeHTML(scoreText)}</span>
+
+              <div class="team-box">
+                ${teamLogo(match.awayTeam)}
+                <span class="team-name">${escapeHTML(away)}</span>
+              </div>
+            </div>
+
+            <div class="time">
+              ${kickoff}${escapeHTML(formatTime(match))}
+            </div>
+
+            <span class="status">
+              ${escapeHTML(status[language === "ar" ? 0 : 1])}
+            </span>
+          </article>
+        `;
+      }).join("");
+
+      list.querySelectorAll(".match").forEach(card => {
+        const openDetails = () => {
+          const index = Number(card.dataset.matchIndex);
+          const match = allMatches[index];
+
+          if (match) {
+            openMatchDetails(match);
+          }
+        };
+
+        card.addEventListener("click", openDetails);
+
+        card.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openDetails();
+          }
+        });
+      });
+
+      filterMatches();
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (!element) return;
+
+      const unavailable = language === "ar"
+        ? "غير متوفر"
+        : "Non disponible";
+
+      element.textContent =
+        value === null || value === undefined || value === ""
+          ? unavailable
+          : String(value);
+    }
+
+    function openMatchDetails(match) {
+      const modal = document.getElementById("matchModal");
+      if (!modal) return;
+
+      const ar = language === "ar";
+      const unavailable = ar ? "غير متوفر" : "Non disponible";
+
+      const home = teamName(match.homeTeam);
+      const away = teamName(match.awayTeam);
+
+      const score =
+        match.score?.fullTime ||
+        match.score?.regularTime ||
+        match.score?.halfTime;
+
+      const scoreText =
+        score?.home != null && score?.away != null
+          ? `${score.home} - ${score.away}`
+          : "VS";
+
+      const referee = Array.isArray(match.referees)
+        ? match.referees
+            .map(person => person?.name)
+            .filter(Boolean)
+            .join(", ")
+        : "";
+
+      setText("modalTitle", ar ? "تفاصيل المباراة" : "Détails du match");
+      setText("modalHomeName", home);
+      setText("modalAwayName", away);
+      setText("modalHomeLineupTitle", home);
+      setText("modalAwayLineupTitle", away);
+
+      setText("modalScore", scoreText);
+      setText("modalStatus", getStatus(match)[ar ? 0 : 1]);
+      setText("modalKickoff", formatTime(match));
+
+      setText("modalCompetition", match.competition?.name || unavailable);
+      setText("modalRound", match.matchday ?? match.stage ?? unavailable);
+      setText("modalVenue", match.venue || unavailable);
+      setText("modalReferee", referee || unavailable);
+
+      // القناة والمعلّق لا يوفرهما مصدر المباريات الحالي بشكل مضمون
+      setText("modalChannel", unavailable);
+      setText("modalCommentator", unavailable);
+
+      setText(
+        "modalHomeFormation",
+        ar ? "الخطة: غير متوفرة" : "Formation : non disponible"
+      );
+
+      setText(
+        "modalAwayFormation",
+        ar ? "الخطة: غير متوفرة" : "Formation : non disponible"
+      );
+
+      setText(
+        "modalHomeLineup",
+        ar ? "التشكيلة غير متوفرة" : "Composition non disponible"
+      );
+
+      setText(
+        "modalAwayLineup",
+        ar ? "التشكيلة غير متوفرة" : "Composition non disponible"
+      );
+
+      setText(
+        "modalInfoHeading",
+        ar ? "معلومات المباراة" : "Informations du match"
+      );
+
+      setText(
+        "modalBroadcastHeading",
+        ar ? "النقل التلفزيوني" : "Diffusion TV"
+      );
+
+      setText(
+        "modalLineupHeading",
+        ar ? "التشكيلة" : "Compositions"
+      );
+
+      setText("labelCompetition", ar ? "البطولة" : "Compétition");
+      setText("labelRound", ar ? "الجولة" : "Journée");
+      setText("labelVenue", ar ? "الملعب" : "Stade");
+      setText("labelReferee", ar ? "الحكم" : "Arbitre");
+      setText("labelChannel", ar ? "القناة الناقلة" : "Chaîne TV");
+      setText("labelCommentator", ar ? "المعلّق" : "Commentateur");
+
+      function setTeamLogo(id, team) {
+        const img = document.getElementById(id);
+        if (!img) return;
+
+        if (team?.crest) {
+          img.src = team.crest;
+          img.style.display = "block";
+        } else {
+          img.removeAttribute("src");
+          img.style.display = "none";
+        }
+
+        img.alt = teamName(team);
+      }
+
+      setTeamLogo("modalHomeLogo", match.homeTeam);
+      setTeamLogo("modalAwayLogo", match.awayTeam);
+
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("role", "dialog");
+
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeMatchDetails() {
+      const modal = document.getElementById("matchModal");
+
+      if (modal) {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+        modal.removeAttribute("aria-modal");
+      }
+
+      document.body.style.overflow = "";
+    }
+
+    async function loadMatches() {
+      const list = document.getElementById("matchList");
+      const dateInput = document.getElementById("matchDate");
+
+      const date = dateInput.value ||
+        new Date().toLocaleDateString("en-CA", {
+          timeZone: "Africa/Algiers"
+        });
+
+      if (!dateInput.value) {
+        dateInput.value = date;
+      }
+
+      list.innerHTML = `<p class="notice">${
+        language === "ar"
+          ? "جاري تحميل المباريات..."
+          : "Chargement des matchs..."
+      }</p>`;
+
+      try {
+        const response = await fetch(
+          `${API_BASE}/fixtures?date=${encodeURIComponent(date)}`
+        );
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        allMatches = Array.isArray(data)
+          ? data
+          : Array.isArray(data.matches)
+            ? data.matches
+            : Array.isArray(data.fixtures)
+              ? data.fixtures
+              : [];
+
+        renderMatches(allMatches);
+
+      } catch (error) {
+        console.error("Failed to load matches:", error);
+
+        list.innerHTML = `<p class="notice">${
+          language === "ar"
+            ? "تعذر تحميل المباريات. تأكد من اتصال الإنترنت وحاول التحديث."
+            : "Impossible de charger les matchs. Vérifiez Internet et réessayez."
+        }</p>`;
+      }
+    }
+
+    function filterMatches() {
+      const filter = document.getElementById("leagueFilter").value;
+
+      document.querySelectorAll("#matchList .match").forEach(card => {
+        card.style.display =
+          filter === "all" || card.dataset.league === filter
+            ? ""
+            : "none";
+      });
+    }
+
+    function toggleLanguage() {
+      language = language === "ar" ? "fr" : "ar";
+
+      document.documentElement.lang = language;
+      document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+
+      document.getElementById("languageButton").textContent =
+        language === "ar" ? "Français" : "العربية";
+
+      document.getElementById("refreshButton").textContent =
+        language === "ar" ? "⟳ تحديث المباريات" : "⟳ Actualiser";
+
+      document.getElementById("heroBadge").textContent =
+        language === "ar"
+          ? "عالم كرة القدم بين يديك"
+          : "Le monde du football à portée de main";
+
+      document.getElementById("heroTitle").innerHTML =
+        language === "ar"
+          ? 'تابع <span>مباريات اليوم</span>'
+          : 'Suivez les <span>matchs du jour</span>';
+
+      document.getElementById("heroDescription").textContent =
+        language === "ar"
+          ? "اكتشف مواعيد المباريات والنتائج وتفاصيل المواجهات في مكان واحد."
+          : "Consultez les horaires, les résultats et les détails des matchs.";
+
+      document.getElementById("matchesHeading").innerHTML =
+        language === "ar"
+          ? '⚽ <span>المباريات</span>'
+          : '⚽ <span>Les matchs</span>';
+
+      document.getElementById("playerHeading").innerHTML =
+        language === "ar"
+          ? '📺 <span>البث المباشر</span>'
+          : '📺 <span>Direct</span>';
+
+      document.getElementById("playerTitle").textContent =
+        language === "ar" ? "منطقة البث المباشر" : "Zone de diffusion";
+
+      document.getElementById("playerDescription").textContent =
+        language === "ar"
+          ? "سيتم عرض البث هنا عند إضافة مصدر بث مرخّص."
+          : "Un flux autorisé pourra être affiché ici.";
+
+      document.getElementById("footerText").textContent =
+        language === "ar"
+          ? "كل أخبار ومواعيد كرة القدم في مكان واحد."
+          : "Toutes les actualités et horaires du football au même endroit.";
+
+      const filter = document.getElementById("leagueFilter");
+      filter.options[0].textContent =
+        language === "ar" ? "كل المباريات" : "Tous les matchs";
+      filter.options[1].textContent =
+        language === "ar" ? "المباريات العربية" : "Matchs arabes";
+      filter.options[2].textContent =
+        language === "ar" ? "المباريات الأوروبية" : "Matchs européens";
+
+      renderMatches(allMatches);
+    }
+
+    document.getElementById("closeMatchModal").addEventListener(
+      "click",
+      closeMatchDetails
+    );
+
+    document.getElementById("matchModal").addEventListener("click", event => {
+      if (event.target.id === "matchModal") {
+        closeMatchDetails();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeMatchDetails();
+      }
+    });
+
+    document.getElementById("matchDate").addEventListener("change", loadMatches);
+
+    loadMatches();
+  </script>
 </body>
 </html>

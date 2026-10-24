@@ -113,72 +113,215 @@ let allMatches = [];
 
 // أسماء عربية للأندية المشهورة.
 // الأندية غير الموجودة هنا تظهر باسمها الأصلي.
+
 const arabicTeams = {
-  "Arsenal":"أرسنال",
-  "Manchester City":"مانشستر سيتي",
-  "Manchester United":"مانشستر يونايتد",
-  "Liverpool FC":"ليفربول",
-  "Liverpool":"ليفربول",
-  "Chelsea FC":"تشيلسي",
-  "Chelsea":"تشيلسي",
-  "Tottenham Hotspur":"توتنهام",
-  "Newcastle United FC":"نيوكاسل يونايتد",
-  "Real Madrid CF":"ريال مدريد",
-  "Real Madrid":"ريال مدريد",
-  "FC Barcelona":"برشلونة",
-  "Barcelona":"برشلونة",
-  "Club Atlético de Madrid":"أتلتيكو مدريد",
-  "Atlético Madrid":"أتلتيكو مدريد",
-  "Sevilla FC":"إشبيلية",
-  "Girona FC":"جيرونا",
-  "FC Bayern München":"بايرن ميونخ",
-  "Bayern Munich":"بايرن ميونخ",
-  "Borussia Dortmund":"بوروسيا دورتموند",
-  "Bayer 04 Leverkusen":"باير ليفركوزن",
-  "RB Leipzig":"لايبزيغ",
-  "Paris Saint-Germain FC":"باريس سان جيرمان",
-  "Paris Saint-Germain":"باريس سان جيرمان",
-  "Olympique de Marseille":"أولمبيك مارسيليا",
-  "Olympique Lyonnais":"أولمبيك ليون",
-  "Inter":"إنتر ميلان",
-  "FC Internazionale Milano":"إنتر ميلان",
-  "AC Milan":"ميلان",
-  "Juventus FC":"يوفنتوس",
-  "Juventus":"يوفنتوس",
-  "SSC Napoli":"نابولي",
-  "AS Roma":"روما",
-  "Atalanta BC":"أتالانتا",
-  "Sporting CP":"سبورتينغ لشبونة",
-  "SL Benfica":"بنفيكا",
-  "FC Porto":"بورتو",
-  "Ajax Amsterdam":"أياكس",
-  "AFC Ajax":"أياكس",
-  "PSV":"آيندهوفن",
-  "Feyenoord Rotterdam":"فينورد",
-  "Algeria":"الجزائر",
-  "Algeria National Team":"منتخب الجزائر",
-  "Egypt":"مصر",
-  "Egypt National Team":"منتخب مصر",
-  "Morocco":"المغرب",
-  "Morocco National Team":"منتخب المغرب",
-  "Tunisia":"تونس",
-  "Tunisia National Team":"منتخب تونس",
-  "Saudi Arabia":"السعودية",
-  "Saudi Arabia National Team":"منتخب السعودية",
-  "Argentina":"الأرجنتين",
-  "Brazil":"البرازيل",
-  "France":"فرنسا",
-  "Germany":"ألمانيا",
-  "Spain":"إسبانيا",
-  "Portugal":"البرتغال",
-  "Italy":"إيطاليا",
-  "Netherlands":"هولندا",
-  "Belgium":"بلجيكا",
-  "Croatia":"كرواتيا",
-  "Uruguay":"الأوروغواي",
-  "Japan":"اليابان",
-  "South Korea":"كوريا الجنوبية"
+  // إنجلترا
+  "Arsenal": "أرسنال",
+  "Arsenal FC": "أرسنال",
+  "Manchester City": "مانشستر سيتي",
+  "Manchester City FC": "مانشستر سيتي",
+  "Manchester United": "مانشستر يونايتد",
+  "Manchester United FC": "مانشستر يونايتد",
+  "Liverpool": "ليفربول",
+  "Liverpool FC": "ليفربول",
+  "Chelsea": "تشيلسي",
+  "Chelsea FC": "تشيلسي",
+  "Tottenham Hotspur": "توتنهام",
+  "Tottenham Hotspur FC": "توتنهام",
+  "Newcastle United": "نيوكاسل يونايتد",
+  "Newcastle United FC": "نيوكاسل يونايتد",
+  "Aston Villa FC": "أستون فيلا",
+  "Aston Villa": "أستون فيلا",
+  "Everton FC": "إيفرتون",
+  "Everton": "إيفرتون",
+  "West Ham United FC": "وست هام يونايتد",
+  "West Ham United": "وست هام يونايتد",
+  "Brighton & Hove Albion": "برايتون",
+  "Brighton and Hove Albion": "برايتون",
+  "Brighton & Hove Albion FC": "برايتون",
+  "Crystal Palace FC": "كريستال بالاس",
+  "Crystal Palace": "كريستال بالاس",
+  "Fulham FC": "فولهام",
+  "Fulham": "فولهام",
+  "Brentford FC": "برينتفورد",
+  "Brentford": "برينتفورد",
+  "Wolverhampton Wanderers FC": "وولفرهامبتون",
+  "Wolverhampton Wanderers": "وولفرهامبتون",
+  "Nottingham Forest FC": "نوتنغهام فورست",
+  "Nottingham Forest": "نوتنغهام فورست",
+  "Leicester City FC": "ليستر سيتي",
+  "Leeds United": "ليدز يونايتد",
+  "Leeds United FC": "ليدز يونايتد",
+  "Bournemouth": "بورنموث",
+  "AFC Bournemouth": "بورنموث",
+  "Sunderland AFC": "سندرلاند",
+  "Burnley FC": "بيرنلي",
+  "Ipswich Town FC": "إيبسويتش تاون",
+  "Southampton FC": "ساوثهامبتون",
+
+  // إسبانيا
+  "Real Madrid": "ريال مدريد",
+  "Real Madrid CF": "ريال مدريد",
+  "Barcelona": "برشلونة",
+  "FC Barcelona": "برشلونة",
+  "Atletico Madrid": "أتلتيكو مدريد",
+  "Atlético Madrid": "أتلتيكو مدريد",
+  "Club Atlético de Madrid": "أتلتيكو مدريد",
+  "Sevilla FC": "إشبيلية",
+  "Sevilla": "إشبيلية",
+  "Girona FC": "جيرونا",
+  "Girona": "جيرونا",
+  "Athletic Club": "أتلتيك بلباو",
+  "Athletic Bilbao": "أتلتيك بلباو",
+  "Real Sociedad": "ريال سوسيداد",
+  "Real Sociedad de Fútbol": "ريال سوسيداد",
+  "Real Betis": "ريال بيتيس",
+  "Real Betis Balompié": "ريال بيتيس",
+  "Valencia CF": "فالنسيا",
+  "Valencia": "فالنسيا",
+  "Villarreal CF": "فياريال",
+  "Villarreal": "فياريال",
+  "Getafe CF": "خيتافي",
+  "CA Osasuna": "أوساسونا",
+  "RCD Mallorca": "ريال مايوركا",
+  "RC Celta de Vigo": "سيلتا فيغو",
+  "Rayo Vallecano": "رايو فاييكانو",
+  "Deportivo Alavés": "ديبورتيفو ألافيس",
+  "UD Las Palmas": "لاس بالماس",
+  "RCD Espanyol": "إسبانيول",
+
+  // ألمانيا
+  "FC Bayern München": "بايرن ميونخ",
+  "Bayern Munich": "بايرن ميونخ",
+  "Borussia Dortmund": "بوروسيا دورتموند",
+  "Bayer 04 Leverkusen": "باير ليفركوزن",
+  "RB Leipzig": "لايبزيغ",
+  "Eintracht Frankfurt": "آينتراخت فرانكفورت",
+  "VfB Stuttgart": "شتوتغارت",
+  "SC Freiburg": "فرايبورغ",
+  "VfL Wolfsburg": "فولفسبورغ",
+  "Borussia Mönchengladbach": "بوروسيا مونشنغلادباخ",
+  "TSG 1899 Hoffenheim": "هوفنهايم",
+  "Werder Bremen": "فيردر بريمن",
+  "1. FC Union Berlin": "يونيون برلين",
+  "1. FSV Mainz 05": "ماينز",
+  "FC Augsburg": "أوغسبورغ",
+  "1. FC Köln": "كولن",
+  "Hamburger SV": "هامبورغ",
+
+  // فرنسا
+  "Paris Saint-Germain": "باريس سان جيرمان",
+  "Paris Saint-Germain FC": "باريس سان جيرمان",
+  "Olympique de Marseille": "أولمبيك مارسيليا",
+  "Olympique Lyonnais": "أولمبيك ليون",
+  "AS Monaco FC": "موناكو",
+  "AS Monaco": "موناكو",
+  "Lille OSC": "ليل",
+  "LOSC Lille": "ليل",
+  "OGC Nice": "نيس",
+  "Stade Rennais FC": "رين",
+  "Stade Rennais": "رين",
+  "RC Lens": "لانس",
+  "RC Strasbourg Alsace": "ستراسبورغ",
+  "Toulouse FC": "تولوز",
+  "FC Nantes": "نانت",
+  "Montpellier HSC": "مونبلييه",
+  "Stade Brestois 29": "بريست",
+  "AJ Auxerre": "أوكسير",
+  "Angers SCO": "أنجيه",
+  "Le Havre AC": "لوهافر",
+
+  // إيطاليا
+  "Inter": "إنتر ميلان",
+  "FC Internazionale Milano": "إنتر ميلان",
+  "Inter Milan": "إنتر ميلان",
+  "AC Milan": "ميلان",
+  "Milan": "ميلان",
+  "Juventus": "يوفنتوس",
+  "Juventus FC": "يوفنتوس",
+  "SSC Napoli": "نابولي",
+  "Napoli": "نابولي",
+  "AS Roma": "روما",
+  "Roma": "روما",
+  "SS Lazio": "لاتسيو",
+  "Lazio": "لاتسيو",
+  "Atalanta BC": "أتالانتا",
+  "Atalanta": "أتالانتا",
+  "ACF Fiorentina": "فيورنتينا",
+  "Fiorentina": "فيورنتينا",
+  "Bologna FC 1909": "بولونيا",
+  "Torino FC": "تورينو",
+  "Udinese Calcio": "أودينيزي",
+  "Genoa CFC": "جنوى",
+  "Cagliari Calcio": "كالياري",
+  "Parma Calcio 1913": "بارما",
+  "Como 1907": "كومو",
+  "Hellas Verona FC": "هيلاس فيرونا",
+  "US Lecce": "ليتشي",
+  "Empoli FC": "إمبولي",
+  "AC Monza": "مونزا",
+
+  // البرتغال وهولندا
+  "Sporting CP": "سبورتينغ لشبونة",
+  "SL Benfica": "بنفيكا",
+  "FC Porto": "بورتو",
+  "SC Braga": "سبورتينغ براغا",
+  "Ajax": "أياكس",
+  "Ajax Amsterdam": "أياكس",
+  "AFC Ajax": "أياكس",
+  "PSV": "آيندهوفن",
+  "PSV Eindhoven": "آيندهوفن",
+  "Feyenoord": "فينورد",
+  "Feyenoord Rotterdam": "فينورد",
+  "AZ Alkmaar": "ألكمار",
+  "FC Twente": "تفينتي",
+
+  // تركيا
+  "Galatasaray": "غلطة سراي",
+  "Fenerbahçe": "فنربخشة",
+  "Fenerbahce": "فنربخشة",
+  "Beşiktaş": "بشكتاش",
+  "Besiktas": "بشكتاش",
+  "Trabzonspor": "طرابزون سبور",
+
+  // الجزائر والمنتخبات
+  "Algeria": "الجزائر",
+  "Algeria National Team": "منتخب الجزائر",
+  "Egypt": "مصر",
+  "Egypt National Team": "منتخب مصر",
+  "Morocco": "المغرب",
+  "Morocco National Team": "منتخب المغرب",
+  "Tunisia": "تونس",
+  "Tunisia National Team": "منتخب تونس",
+  "Saudi Arabia": "السعودية",
+  "Saudi Arabia National Team": "منتخب السعودية",
+  "Argentina": "الأرجنتين",
+  "Brazil": "البرازيل",
+  "France": "فرنسا",
+  "Germany": "ألمانيا",
+  "Spain": "إسبانيا",
+  "Portugal": "البرتغال",
+  "Italy": "إيطاليا",
+  "Netherlands": "هولندا",
+  "Belgium": "بلجيكا",
+  "Croatia": "كرواتيا",
+  "Uruguay": "الأوروغواي",
+  "Japan": "اليابان",
+  "South Korea": "كوريا الجنوبية",
+  "England": "إنجلترا",
+  "Scotland": "اسكتلندا",
+  "Wales": "ويلز",
+  "United States": "الولايات المتحدة",
+  "Mexico": "المكسيك",
+  "Canada": "كندا",
+  "Senegal": "السنغال",
+  "Nigeria": "نيجيريا",
+  "Cameroon": "الكاميرون",
+  "Ghana": "غانا",
+  "Ivory Coast": "ساحل العاج",
+  "South Africa": "جنوب أفريقيا"
 };
+
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -187,14 +330,31 @@ function escapeHTML(value) {
   })[char]);
 }
 
+
 function teamName(team) {
   const original = team?.name || team?.shortName || "TBD";
   if (language !== "ar") return original;
 
-  return arabicTeams[original]
-    || arabicTeams[team?.shortName]
-    || original;
+  const normalize = value => String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’']/g, "'")
+    .trim()
+    .toLowerCase();
+
+  const key = Object.keys(arabicTeams).find(
+    name => normalize(name) === normalize(original)
+  );
+
+  if (key) return arabicTeams[key];
+
+  const shortKey = Object.keys(arabicTeams).find(
+    name => normalize(name) === normalize(team?.shortName)
+  );
+
+  return shortKey ? arabicTeams[shortKey] : original;
 }
+
 
 function getToday() {
   const now = new Date();

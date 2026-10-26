@@ -202,12 +202,33 @@
       transform: translateY(-3px);
     }
 
-    .league {
-      margin-bottom: 17px;
-      color: var(--purple-light);
-      font-size: 13px;
-      font-weight: bold;
+    
+   .league {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  min-height: 30px;
+  margin-bottom: 17px;
+  color: var(--purple-light);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.league-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+    .league-logo {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
+
 
     .teams {
       display: grid;
@@ -847,6 +868,30 @@
         competition.includes(keyword)
       );
     }
+    
+        function competitionName(competition) {
+      const names = {
+        "PPL": "الدوري البرتغالي الممتاز",
+        "FL1": "الدوري الفرنسي",
+        "PD": "الدوري الإسباني",
+        "PL": "الدوري الإنجليزي الممتاز",
+        "BL1": "الدوري الألماني",
+        "SA": "الدوري الإيطالي",
+        "CL": "دوري أبطال أوروبا",
+        "EL": "الدوري الأوروبي",
+        "BSA": "الدوري البرازيلي",
+        "DED": "الدوري الهولندي"
+      };
+
+      if (language !== "ar") {
+        return competition?.name || "Football";
+      }
+
+      return names[competition?.code] ||
+        competition?.name ||
+        "بطولة غير معروفة";
+    }
+
     function renderMatches(matches) {
       const list = document.getElementById("matchList");
 
@@ -862,7 +907,8 @@
       list.innerHTML = matches.map((match, index) => {
         const home = teamName(match.homeTeam);
         const away = teamName(match.awayTeam);
-        const competition = match.competition?.name || "Football";
+        const competition = competitionName(match.competition);
+        const competitionLogo = match.competition?.emblem || "";
         const status = getStatus(match);
         const score = match.score?.fullTime;
         const hasScore = score?.home != null && score?.away != null;
@@ -882,7 +928,20 @@
             role="button"
             aria-label="${escapeHTML(home + ' - ' + away)}">
 
-            <div class="league">${escapeHTML(competition)}</div>
+            
+            <div class="league">
+              ${
+                competitionLogo
+                  ? `<img class="league-logo"
+                      src="${escapeHTML(competitionLogo)}"
+                      alt=""
+                      loading="lazy"
+                      onerror="this.style.display='none'">`
+                  : ""
+              }
+              <span>${escapeHTML(competition)}</span>
+            </div>
+
 
             <div class="teams">
               <div class="team-box">

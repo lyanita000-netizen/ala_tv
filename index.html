@@ -33,7 +33,7 @@
       min-height: 100vh;
     }
 
-    button, input { font: inherit; }
+    button, input, select { font: inherit; }
 
     button {
       cursor: pointer;
@@ -136,13 +136,27 @@
       color: var(--muted);
     }
 
-    input[type="date"] {
+    input[type="date"], #leagueSelect {
       color: white;
       background: var(--panel2);
       border: 1px solid var(--border);
-      padding: 9px;
+      padding: 10px;
       border-radius: 9px;
+      min-height: 40px;
+    }
+
+    input[type="date"] {
       color-scheme: dark;
+    }
+
+    #leagueSelect {
+      max-width: 100%;
+      min-width: 190px;
+    }
+
+    #leagueSelect option {
+      background: var(--panel);
+      color: white;
     }
 
     .primary-btn {
@@ -151,6 +165,11 @@
       padding: 11px 17px;
       border-radius: 10px;
       font-weight: bold;
+    }
+
+    .primary-btn:disabled {
+      opacity: .65;
+      cursor: wait;
     }
 
     .section-heading {
@@ -419,9 +438,7 @@
       line-height: 1.6;
     }
 
-    .modal-section {
-      margin-top: 22px;
-    }
+    .modal-section { margin-top: 22px; }
 
     .modal-section h4 {
       margin: 0 0 12px;
@@ -462,7 +479,11 @@
       .brand h1 { font-size: 22px; }
       .toolbar { align-items: stretch; }
       .toolbar label { width: 100%; }
-      input[type="date"] { flex: 1; min-width: 0; }
+      input[type="date"], #leagueSelect {
+        flex: 1;
+        min-width: 0;
+        width: 100%;
+      }
       .info-grid { grid-template-columns: 1fr 1fr; }
       .modal-content { padding: 15px; }
     }
@@ -500,6 +521,18 @@
         <span data-ar="اختر التاريخ:" data-fr="Choisir la date :">اختر التاريخ:</span>
         <input type="date" id="matchDate">
       </label>
+
+      <label>
+        <span data-ar="اختر الدوري:" data-fr="Choisir la compétition :">اختر الدوري:</span>
+        <select id="leagueSelect">
+          <option value="all" data-ar="كل البطولات (المصدر الحالي)" data-fr="Toutes les compétitions (source actuelle)">كل البطولات (المصدر الحالي)</option>
+          <option value="comp_ligue_1_dza" data-ar="الدوري الجزائري" data-fr="Ligue 1 algérienne">الدوري الجزائري</option>
+          <option value="comp_saudi_pro_league_sau" data-ar="الدوري السعودي" data-fr="Championnat saoudien">الدوري السعودي</option>
+          <option value="comp_egyptian_prem_egy" data-ar="الدوري المصري" data-fr="Championnat égyptien">الدوري المصري</option>
+          <option value="comp_uefa_champions_league" data-ar="دوري أبطال أوروبا" data-fr="Ligue des champions">دوري أبطال أوروبا</option>
+        </select>
+      </label>
+
       <button class="primary-btn" id="refreshBtn" data-ar="تحديث المباريات" data-fr="Actualiser les matchs">تحديث المباريات</button>
     </section>
 
@@ -509,7 +542,10 @@
     </div>
 
     <section class="matches" id="matches">
-      <div class="message"><span class="spinner"></span><span data-ar="جاري تحميل المباريات..." data-fr="Chargement des matchs...">جاري تحميل المباريات...</span></div>
+      <div class="message">
+        <span class="spinner"></span>
+        <span data-ar="جاري تحميل المباريات..." data-fr="Chargement des matchs...">جاري تحميل المباريات...</span>
+      </div>
     </section>
   </main>
 
@@ -591,6 +627,7 @@
 
     let allMatches = [];
     let currentLanguage = "ar";
+    let loadRequestNumber = 0;
 
     const unavailable = () =>
       currentLanguage === "ar" ? "غير متوفر" : "Non disponible";
@@ -601,9 +638,11 @@
 
     function safeString(value) {
       if (value === null || value === undefined || value === "") return "";
+
       if (typeof value === "object") {
         return value.name || value.fullName || value.displayName || "";
       }
+
       return String(value);
     }
 
@@ -640,19 +679,22 @@
 
     function competitionName(match) {
       const competition = getCompetition(match);
+
       return safeString(competition?.name || competition?.title) ||
         (currentLanguage === "ar" ? "دوري غير معروف" : "Compétition inconnue");
     }
 
     function competitionId(match) {
       const competition = getCompetition(match);
-      return String(competition?.id || competition?.competition_id || match?.competition_id || "");
+
+      return String(
+        competition?.id ||
+        competition?.competition_id ||
+        match?.competition_id ||
+        ""
+      );
     }
 
-    /*
-      نستعمل شعار الدوري القادم من الـAPI أولاً.
-      وإذا لم يكن موجوداً، نحاول استعمال شعار الدوري المعروف.
-    */
     function competitionLogo(match) {
       const competition = getCompetition(match);
 
@@ -679,8 +721,12 @@
     }
 
     function getMatchId(match) {
-      return match?.id ?? match?.fixtureId ?? match?.fixture_id ??
-        match?.match_id ?? match?.eventId ?? null;
+      return match?.id ??
+        match?.fixtureId ??
+        match?.fixture_id ??
+        match?.match_id ??
+        match?.eventId ??
+        null;
     }
 
     function getStatus(match) {
@@ -690,25 +736,42 @@
         match?.status ||
         match?.fixture?.status?.short ||
         ""
-      ).toLowerCase();
+      ).toLowerCase().replace(/[\s-]/g, "_");
 
-      if (raw.includes("live") || raw === "1h" || raw === "2h" ||
-          raw === "ht" || raw === "inplay" || raw === "in_play") {
+      if (
+        raw.includes("live") ||
+        raw === "1h" ||
+        raw === "2h" ||
+        raw === "ht" ||
+        raw === "inplay" ||
+        raw === "in_play" ||
+        raw === "paused"
+      ) {
         return {
           label: currentLanguage === "ar" ? "مباشر" : "En direct",
           className: "live"
         };
       }
 
-      if (raw.includes("finish") || raw === "ft" || raw === "aet" ||
-          raw === "pen" || raw === "completed") {
+      if (
+        raw.includes("finish") ||
+        raw === "ft" ||
+        raw === "aet" ||
+        raw === "pen" ||
+        raw === "completed"
+      ) {
         return {
           label: currentLanguage === "ar" ? "انتهت" : "Terminé",
           className: "finished"
         };
       }
 
-      if (raw.includes("postpon") || raw.includes("cancel")) {
+      if (
+        raw.includes("postpon") ||
+        raw.includes("cancel") ||
+        raw.includes("suspend") ||
+        raw.includes("abandon")
+      ) {
         return {
           label: currentLanguage === "ar" ? "مؤجلة / ملغاة" : "Reporté / annulé",
           className: ""
@@ -722,8 +785,12 @@
     }
 
     function formatTime(match) {
-      const raw = match?.utcDate || match?.date || match?.datetime ||
-        match?.fixture?.date || match?.starting_at;
+      const raw =
+        match?.utcDate ||
+        match?.date ||
+        match?.datetime ||
+        match?.fixture?.date ||
+        match?.starting_at;
 
       if (!raw) return unavailable();
 
@@ -733,6 +800,7 @@
         date = new Date(raw < 10000000000 ? raw * 1000 : raw);
       } else {
         date = new Date(raw);
+
         if (Number.isNaN(date.getTime()) && typeof raw === "string") {
           date = new Date(raw.replace(" ", "T") + "Z");
         }
@@ -742,21 +810,36 @@
 
       return new Intl.DateTimeFormat(
         currentLanguage === "ar" ? "ar-DZ" : "fr-FR",
-        { hour: "2-digit", minute: "2-digit", hour12: false }
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "Africa/Algiers"
+        }
       ).format(date);
     }
 
     function scoreValue(match) {
-      const homeScore = match?.score?.home ??
-        match?.scores?.home ?? match?.homeScore ?? match?.goals?.home ??
+      const homeScore =
+        match?.score?.fullTime?.home ??
+        match?.score?.home ??
+        match?.scores?.home ??
+        match?.homeScore ??
+        match?.goals?.home ??
         match?.home_score;
 
-      const awayScore = match?.score?.away ??
-        match?.scores?.away ?? match?.awayScore ?? match?.goals?.away ??
+      const awayScore =
+        match?.score?.fullTime?.away ??
+        match?.score?.away ??
+        match?.scores?.away ??
+        match?.awayScore ??
+        match?.goals?.away ??
         match?.away_score;
 
-      if (homeScore === null || homeScore === undefined ||
-          awayScore === null || awayScore === undefined) {
+      if (
+        homeScore === null || homeScore === undefined ||
+        awayScore === null || awayScore === undefined
+      ) {
         return null;
       }
 
@@ -778,9 +861,10 @@
       if (!Array.isArray(matches) || matches.length === 0) {
         showMessage(
           currentLanguage === "ar"
-            ? "ما كاين حتى مباراة متوفرة لهذا التاريخ."
-            : "Aucun match disponible pour cette date."
+            ? "ما كاين حتى مباراة متوفرة لهذا التاريخ. جرّب تاريخاً آخر."
+            : "Aucun match disponible pour cette date. Essayez une autre date."
         );
+
         $("matchCount").textContent = "";
         return;
       }
@@ -789,7 +873,7 @@
         ? `${matches.length} مباراة`
         : `${matches.length} matchs`;
 
-      matches.forEach((match, index) => {
+      matches.forEach((match) => {
         const home = getHome(match);
         const away = getAway(match);
         const league = competitionName(match);
@@ -816,15 +900,20 @@
               }
               <span>${escapeHTML(league)}</span>
             </div>
-            <span class="status ${status.className}">${escapeHTML(status.label)}</span>
+
+            <span class="status ${status.className}">
+              ${escapeHTML(status.label)}
+            </span>
           </div>
 
           <div class="teams">
             <div class="team">
               ${
                 homeLogo
-                  ? `<img class="team-logo" src="${escapeHTML(homeLogo)}"
-                       alt="" loading="lazy"
+                  ? `<img class="team-logo"
+                       src="${escapeHTML(homeLogo)}"
+                       alt=""
+                       loading="lazy"
                        onerror="this.style.display='none'">`
                   : `<div class="team-logo" style="display:grid;place-items:center;font-size:30px">⚽</div>`
               }
@@ -839,8 +928,10 @@
             <div class="team">
               ${
                 awayLogo
-                  ? `<img class="team-logo" src="${escapeHTML(awayLogo)}"
-                       alt="" loading="lazy"
+                  ? `<img class="team-logo"
+                       src="${escapeHTML(awayLogo)}"
+                       alt=""
+                       loading="lazy"
                        onerror="this.style.display='none'">`
                   : `<div class="team-logo" style="display:grid;place-items:center;font-size:30px">⚽</div>`
               }
@@ -848,7 +939,7 @@
             </div>
           </div>
 
-          <button class="details-btn" data-index="${index}">
+          <button class="details-btn">
             ${currentLanguage === "ar" ? "عرض تفاصيل المباراة" : "Voir les détails"}
           </button>
         `;
@@ -862,20 +953,40 @@
     }
 
     async function loadMatches() {
+      const requestNumber = ++loadRequestNumber;
       const date = $("matchDate").value;
+      const league = $("leagueSelect").value;
+      const refreshButton = $("refreshBtn");
+
+      if (!date) {
+        showMessage(
+          currentLanguage === "ar"
+            ? "اختار التاريخ أولاً."
+            : "Choisissez d'abord une date."
+        );
+        return;
+      }
+
+      refreshButton.disabled = true;
+
       $("matches").innerHTML = `
         <div class="message">
           <span class="spinner"></span>
-          ${currentLanguage === "ar" ? "جاري تحميل المباريات..." : "Chargement des matchs..."}
+          ${currentLanguage === "ar"
+            ? "جاري تحميل المباريات..."
+            : "Chargement des matchs..."}
         </div>`;
 
       $("matchCount").textContent = "";
 
       try {
-        const response = await fetch(
-          `${API_BASE}/fixtures?date=${encodeURIComponent(date)}`,
-          { cache: "no-store" }
-        );
+        const endpoint = league === "all"
+          ? `${API_BASE}/fixtures?date=${encodeURIComponent(date)}`
+          : `${API_BASE}/openfootapi-fixtures?date=${encodeURIComponent(date)}&competition=${encodeURIComponent(league)}`;
+
+        const response = await fetch(endpoint, {
+          cache: "no-store"
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
@@ -891,16 +1002,28 @@
           throw new Error("Invalid fixtures response");
         }
 
+        // تجاهل الرد القديم إذا اختار المستخدم تاريخاً أو دورياً آخر.
+        if (requestNumber !== loadRequestNumber) return;
+
         allMatches = matches;
         renderMatches(allMatches);
+
       } catch (error) {
+        if (requestNumber !== loadRequestNumber) return;
+
         console.error("ALA TV fixtures error:", error);
+
         showMessage(
           currentLanguage === "ar"
-            ? "ما قدرناش نحمّلو المباريات. تأكد أن الـWorker يخدم ثم أعد المحاولة."
+            ? "ما قدرناش نحمّلو المباريات. تأكد أن الـ Worker يخدم ثم أعد المحاولة."
             : "Impossible de charger les matchs. Vérifiez le Worker puis réessayez.",
           true
         );
+
+      } finally {
+        if (requestNumber === loadRequestNumber) {
+          refreshButton.disabled = false;
+        }
       }
     }
 
@@ -943,6 +1066,7 @@
 
         const country = safeString(channel?.country?.name || channel?.country);
         const item = document.createElement("li");
+
         item.textContent = country ? `${name} — ${country}` : name;
         list.appendChild(item);
       });
@@ -954,6 +1078,7 @@
 
     function playerName(player) {
       if (typeof player === "string") return player;
+
       return safeString(
         player?.name ||
         player?.player?.name ||
@@ -985,9 +1110,11 @@
 
         const item = document.createElement("li");
         const number = player?.number ?? player?.shirtNumber ?? player?.shirt_number;
+
         item.textContent = number !== undefined && number !== null
           ? `${number}. ${name}`
           : name;
+
         list.appendChild(item);
       });
 
@@ -1004,13 +1131,16 @@
 
       $("modalHome").textContent = teamName(home);
       $("modalAway").textContent = teamName(away);
+
       $("modalHomeLogo").src = homeLogo;
       $("modalAwayLogo").src = awayLogo;
+
       $("modalHomeLogo").style.visibility = homeLogo ? "visible" : "hidden";
       $("modalAwayLogo").style.visibility = awayLogo ? "visible" : "hidden";
 
       $("modalScore").textContent = scoreValue(match) || "VS";
       $("modalTime").textContent = formatTime(match);
+
       setText("modalLeague", competitionName(match));
       setText("modalVenue", safeString(match?.venue?.name || match?.venue));
       setText("modalReferee", safeString(match?.referee?.name || match?.referee));
@@ -1025,7 +1155,9 @@
 
       $("modalChannelList").innerHTML =
         `<li class="muted">${escapeHTML(
-          currentLanguage === "ar" ? "جاري تحميل القنوات..." : "Chargement des chaînes..."
+          currentLanguage === "ar"
+            ? "جاري تحميل القنوات..."
+            : "Chargement des chaînes..."
         )}</li>`;
 
       $("lineupHomeTitle").textContent = teamName(getHome(match));
@@ -1038,8 +1170,18 @@
 
       if (id === null || id === "") {
         renderChannels({});
-        setText("modalVenue", safeString(match?.venue?.name || match?.venue));
-        setText("modalReferee", safeString(match?.referee?.name || match?.referee));
+        return;
+      }
+
+      /*
+        معرّفات OpenFootAPI نصية مثل match_fmb_...
+        أما مسار /match-details الحالي فيستعمل معرّفات SoccersAPI الرقمية.
+        لذلك لا نرسل المعرّفات النصية إلى المسار القديم.
+      */
+      if (!/^\d+$/.test(String(id))) {
+        renderChannels({});
+        renderLineup("lineupHome", []);
+        renderLineup("lineupAway", []);
         return;
       }
 
@@ -1058,12 +1200,14 @@
 
         renderChannels(details);
 
-        const venue = details?.venue?.name ||
+        const venue =
+          details?.venue?.name ||
           details?.venue ||
           details?.stadium?.name ||
           details?.stadium;
 
-        const referee = details?.referee?.name ||
+        const referee =
+          details?.referee?.name ||
           details?.referee ||
           details?.referees?.[0]?.name ||
           details?.officials?.referee;
@@ -1072,10 +1216,20 @@
         setText("modalReferee", safeString(referee));
 
         const lineups = details?.lineups || details?.lineup || {};
-        const homeLineup = lineups?.home || lineups?.localteam ||
-          details?.homeLineup || details?.home_lineup || [];
-        const awayLineup = lineups?.away || lineups?.visitorteam ||
-          details?.awayLineup || details?.away_lineup || [];
+
+        const homeLineup =
+          lineups?.home ||
+          lineups?.localteam ||
+          details?.homeLineup ||
+          details?.home_lineup ||
+          [];
+
+        const awayLineup =
+          lineups?.away ||
+          lineups?.visitorteam ||
+          details?.awayLineup ||
+          details?.away_lineup ||
+          [];
 
         renderLineup("lineupHome", homeLineup);
         renderLineup("lineupAway", awayLineup);
@@ -1084,6 +1238,7 @@
           const statusMatch = { status: details.status };
           setText("modalStatus", getStatus(statusMatch).label);
         }
+
       } catch (error) {
         console.error("ALA TV match details error:", error);
         renderChannels({});
@@ -1102,6 +1257,7 @@
 
       document.documentElement.lang = currentLanguage;
       document.documentElement.dir = isArabic ? "rtl" : "ltr";
+
       $("langToggle").textContent = isArabic ? "Français" : "العربية";
 
       document.querySelectorAll("[data-ar][data-fr]").forEach((element) => {
@@ -1119,6 +1275,7 @@
 
     $("refreshBtn").addEventListener("click", loadMatches);
     $("matchDate").addEventListener("change", loadMatches);
+    $("leagueSelect").addEventListener("change", loadMatches);
     $("closeModal").addEventListener("click", closeModal);
 
     $("matchModal").addEventListener("click", (event) => {
@@ -1130,11 +1287,21 @@
     });
 
     function localDateString() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
+      const formatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Africa/Algiers",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+
+      const parts = formatter.formatToParts(new Date());
+      const values = {};
+
+      parts.forEach((part) => {
+        if (part.type !== "literal") values[part.type] = part.value;
+      });
+
+      return `${values.year}-${values.month}-${values.day}`;
     }
 
     $("matchDate").value = localDateString();

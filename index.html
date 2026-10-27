@@ -5,30 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090611">
-  <meta name="description" content="ALA TV - تابع مباريات كرة القدم ومواعيدها والقنوات الناقلة.">
+  <meta name="description" content="ALA TV - تابع مباريات كرة القدم ومواعيدها ونتائجها وتفاصيلها.">
   <title>ALA TV | مباريات اليوم</title>
 
   <style>
     :root {
       --bg: #090611;
-      --panel: #151020;
-      --panel2: #1d1530;
-      --purple: #9b5cff;
-      --purple2: #6e35c7;
-      --text: #f8f5ff;
-      --muted: #aaa1bb;
-      --border: #302442;
-      --green: #51dfa0;
+      --panel: #130e20;
+      --panel2: #1b1430;
+      --purple: #8b5cf6;
+      --purple2: #6d28d9;
+      --text: #f7f4ff;
+      --muted: #a9a0bb;
+      --border: #302343;
+      --green: #35d49a;
+      --red: #ff6b81;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background:
-        radial-gradient(ellipse at top, #21113b 0, transparent 50%),
-        var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(ellipse at top, #21113b 0%, var(--bg) 52%);
       font-family: Arial, Tahoma, sans-serif;
       min-height: 100vh;
     }
@@ -41,138 +41,103 @@
     }
 
     .container {
-      width: min(1120px, 94%);
+      width: min(1150px, 94%);
       margin: auto;
     }
 
     header {
-      padding: 22px 0;
       border-bottom: 1px solid var(--border);
-      background: #090611d9;
+      background: rgba(9, 6, 17, .88);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
     }
 
-    .header-row {
+    .nav {
+      min-height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
+      gap: 14px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 15px;
-      background: linear-gradient(135deg, var(--purple), #4a1b87);
-      font-size: 25px;
-      font-weight: bold;
-      box-shadow: 0 0 25px #9b5cff35;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 25px;
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
       letter-spacing: 1px;
     }
 
-    .brand p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .logo span { color: var(--purple); }
 
-    .lang-btn, .date-btn {
+    .nav button, .secondary-btn {
+      color: white;
       background: var(--panel2);
       border: 1px solid var(--border);
-      color: white;
+      padding: 10px 14px;
       border-radius: 10px;
-      padding: 10px 15px;
     }
 
     .hero {
       text-align: center;
-      padding: 34px 0 25px;
+      padding: 35px 0 24px;
     }
 
-    .hero h2 {
+    .hero h1 {
       margin: 0 0 10px;
-      font-size: clamp(25px, 5vw, 36px);
+      font-size: clamp(26px, 5vw, 40px);
     }
 
-    .hero h2 span { color: var(--purple); }
+    .hero h1 span { color: #b69aff; }
 
     .hero p {
-      color: var(--muted);
       margin: 0;
+      color: var(--muted);
       line-height: 1.8;
     }
 
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
       gap: 12px;
-      flex-wrap: wrap;
       margin: 22px 0;
-      padding: 15px;
-      background: #130e1e;
+      padding: 16px;
       border: 1px solid var(--border);
-      border-radius: 15px;
+      border-radius: 16px;
+      background: rgba(19, 14, 32, .88);
     }
 
-    .toolbar label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+    .field label {
+      display: block;
       color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 13px;
     }
 
-    input[type="date"], #leagueSelect {
+    .field input, .field select {
+      width: 100%;
+      min-height: 44px;
       color: white;
-      background: var(--panel2);
+      background: #0d0916;
       border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 10px;
-      border-radius: 9px;
-      min-height: 40px;
+      outline: none;
     }
 
-    input[type="date"] {
-      color-scheme: dark;
-    }
-
-    #leagueSelect {
-      max-width: 100%;
-      min-width: 190px;
-    }
-
-    #leagueSelect option {
-      background: var(--panel);
-      color: white;
-    }
+    .field select option { background: #130e20; }
 
     .primary-btn {
-      background: linear-gradient(135deg, var(--purple), var(--purple2));
-      color: white;
-      padding: 11px 17px;
+      align-self: end;
+      min-height: 44px;
+      padding: 10px 20px;
       border-radius: 10px;
+      color: white;
       font-weight: bold;
+      background: linear-gradient(135deg, var(--purple), var(--purple2));
     }
 
-    .primary-btn:disabled {
-      opacity: .65;
-      cursor: wait;
-    }
-
-    .section-heading {
+    .section-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -180,470 +145,363 @@
       margin: 25px 0 15px;
     }
 
-    .section-heading h3 {
-      margin: 0;
+    .section-head h2 {
       font-size: 20px;
+      margin: 0;
     }
 
-    .count {
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .status-message {
+      text-align: center;
+      padding: 30px 12px;
+      border: 1px dashed var(--border);
+      border-radius: 15px;
+      background: rgba(19, 14, 32, .6);
       color: var(--muted);
-      font-size: 13px;
+      line-height: 1.9;
     }
 
     .matches {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 15px;
-      padding-bottom: 35px;
+      gap: 14px;
+      padding-bottom: 40px;
     }
 
     .match-card {
-      min-width: 0;
-      padding: 17px;
-      background: linear-gradient(145deg, #191225, #100c19);
+      background: linear-gradient(145deg, #171026, #100b1b);
       border: 1px solid var(--border);
-      border-radius: 17px;
-      transition: border-color .2s, transform .2s;
+      border-radius: 16px;
+      padding: 16px;
+      transition: .2s;
     }
 
     .match-card:hover {
-      border-color: var(--purple);
+      border-color: #7651bd;
       transform: translateY(-2px);
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
     }
 
     .league {
       display: flex;
-      align-items: center;
-      gap: 9px;
-      min-width: 0;
-      color: #d9c9ff;
-      font-size: 13px;
-    }
-
-    .league-logo {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-      flex-shrink: 0;
-      padding: 3px;
-      background: #ffffff0b;
-      border: 1px solid #ffffff12;
-      border-radius: 9px;
-    }
-
-    .status {
-      font-size: 11px;
-      padding: 6px 9px;
-      border-radius: 20px;
-      background: #ffffff0b;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .status.live {
-      color: #ff7979;
-      background: #ff34341b;
-    }
-
-    .status.finished {
-      color: var(--green);
-      background: #51dfa015;
+      justify-content: space-between;
+      gap: 8px;
+      color: #c5b5f0;
+      font-size: 12px;
+      margin-bottom: 20px;
     }
 
     .teams {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
       align-items: center;
-      gap: 8px;
       text-align: center;
     }
 
-    .team {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 9px;
-    }
+    .team { min-width: 0; }
 
-    .team-logo {
-      width: 52px;
-      height: 52px;
+    .team img {
+      width: 43px;
+      height: 43px;
       object-fit: contain;
+      display: block;
+      margin: 0 auto 9px;
     }
 
     .team-name {
-      font-size: 13px;
+      font-size: 14px;
+      font-weight: bold;
       line-height: 1.5;
       overflow-wrap: anywhere;
     }
 
     .score {
-      font-size: 22px;
-      font-weight: bold;
+      font-size: 21px;
+      font-weight: 900;
       white-space: nowrap;
     }
 
     .match-time {
-      color: var(--purple);
-      font-size: 13px;
       margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
     }
+
+    .match-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status.live { color: var(--red); }
+    .status.finished { color: var(--green); }
 
     .details-btn {
-      width: 100%;
-      margin-top: 18px;
-      padding: 11px;
-      background: #9b5cff15;
-      border: 1px solid #9b5cff40;
-      color: #d9c1ff;
-      border-radius: 10px;
-    }
-
-    .details-btn:hover { background: #9b5cff2a; }
-
-    .message {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 35px 15px;
-      color: var(--muted);
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      line-height: 1.8;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 22px;
-      height: 22px;
-      border: 3px solid #ffffff25;
-      border-top-color: var(--purple);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-      vertical-align: middle;
-      margin-inline-end: 8px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 22px 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
+      padding: 8px 12px;
+      border-radius: 9px;
+      color: white;
+      background: #33204e;
+      border: 1px solid #493267;
+      font-size: 12px;
     }
 
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 1000;
+      z-index: 30;
+      background: rgba(0, 0, 0, .78);
       padding: 18px;
-      background: #05030bdc;
       overflow-y: auto;
-      align-items: center;
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: flex-start;
       justify-content: center;
     }
 
-    .modal.open { display: flex; }
-
     .modal-content {
-      width: min(650px, 100%);
-      max-height: 92vh;
-      overflow-y: auto;
-      background: #120d1e;
-      border: 1px solid #473260;
+      width: min(700px, 100%);
+      margin: auto;
+      background: #110c1d;
+      border: 1px solid var(--border);
       border-radius: 18px;
       padding: 20px;
-      box-shadow: 0 20px 80px #0009;
     }
 
-    .modal-header {
+    .modal-head {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
-    .modal-header h3 { margin: 0; }
+    .modal-head h2 { font-size: 20px; margin: 0; }
 
     .close-btn {
-      width: 36px;
-      height: 36px;
       color: white;
-      background: #ffffff12;
-      border-radius: 10px;
-      font-size: 22px;
+      background: #30213f;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font-size: 20px;
     }
 
-    .modal-teams {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 12px;
-      align-items: center;
-      text-align: center;
-      padding: 20px 0;
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 0;
       border-bottom: 1px solid var(--border);
+      line-height: 1.7;
     }
 
-    .modal-team-logo {
-      width: 58px;
-      height: 58px;
-      object-fit: contain;
-      margin-bottom: 8px;
+    .detail-row span:first-child { color: var(--muted); }
+    .detail-row span:last-child { text-align: left; overflow-wrap: anywhere; }
+
+    .detail-section { margin-top: 22px; }
+
+    .detail-section h3 {
+      font-size: 16px;
+      color: #c7b4ff;
     }
 
-    .modal-score {
-      font-size: 25px;
-      font-weight: bold;
+    .channel-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 18px 0;
-    }
-
-    .info-item {
-      background: #ffffff06;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 12px;
-      min-width: 0;
-    }
-
-    .info-label {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 7px;
-    }
-
-    .info-value {
-      font-size: 14px;
-      overflow-wrap: anywhere;
-      line-height: 1.6;
-    }
-
-    .modal-section { margin-top: 22px; }
-
-    .modal-section h4 {
-      margin: 0 0 12px;
-      color: #d8c1ff;
-    }
-
-    .channels-list, .lineup-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .channels-list li, .lineup-list li {
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      background: #ffffff07;
+    .channel {
+      padding: 8px 11px;
+      background: #211634;
       border: 1px solid var(--border);
       border-radius: 9px;
-      line-height: 1.6;
+      font-size: 13px;
     }
 
-    .muted { color: var(--muted); }
-
-    .lineups {
+    .lineup-list {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .lineups h5 {
-      margin: 0 0 10px;
-      color: white;
-      font-size: 14px;
+    .lineup-team {
+      background: #171026;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .lineup-team h4 { margin: 0 0 10px; }
+    .lineup-team ul { margin: 0; padding-right: 20px; color: #ded6ed; }
+    .lineup-team li { margin: 7px 0; font-size: 13px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      padding: 25px 10px;
+      font-size: 13px;
     }
 
     @media (max-width: 650px) {
+      .filters { grid-template-columns: 1fr; }
       .matches { grid-template-columns: 1fr; }
-      .brand h1 { font-size: 22px; }
-      .toolbar { align-items: stretch; }
-      .toolbar label { width: 100%; }
-      input[type="date"], #leagueSelect {
-        flex: 1;
-        min-width: 0;
-        width: 100%;
-      }
-      .info-grid { grid-template-columns: 1fr 1fr; }
-      .modal-content { padding: 15px; }
-    }
-
-    @media (max-width: 380px) {
-      .info-grid, .lineups { grid-template-columns: 1fr; }
-      .team-logo { width: 43px; height: 43px; }
-      .team-name { font-size: 12px; }
+      .nav { min-height: 62px; }
+      .logo { font-size: 23px; }
+      .lineup-list { grid-template-columns: 1fr; }
+      .hero { padding-top: 27px; }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="container header-row">
-      <div class="brand">
-        <div class="brand-icon">A</div>
-        <div>
-          <h1>ALA TV</h1>
-          <p data-ar="عالم كرة القدم بين يديك" data-fr="Le football à portée de main">عالم كرة القدم بين يديك</p>
-        </div>
-      </div>
-      <button class="lang-btn" id="langToggle">Français</button>
+    <div class="container nav">
+      <div class="logo">ALA <span>TV</span></div>
+      <button id="langBtn" type="button">Français</button>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <h2 data-ar="مباريات <span>كرة القدم</span>" data-fr="Matchs de <span>football</span>">مباريات <span>كرة القدم</span></h2>
-      <p data-ar="تابع المواعيد والنتائج والقنوات الناقلة حسب المعلومات المتوفرة." data-fr="Suivez les horaires, les résultats et les chaînes disponibles.">تابع المواعيد والنتائج والقنوات الناقلة حسب المعلومات المتوفرة.</p>
+      <h1 id="heroTitle">كل المباريات <span>في مكان واحد</span></h1>
+      <p id="heroText">تابع مواعيد مباريات كرة القدم ونتائجها وتفاصيلها بسهولة.</p>
     </section>
 
-    <section class="toolbar">
-      <label>
-        <span data-ar="اختر التاريخ:" data-fr="Choisir la date :">اختر التاريخ:</span>
+    <section class="filters">
+      <div class="field">
+        <label id="dateLabel" for="matchDate">تاريخ المباريات</label>
         <input type="date" id="matchDate">
-      </label>
+      </div>
 
-      <label>
-        <span data-ar="اختر الدوري:" data-fr="Choisir la compétition :">اختر الدوري:</span>
-        <select id="leagueSelect">
-          <option value="all" data-ar="كل البطولات (المصدر الحالي)" data-fr="Toutes les compétitions (source actuelle)">كل البطولات (المصدر الحالي)</option>
-          <option value="comp_ligue_1_dza" data-ar="الدوري الجزائري" data-fr="Ligue 1 algérienne">الدوري الجزائري</option>
-          <option value="comp_saudi_pro_league_sau" data-ar="الدوري السعودي" data-fr="Championnat saoudien">الدوري السعودي</option>
-          <option value="comp_egyptian_prem_egy" data-ar="الدوري المصري" data-fr="Championnat égyptien">الدوري المصري</option>
-          <option value="comp_uefa_champions_league" data-ar="دوري أبطال أوروبا" data-fr="Ligue des champions">دوري أبطال أوروبا</option>
+      <div class="field">
+        <label id="leagueLabel" for="competition">البطولة</label>
+        <select id="competition">
+          <option value="all">كل البطولات</option>
         </select>
-      </label>
+      </div>
 
-      <button class="primary-btn" id="refreshBtn" data-ar="تحديث المباريات" data-fr="Actualiser les matchs">تحديث المباريات</button>
+      <button class="primary-btn" id="searchBtn" type="button">عرض المباريات</button>
     </section>
 
-    <div class="section-heading">
-      <h3 data-ar="قائمة المباريات" data-fr="Liste des matchs">قائمة المباريات</h3>
-      <span class="count" id="matchCount"></span>
+    <div class="section-head">
+      <h2 id="matchesTitle">المباريات</h2>
+      <span class="muted" id="matchCount">0 مباراة</span>
     </div>
 
-    <section class="matches" id="matches">
-      <div class="message">
-        <span class="spinner"></span>
-        <span data-ar="جاري تحميل المباريات..." data-fr="Chargement des matchs...">جاري تحميل المباريات...</span>
-      </div>
-    </section>
+    <div id="message" class="status-message">جاري تحميل المباريات...</div>
+    <section id="matches" class="matches"></section>
   </main>
 
-  <footer>
-    <div class="container">
-      <strong>ALA TV</strong>
-      <div data-ar="معلومات المباريات والقنوات تعتمد على البيانات المتاحة من مزود الخدمة." data-fr="Les informations dépendent des données disponibles auprès du fournisseur.">معلومات المباريات والقنوات تعتمد على البيانات المتاحة من مزود الخدمة.</div>
-    </div>
-  </footer>
-
-  <div class="modal" id="matchModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div id="matchModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modalTitle" data-ar="تفاصيل المباراة" data-fr="Détails du match">تفاصيل المباراة</h3>
-        <button class="close-btn" id="closeModal" aria-label="Close">&times;</button>
+      <div class="modal-head">
+        <h2 id="modalTitle">تفاصيل المباراة</h2>
+        <button class="close-btn" id="closeModal" type="button" aria-label="إغلاق">×</button>
       </div>
-
-      <div class="modal-teams">
-        <div>
-          <img class="modal-team-logo" id="modalHomeLogo" alt="">
-          <div id="modalHome"></div>
-        </div>
-        <div>
-          <div class="modal-score" id="modalScore">- : -</div>
-          <div class="match-time" id="modalTime"></div>
-        </div>
-        <div>
-          <img class="modal-team-logo" id="modalAwayLogo" alt="">
-          <div id="modalAway"></div>
-        </div>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <span class="info-label" data-ar="الدوري" data-fr="Compétition">الدوري</span>
-          <div class="info-value" id="modalLeague">غير متوفر</div>
-        </div>
-        <div class="info-item">
-          <span class="info-label" data-ar="الملعب" data-fr="Stade">الملعب</span>
-          <div class="info-value" id="modalVenue">غير متوفر</div>
-        </div>
-        <div class="info-item">
-          <span class="info-label" data-ar="الحكم" data-fr="Arbitre">الحكم</span>
-          <div class="info-value" id="modalReferee">غير متوفر</div>
-        </div>
-        <div class="info-item">
-          <span class="info-label" data-ar="الحالة" data-fr="Statut">الحالة</span>
-          <div class="info-value" id="modalStatus">غير متوفر</div>
-        </div>
-      </div>
-
-      <section class="modal-section">
-        <h4 data-ar="📺 القنوات الناقلة" data-fr="📺 Chaînes de diffusion">📺 القنوات الناقلة</h4>
-        <ul class="channels-list" id="modalChannelList">
-          <li class="muted">جاري تحميل القنوات...</li>
-        </ul>
-      </section>
-
-      <section class="modal-section">
-        <h4 data-ar="⚽ التشكيلة" data-fr="⚽ Compositions">⚽ التشكيلة</h4>
-        <div class="lineups">
-          <div>
-            <h5 id="lineupHomeTitle">الفريق الأول</h5>
-            <ul class="lineup-list" id="lineupHome"></ul>
-          </div>
-          <div>
-            <h5 id="lineupAwayTitle">الفريق الثاني</h5>
-            <ul class="lineup-list" id="lineupAway"></ul>
-          </div>
-        </div>
-      </section>
+      <div id="modalBody"></div>
     </div>
   </div>
 
+  <footer id="footerText">ALA TV — تابع جديد مباريات كرة القدم.</footer>
+
   <script>
+    "use strict";
+
     const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
 
     const $ = (id) => document.getElementById(id);
 
-    let allMatches = [];
-    let currentLanguage = "ar";
-    let loadRequestNumber = 0;
+    const state = {
+      matches: [],
+      language: "ar",
+      loading: false
+    };
 
-    const unavailable = () =>
-      currentLanguage === "ar" ? "غير متوفر" : "Non disponible";
-
-    function setText(id, value) {
-      $(id).textContent = value || unavailable();
-    }
-
-    function safeString(value) {
-      if (value === null || value === undefined || value === "") return "";
-
-      if (typeof value === "object") {
-        return value.name || value.fullName || value.displayName || "";
+    const translations = {
+      ar: {
+        heroTitle: 'كل المباريات <span>في مكان واحد</span>',
+        heroText: "تابع مواعيد مباريات كرة القدم ونتائجها وتفاصيلها بسهولة.",
+        dateLabel: "تاريخ المباريات",
+        leagueLabel: "البطولة",
+        searchBtn: "عرض المباريات",
+        matchesTitle: "المباريات",
+        allCompetitions: "كل البطولات",
+        loading: "جاري تحميل المباريات...",
+        noMatches: "ما لقيناش مباريات لهذا التاريخ أو البطولة.",
+        error: "تعذر تحميل المباريات. تأكد من اتصال الإنترنت وحاول مجددًا.",
+        matchCount: "مباراة",
+        details: "التفاصيل",
+        vs: "ضد",
+        scheduled: "لم تبدأ",
+        live: "مباشرة",
+        finished: "انتهت",
+        postponed: "مؤجلة",
+        cancelled: "أُلغيت",
+        unknown: "غير متوفر",
+        detailsTitle: "تفاصيل المباراة",
+        competition: "البطولة",
+        dateTime: "التاريخ والتوقيت",
+        stadium: "الملعب",
+        referee: "الحكم",
+        channels: "القنوات الناقلة",
+        homeLineup: "تشكيلة الفريق الأول",
+        awayLineup: "تشكيلة الفريق الثاني",
+        noLineup: "التشكيلة غير متوفرة من المصدر.",
+        noChannels: "لا توجد قنوات ناقلة متاحة من المصدر.",
+        footer: "ALA TV — تابع جديد مباريات كرة القدم.",
+        languageButton: "Français"
+      },
+      fr: {
+        heroTitle: 'Tous les matchs <span>au même endroit</span>',
+        heroText: "Consultez les horaires, résultats et détails des matchs de football.",
+        dateLabel: "Date des matchs",
+        leagueLabel: "Compétition",
+        searchBtn: "Afficher les matchs",
+        matchesTitle: "Matchs",
+        allCompetitions: "Toutes les compétitions",
+        loading: "Chargement des matchs...",
+        noMatches: "Aucun match trouvé pour cette date ou compétition.",
+        error: "Impossible de charger les matchs. Vérifiez votre connexion.",
+        matchCount: "match(s)",
+        details: "Détails",
+        vs: "contre",
+        scheduled: "À venir",
+        live: "En direct",
+        finished: "Terminé",
+        postponed: "Reporté",
+        cancelled: "Annulé",
+        unknown: "Non disponible",
+        detailsTitle: "Détails du match",
+        competition: "Compétition",
+        dateTime: "Date et heure",
+        stadium: "Stade",
+        referee: "Arbitre",
+        channels: "Chaînes TV",
+        homeLineup: "Composition — équipe 1",
+        awayLineup: "Composition — équipe 2",
+        noLineup: "Composition non disponible.",
+        noChannels: "Aucune chaîne disponible depuis la source.",
+        footer: "ALA TV — Toute l'actualité du football.",
+        languageButton: "العربية"
       }
+    };
 
-      return String(value);
+    function t(key) {
+      return translations[state.language][key] || key;
     }
 
     function escapeHTML(value) {
@@ -656,655 +514,561 @@
       })[char]);
     }
 
+    function firstValue(...values) {
+      for (const value of values) {
+        if (value === null || value === undefined || value === "") continue;
+        if (typeof value === "object" && !Array.isArray(value)) {
+          if (value.name) return value.name;
+          if (value.title) return value.title;
+          if (value.label) return value.label;
+        } else {
+          return value;
+        }
+      }
+      return "";
+    }
+
     function getHome(match) {
-      return match?.homeTeam || match?.home_team || match?.home || {};
+      return match.homeTeam || match.home_team || match.home ||
+        match.localteam || match.team_home || {};
     }
 
     function getAway(match) {
-      return match?.awayTeam || match?.away_team || match?.away || {};
+      return match.awayTeam || match.away_team || match.away ||
+        match.visitorteam || match.team_away || {};
     }
 
-    function getCompetition(match) {
-      return match?.competition || match?.league || match?.tournament || {};
+    function getTeamName(team) {
+      if (typeof team === "string") return team;
+      return firstValue(team?.name, team?.displayName, team?.shortName,
+        team?.team_name, team?.title, team?.name_ar) || t("unknown");
     }
 
-    function teamName(team) {
-      return safeString(team?.name || team?.shortName || team?.displayName) ||
-        (currentLanguage === "ar" ? "فريق غير معروف" : "Équipe inconnue");
-    }
-
-    function teamLogo(team) {
-      return team?.crest || team?.logo || team?.image || team?.badge || "";
+    function getTeamCrest(team) {
+      if (!team || typeof team !== "object") return "";
+      return firstValue(team.crest, team.logo, team.image, team.logo_url,
+        team.badge, team.team_logo, team.crestUrl);
     }
 
     function competitionName(match) {
-      const competition = getCompetition(match);
+      const comp = match.competition || match.league || match.tournament || {};
+      let name = typeof comp === "string"
+        ? comp
+        : firstValue(comp.name, comp.title, comp.displayName, comp.competition_name);
 
-      return safeString(competition?.name || competition?.title) ||
-        (currentLanguage === "ar" ? "دوري غير معروف" : "Compétition inconnue");
+      name = name || firstValue(match.competition_name, match.league_name, match.tournament_name);
+
+      const known = {
+        "comp_ligue_1_fr": "الدوري الفرنسي",
+        "comp_premier_league_eng": "الدوري الإنجليزي",
+        "comp_la_liga_es": "الدوري الإسباني",
+        "comp_serie_a_it": "الدوري الإيطالي",
+        "comp_bundesliga_de": "الدوري الألماني",
+        "comp_ligue_1": "الدوري الفرنسي",
+        "comp_premier_league": "الدوري الإنجليزي",
+        "comp_la_liga": "الدوري الإسباني",
+        "comp_serie_a": "الدوري الإيطالي"
+      };
+
+      if (known[name]) return known[name];
+
+      if (name && name.startsWith("comp_")) {
+        const cleaned = name.replace(/^comp_/, "").replace(/_/g, " ");
+        return cleaned.replace(/\b\w/g, c => c.toUpperCase());
+      }
+
+      return name || t("unknown");
     }
 
     function competitionId(match) {
-      const competition = getCompetition(match);
+      const comp = match.competition || match.league || match.tournament || {};
+      return String(firstValue(
+        comp.id, comp.code, comp.competition_id, comp.slug,
+        match.competition_id, match.competition_code, match.league_id
+      ) || "");
+    }
 
-      return String(
-        competition?.id ||
-        competition?.competition_id ||
-        match?.competition_id ||
-        ""
+    function getKickoff(match) {
+      return firstValue(
+        match.kickoffAt, match.utcDate, match.datetime, match.starting_at,
+        match.date, match.match_date, match.fixture?.date,
+        match.start_time, match.time
       );
     }
 
-    function competitionLogo(match) {
-      const competition = getCompetition(match);
+    function formatTime(match) {
+      const raw = getKickoff(match);
+      if (!raw) return t("unknown");
 
-      const provided =
-        competition?.emblem ||
-        competition?.crest ||
-        competition?.logo ||
-        competition?.image ||
-        competition?.badge ||
-        competition?.logo_url ||
-        match?.competitionLogo ||
-        match?.leagueLogo;
+      if (typeof raw === "string" && /^\d{1,2}:\d{2}$/.test(raw)) return raw;
 
-      if (provided) return provided;
+      const date = new Date(raw);
+      if (Number.isNaN(date.getTime())) return String(raw);
 
-      const id = competitionId(match);
-
-      const knownLogos = {
-        "583": "https://resources.premierleague.com/premierleague/badges/50/t94.png",
-        "637": "https://upload.wikimedia.org/wikipedia/commons/1/13/LaLiga_2023_Logo.svg"
-      };
-
-      return knownLogos[id] || "";
+      return new Intl.DateTimeFormat(state.language === "ar" ? "ar-DZ" : "fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Africa/Algiers"
+      }).format(date);
     }
 
-    function getMatchId(match) {
-      return match?.id ??
-        match?.fixtureId ??
-        match?.fixture_id ??
-        match?.match_id ??
-        match?.eventId ??
-        null;
+    function formatDateTime(match) {
+      const raw = getKickoff(match);
+      if (!raw) return t("unknown");
+
+      const date = new Date(raw);
+      if (Number.isNaN(date.getTime())) return String(raw);
+
+      return new Intl.DateTimeFormat(state.language === "ar" ? "ar-DZ" : "fr-FR", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Africa/Algiers"
+      }).format(date);
+    }
+
+    function getScore(match) {
+      const home = firstValue(match.homeScore, match.home_score,
+        match.score?.home, match.scores?.home, match.goals?.home);
+      const away = firstValue(match.awayScore, match.away_score,
+        match.score?.away, match.scores?.away, match.goals?.away);
+
+      if (home !== "" && away !== "") return `${home} - ${away}`;
+
+      const score = match.score?.fullTime || match.score?.fulltime;
+      if (score && score.home != null && score.away != null) {
+        return `${score.home} - ${score.away}`;
+      }
+
+      return formatTime(match);
     }
 
     function getStatus(match) {
-      const raw = String(
-        match?.status?.short ||
-        match?.status?.name ||
-        match?.status ||
-        match?.fixture?.status?.short ||
-        ""
-      ).toLowerCase().replace(/[\s-]/g, "_");
+      const raw = String(firstValue(
+        match.status, match.state, match.match_status, match.fixture?.status
+      ) || "").toLowerCase();
 
-      if (
-        raw.includes("live") ||
-        raw === "1h" ||
-        raw === "2h" ||
-        raw === "ht" ||
-        raw === "inplay" ||
-        raw === "in_play" ||
-        raw === "paused"
-      ) {
-        return {
-          label: currentLanguage === "ar" ? "مباشر" : "En direct",
-          className: "live"
-        };
+      if (/live|in.play|in_progress|1h|2h|half.time|first.half|second.half|مباشر/.test(raw)) {
+        return { label: t("live"), className: "live" };
       }
 
-      if (
-        raw.includes("finish") ||
-        raw === "ft" ||
-        raw === "aet" ||
-        raw === "pen" ||
-        raw === "completed"
-      ) {
-        return {
-          label: currentLanguage === "ar" ? "انتهت" : "Terminé",
-          className: "finished"
-        };
+      if (/finish|ended|full.time|ft|complete|after.extra|penalt|انتهت/.test(raw)) {
+        return { label: t("finished"), className: "finished" };
       }
 
-      if (
-        raw.includes("postpon") ||
-        raw.includes("cancel") ||
-        raw.includes("suspend") ||
-        raw.includes("abandon")
-      ) {
-        return {
-          label: currentLanguage === "ar" ? "مؤجلة / ملغاة" : "Reporté / annulé",
-          className: ""
-        };
+      if (/postpon|delay|مؤجل/.test(raw)) {
+        return { label: t("postponed"), className: "" };
       }
 
-      return {
-        label: currentLanguage === "ar" ? "لم تبدأ" : "À venir",
-        className: ""
-      };
+      if (/cancel|abandon|ألغ/.test(raw)) {
+        return { label: t("cancelled"), className: "" };
+      }
+
+      return { label: t("scheduled"), className: "" };
     }
 
-    function formatTime(match) {
-      const raw =
-        match?.utcDate ||
-        match?.date ||
-        match?.datetime ||
-        match?.fixture?.date ||
-        match?.starting_at;
+    function getArray(data) {
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data?.matches)) return data.matches;
+      if (Array.isArray(data?.fixtures)) return data.fixtures;
+      if (Array.isArray(data?.data)) return data.data;
+      if (Array.isArray(data?.events)) return data.events;
+      return [];
+    }
 
-      if (!raw) return unavailable();
+    function makeMatchKey(match) {
+      const home = getTeamName(getHome(match)).toLowerCase();
+      const away = getTeamName(getAway(match)).toLowerCase();
+      const kickoff = String(getKickoff(match) || "").slice(0, 16);
+      return `${home}|${away}|${kickoff}`;
+    }
 
-      let date;
+    function normalizeMatches(matches) {
+      const unique = new Map();
 
-      if (typeof raw === "number") {
-        date = new Date(raw < 10000000000 ? raw * 1000 : raw);
+      for (const match of matches) {
+        if (!match || typeof match !== "object") continue;
+        if (!getTeamName(getHome(match)) || !getTeamName(getAway(match))) continue;
+
+        const key = makeMatchKey(match);
+        if (!unique.has(key)) unique.set(key, match);
+      }
+
+      return [...unique.values()].sort((a, b) => {
+        const dateA = new Date(getKickoff(a)).getTime();
+        const dateB = new Date(getKickoff(b)).getTime();
+        if (Number.isNaN(dateA)) return 1;
+        if (Number.isNaN(dateB)) return -1;
+        return dateA - dateB;
+      });
+    }
+
+    function buildCompetitionOptions(matches) {
+      const select = $("competition");
+      const current = select.value || "all";
+      const competitions = new Map();
+
+      for (const match of matches) {
+        const id = competitionId(match);
+        const name = competitionName(match);
+        const key = id || name;
+
+        if (key && name && !competitions.has(key)) {
+          competitions.set(key, name);
+        }
+      }
+
+      select.innerHTML = `<option value="all">${escapeHTML(t("allCompetitions"))}</option>`;
+
+      [...competitions.entries()]
+        .sort((a, b) => a[1].localeCompare(b[1], state.language === "ar" ? "ar" : "fr"))
+        .forEach(([id, name]) => {
+          const option = document.createElement("option");
+          option.value = id;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+
+      if ([...select.options].some(option => option.value === current)) {
+        select.value = current;
       } else {
-        date = new Date(raw);
-
-        if (Number.isNaN(date.getTime()) && typeof raw === "string") {
-          date = new Date(raw.replace(" ", "T") + "Z");
-        }
+        select.value = "all";
       }
-
-      if (Number.isNaN(date.getTime())) return safeString(raw);
-
-      return new Intl.DateTimeFormat(
-        currentLanguage === "ar" ? "ar-DZ" : "fr-FR",
-        {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-          timeZone: "Africa/Algiers"
-        }
-      ).format(date);
-    }
-
-    function scoreValue(match) {
-      const homeScore =
-        match?.score?.fullTime?.home ??
-        match?.score?.home ??
-        match?.scores?.home ??
-        match?.homeScore ??
-        match?.goals?.home ??
-        match?.home_score;
-
-      const awayScore =
-        match?.score?.fullTime?.away ??
-        match?.score?.away ??
-        match?.scores?.away ??
-        match?.awayScore ??
-        match?.goals?.away ??
-        match?.away_score;
-
-      if (
-        homeScore === null || homeScore === undefined ||
-        awayScore === null || awayScore === undefined
-      ) {
-        return null;
-      }
-
-      return `${homeScore} : ${awayScore}`;
-    }
-
-    function showMessage(message, isError = false) {
-      $("matches").innerHTML = `
-        <div class="message">
-          ${isError ? "⚠️ " : ""}
-          ${escapeHTML(message)}
-        </div>`;
     }
 
     function renderMatches(matches) {
       const container = $("matches");
       container.innerHTML = "";
 
-      if (!Array.isArray(matches) || matches.length === 0) {
-        showMessage(
-          currentLanguage === "ar"
-            ? "ما كاين حتى مباراة متوفرة لهذا التاريخ. جرّب تاريخاً آخر."
-            : "Aucun match disponible pour cette date. Essayez une autre date."
-        );
-
-        $("matchCount").textContent = "";
+      if (!matches.length) {
+        $("message").style.display = "block";
+        $("message").textContent = t("noMatches");
+        $("matchCount").textContent = `0 ${t("matchCount")}`;
         return;
       }
 
-      $("matchCount").textContent = currentLanguage === "ar"
-        ? `${matches.length} مباراة`
-        : `${matches.length} matchs`;
+      $("message").style.display = "none";
+      $("matchCount").textContent = `${matches.length} ${t("matchCount")}`;
 
-      matches.forEach((match) => {
+      matches.forEach((match, index) => {
         const home = getHome(match);
         const away = getAway(match);
-        const league = competitionName(match);
-        const logo = competitionLogo(match);
+        const homeName = getTeamName(home);
+        const awayName = getTeamName(away);
+        const homeLogo = getTeamCrest(home);
+        const awayLogo = getTeamCrest(away);
         const status = getStatus(match);
-        const score = scoreValue(match);
-        const homeLogo = teamLogo(home);
-        const awayLogo = teamLogo(away);
+        const matchId = String(firstValue(match.id, match.fixture_id, match.match_id) || index);
 
-        const article = document.createElement("article");
-        article.className = "match-card";
+        const card = document.createElement("article");
+        card.className = "match-card";
 
-        article.innerHTML = `
-          <div class="card-top">
-            <div class="league">
-              ${
-                logo
-                  ? `<img class="league-logo"
-                       src="${escapeHTML(logo)}"
-                       alt=""
-                       loading="lazy"
-                       onerror="this.style.display='none'">`
-                  : `<span class="league-logo" style="display:grid;place-items:center">⚽</span>`
-              }
-              <span>${escapeHTML(league)}</span>
-            </div>
-
-            <span class="status ${status.className}">
-              ${escapeHTML(status.label)}
-            </span>
+        card.innerHTML = `
+          <div class="league">
+            <span>${escapeHTML(competitionName(match))}</span>
+            <span>${escapeHTML(formatTime(match))}</span>
           </div>
 
           <div class="teams">
             <div class="team">
-              ${
-                homeLogo
-                  ? `<img class="team-logo"
-                       src="${escapeHTML(homeLogo)}"
-                       alt=""
-                       loading="lazy"
-                       onerror="this.style.display='none'">`
-                  : `<div class="team-logo" style="display:grid;place-items:center;font-size:30px">⚽</div>`
-              }
-              <span class="team-name">${escapeHTML(teamName(home))}</span>
+              ${homeLogo ? `<img src="${escapeHTML(homeLogo)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ""}
+              <div class="team-name">${escapeHTML(homeName)}</div>
             </div>
 
             <div>
-              <div class="score">${escapeHTML(score ?? "VS")}</div>
-              <div class="match-time">${escapeHTML(formatTime(match))}</div>
+              <div class="score">${escapeHTML(getScore(match))}</div>
+              <div class="match-time">${escapeHTML(status.label)}</div>
             </div>
 
             <div class="team">
-              ${
-                awayLogo
-                  ? `<img class="team-logo"
-                       src="${escapeHTML(awayLogo)}"
-                       alt=""
-                       loading="lazy"
-                       onerror="this.style.display='none'">`
-                  : `<div class="team-logo" style="display:grid;place-items:center;font-size:30px">⚽</div>`
-              }
-              <span class="team-name">${escapeHTML(teamName(away))}</span>
+              ${awayLogo ? `<img src="${escapeHTML(awayLogo)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ""}
+              <div class="team-name">${escapeHTML(awayName)}</div>
             </div>
           </div>
 
-          <button class="details-btn">
-            ${currentLanguage === "ar" ? "عرض تفاصيل المباراة" : "Voir les détails"}
-          </button>
+          <div class="match-bottom">
+            <span class="status ${status.className}">${escapeHTML(status.label)}</span>
+            <button class="details-btn" type="button">${escapeHTML(t("details"))}</button>
+          </div>
         `;
 
-        article.querySelector(".details-btn").addEventListener("click", () => {
+        card.querySelector(".details-btn").addEventListener("click", () => {
           openMatchDetails(match);
         });
 
-        container.appendChild(article);
+        container.appendChild(card);
       });
     }
 
-    async function loadMatches() {
-      const requestNumber = ++loadRequestNumber;
-      const date = $("matchDate").value;
-      const league = $("leagueSelect").value;
-      const refreshButton = $("refreshBtn");
+    function extractNames(value) {
+      if (!Array.isArray(value)) return [];
 
-      if (!date) {
-        showMessage(
-          currentLanguage === "ar"
-            ? "اختار التاريخ أولاً."
-            : "Choisissez d'abord une date."
+      return value.map(player => {
+        if (typeof player === "string") return player;
+
+        const name = firstValue(
+          player.name, player.player_name, player.displayName,
+          player.full_name, player.player?.name
         );
-        return;
+
+        const position = firstValue(
+          player.position, player.pos, player.role, player.player?.position
+        );
+
+        if (!name) return "";
+        return position ? `${name} — ${position}` : name;
+      }).filter(Boolean);
+    }
+
+    function getLineup(match, side) {
+      const lineup = match.lineups || match.lineup || {};
+      const team = side === "home" ? getHome(match) : getAway(match);
+
+      const possible = side === "home"
+        ? [
+            match.homeLineup, match.home_lineup, match.home_players,
+            lineup.home, lineup.homeTeam, lineup.home_team,
+            team.lineup, team.players
+          ]
+        : [
+            match.awayLineup, match.away_lineup, match.away_players,
+            lineup.away, lineup.awayTeam, lineup.away_team,
+            team.lineup, team.players
+          ];
+
+      for (const item of possible) {
+        const names = extractNames(item);
+        if (names.length) return names;
       }
 
-      refreshButton.disabled = true;
+      return [];
+    }
 
-      $("matches").innerHTML = `
-        <div class="message">
-          <span class="spinner"></span>
-          ${currentLanguage === "ar"
-            ? "جاري تحميل المباريات..."
-            : "Chargement des matchs..."}
-        </div>`;
+    function getChannels(match) {
+      const possible = [
+        match.broadcast, match.broadcasts, match.channels,
+        match.tvChannels, match.tv_channels, match.broadcasting,
+        match.tv, match.television
+      ];
 
-      $("matchCount").textContent = "";
+      for (const item of possible) {
+        if (!item) continue;
+
+        const values = Array.isArray(item) ? item : [item];
+        const names = values.map(channel => {
+          if (typeof channel === "string") return channel;
+          return firstValue(channel.name, channel.title, channel.channel_name,
+            channel.displayName, channel.channel);
+        }).filter(Boolean);
+
+        if (names.length) return [...new Set(names)];
+      }
+
+      return [];
+    }
+
+    function getVenue(match) {
+      return firstValue(
+        match.venue?.name, match.venue, match.stadium?.name,
+        match.stadium, match.ground, match.venue_name, match.stadium_name
+      );
+    }
+
+    function getReferee(match) {
+      const value = firstValue(match.referee?.name, match.referee,
+        match.referee_name, match.officials?.referee);
+
+      if (value) return value;
+
+      if (Array.isArray(match.referees) && match.referees.length) {
+        const main = match.referees[0];
+        return firstValue(main.name, main.full_name, main);
+      }
+
+      return "";
+    }
+
+    function detailRow(label, value) {
+      return `
+        <div class="detail-row">
+          <span>${escapeHTML(label)}</span>
+          <span>${escapeHTML(value || t("unknown"))}</span>
+        </div>
+      `;
+    }
+
+    function renderLineup(title, names, emptyMessage) {
+      const content = names.length
+        ? `<ul>${names.map(name => `<li>${escapeHTML(name)}</li>`).join("")}</ul>`
+        : `<p class="muted">${escapeHTML(emptyMessage)}</p>`;
+
+      return `<div class="lineup-team"><h4>${escapeHTML(title)}</h4>${content}</div>`;
+    }
+
+    function openMatchDetails(match) {
+      const homeName = getTeamName(getHome(match));
+      const awayName = getTeamName(getAway(match));
+      const channels = getChannels(match);
+      const homeLineup = getLineup(match, "home");
+      const awayLineup = getLineup(match, "away");
+
+      $("modalTitle").textContent = `${homeName} ${t("vs")} ${awayName}`;
+
+      const channelHTML = channels.length
+        ? channels.map(channel => `<span class="channel">${escapeHTML(channel)}</span>`).join("")
+        : `<p class="muted">${escapeHTML(t("noChannels"))}</p>`;
+
+      $("modalBody").innerHTML = `
+        ${detailRow(t("competition"), competitionName(match))}
+        ${detailRow(t("dateTime"), formatDateTime(match))}
+        ${detailRow(t("stadium"), getVenue(match))}
+        ${detailRow(t("referee"), getReferee(match))}
+
+        <section class="detail-section">
+          <h3>${escapeHTML(t("channels"))}</h3>
+          <div class="channel-list">${channelHTML}</div>
+        </section>
+
+        <section class="detail-section">
+          <h3>${escapeHTML(t("homeLineup"))}</h3>
+          <div class="lineup-list">
+            ${renderLineup(homeName, homeLineup, t("noLineup"))}
+            ${renderLineup(awayName, awayLineup, t("noLineup"))}
+          </div>
+        </section>
+      `;
+
+      $("matchModal").classList.add("show");
+    }
+
+    async function loadMatches() {
+      if (state.loading) return;
+
+      state.loading = true;
+      $("message").style.display = "block";
+      $("message").textContent = t("loading");
+      $("matches").innerHTML = "";
+
+      const date = $("matchDate").value;
+      const selectedCompetition = $("competition").value;
 
       try {
-        const endpoint = league === "all"
-          ? `${API_BASE}/fixtures?date=${encodeURIComponent(date)}`
-          : `${API_BASE}/openfootapi-fixtures?date=${encodeURIComponent(date)}&competition=${encodeURIComponent(league)}`;
+        // المصدر الجديد يجمع المباريات من المصدرين في استجابة واحدة.
+        const params = new URLSearchParams({ date });
 
-        const response = await fetch(endpoint, {
-          cache: "no-store"
-        });
+        if (selectedCompetition && selectedCompetition !== "all") {
+          params.set("competition", selectedCompetition);
+        }
+
+        const response = await fetch(
+          `${API_BASE}/all-fixtures?${params.toString()}`,
+          { method: "GET", headers: { "Accept": "application/json" } }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
 
         const data = await response.json();
+        let matches = normalizeMatches(getArray(data));
 
-        const matches = Array.isArray(data)
-          ? data
-          : data.matches || data.fixtures || data.data || data.events || [];
-
-        if (!Array.isArray(matches)) {
-          throw new Error("Invalid fixtures response");
+        // بعض استجابات الـ API قد تعيد أسماء أو معرفات مختلفة للبطولات.
+        if (selectedCompetition && selectedCompetition !== "all") {
+          matches = matches.filter(match => {
+            const id = competitionId(match);
+            const name = competitionName(match);
+            return id === selectedCompetition || name === selectedCompetition;
+          });
         }
 
-        // تجاهل الرد القديم إذا اختار المستخدم تاريخاً أو دورياً آخر.
-        if (requestNumber !== loadRequestNumber) return;
+        state.matches = matches;
+        buildCompetitionOptions(normalizeMatches(getArray(data)));
 
-        allMatches = matches;
-        renderMatches(allMatches);
+        // إعادة تطبيق اختيار البطولة بعد تحديث القائمة.
+        if (selectedCompetition &&
+            [...$("competition").options].some(option => option.value === selectedCompetition)) {
+          $("competition").value = selectedCompetition;
+        }
 
+        renderMatches(matches);
+
+        if (data && data.partial === true && data.warnings?.length) {
+          $("message").style.display = "block";
+          $("message").textContent = data.warnings.join(" · ");
+          if (matches.length) {
+            $("message").style.marginBottom = "14px";
+          }
+        }
       } catch (error) {
-        if (requestNumber !== loadRequestNumber) return;
-
-        console.error("ALA TV fixtures error:", error);
-
-        showMessage(
-          currentLanguage === "ar"
-            ? "ما قدرناش نحمّلو المباريات. تأكد أن الـ Worker يخدم ثم أعد المحاولة."
-            : "Impossible de charger les matchs. Vérifiez le Worker puis réessayez.",
-          true
-        );
-
+        console.error("ALA TV: failed to load fixtures", error);
+        $("message").style.display = "block";
+        $("message").textContent = t("error");
+        $("matchCount").textContent = `0 ${t("matchCount")}`;
       } finally {
-        if (requestNumber === loadRequestNumber) {
-          refreshButton.disabled = false;
-        }
+        state.loading = false;
       }
-    }
-
-    function extractChannelName(channel) {
-      if (typeof channel === "string") return channel;
-
-      return safeString(
-        channel?.name ||
-        channel?.channel ||
-        channel?.title ||
-        channel?.broadcast_name
-      );
-    }
-
-    function renderChannels(details) {
-      const list = $("modalChannelList");
-      list.innerHTML = "";
-
-      const channels =
-        details?.broadcast ||
-        details?.broadcasts ||
-        details?.channels ||
-        details?.tvChannels ||
-        details?.tv_channels ||
-        details?.broadcasting ||
-        [];
-
-      if (!Array.isArray(channels) || channels.length === 0) {
-        list.innerHTML = `<li class="muted">${escapeHTML(
-          currentLanguage === "ar"
-            ? "القنوات الناقلة غير متوفرة في بيانات هذه المباراة."
-            : "Les chaînes ne sont pas disponibles pour ce match."
-        )}</li>`;
-        return;
-      }
-
-      channels.forEach((channel) => {
-        const name = extractChannelName(channel);
-        if (!name) return;
-
-        const country = safeString(channel?.country?.name || channel?.country);
-        const item = document.createElement("li");
-
-        item.textContent = country ? `${name} — ${country}` : name;
-        list.appendChild(item);
-      });
-
-      if (!list.children.length) {
-        list.innerHTML = `<li class="muted">${escapeHTML(unavailable())}</li>`;
-      }
-    }
-
-    function playerName(player) {
-      if (typeof player === "string") return player;
-
-      return safeString(
-        player?.name ||
-        player?.player?.name ||
-        player?.fullName ||
-        player?.player_name
-      );
-    }
-
-    function renderLineup(listId, lineup) {
-      const list = $(listId);
-      list.innerHTML = "";
-
-      const players = Array.isArray(lineup)
-        ? lineup
-        : lineup?.players || lineup?.startingXI || lineup?.starting_xi || [];
-
-      if (!Array.isArray(players) || players.length === 0) {
-        list.innerHTML = `<li class="muted">${escapeHTML(
-          currentLanguage === "ar"
-            ? "التشكيلة غير متوفرة حالياً."
-            : "Composition non disponible."
-        )}</li>`;
-        return;
-      }
-
-      players.forEach((player) => {
-        const name = playerName(player);
-        if (!name) return;
-
-        const item = document.createElement("li");
-        const number = player?.number ?? player?.shirtNumber ?? player?.shirt_number;
-
-        item.textContent = number !== undefined && number !== null
-          ? `${number}. ${name}`
-          : name;
-
-        list.appendChild(item);
-      });
-
-      if (!list.children.length) {
-        list.innerHTML = `<li class="muted">${escapeHTML(unavailable())}</li>`;
-      }
-    }
-
-    function setModalFromMatch(match) {
-      const home = getHome(match);
-      const away = getAway(match);
-      const homeLogo = teamLogo(home);
-      const awayLogo = teamLogo(away);
-
-      $("modalHome").textContent = teamName(home);
-      $("modalAway").textContent = teamName(away);
-
-      $("modalHomeLogo").src = homeLogo;
-      $("modalAwayLogo").src = awayLogo;
-
-      $("modalHomeLogo").style.visibility = homeLogo ? "visible" : "hidden";
-      $("modalAwayLogo").style.visibility = awayLogo ? "visible" : "hidden";
-
-      $("modalScore").textContent = scoreValue(match) || "VS";
-      $("modalTime").textContent = formatTime(match);
-
-      setText("modalLeague", competitionName(match));
-      setText("modalVenue", safeString(match?.venue?.name || match?.venue));
-      setText("modalReferee", safeString(match?.referee?.name || match?.referee));
-      setText("modalStatus", getStatus(match).label);
-    }
-
-    async function openMatchDetails(match) {
-      $("matchModal").classList.add("open");
-      document.body.style.overflow = "hidden";
-
-      setModalFromMatch(match);
-
-      $("modalChannelList").innerHTML =
-        `<li class="muted">${escapeHTML(
-          currentLanguage === "ar"
-            ? "جاري تحميل القنوات..."
-            : "Chargement des chaînes..."
-        )}</li>`;
-
-      $("lineupHomeTitle").textContent = teamName(getHome(match));
-      $("lineupAwayTitle").textContent = teamName(getAway(match));
-
-      renderLineup("lineupHome", []);
-      renderLineup("lineupAway", []);
-
-      const id = getMatchId(match);
-
-      if (id === null || id === "") {
-        renderChannels({});
-        return;
-      }
-
-      /*
-        معرّفات OpenFootAPI نصية مثل match_fmb_...
-        أما مسار /match-details الحالي فيستعمل معرّفات SoccersAPI الرقمية.
-        لذلك لا نرسل المعرّفات النصية إلى المسار القديم.
-      */
-      if (!/^\d+$/.test(String(id))) {
-        renderChannels({});
-        renderLineup("lineupHome", []);
-        renderLineup("lineupAway", []);
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `${API_BASE}/match-details?id=${encodeURIComponent(id)}`,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const result = await response.json();
-        const details = result?.data || result?.match || result;
-
-        renderChannels(details);
-
-        const venue =
-          details?.venue?.name ||
-          details?.venue ||
-          details?.stadium?.name ||
-          details?.stadium;
-
-        const referee =
-          details?.referee?.name ||
-          details?.referee ||
-          details?.referees?.[0]?.name ||
-          details?.officials?.referee;
-
-        setText("modalVenue", safeString(venue));
-        setText("modalReferee", safeString(referee));
-
-        const lineups = details?.lineups || details?.lineup || {};
-
-        const homeLineup =
-          lineups?.home ||
-          lineups?.localteam ||
-          details?.homeLineup ||
-          details?.home_lineup ||
-          [];
-
-        const awayLineup =
-          lineups?.away ||
-          lineups?.visitorteam ||
-          details?.awayLineup ||
-          details?.away_lineup ||
-          [];
-
-        renderLineup("lineupHome", homeLineup);
-        renderLineup("lineupAway", awayLineup);
-
-        if (details?.status) {
-          const statusMatch = { status: details.status };
-          setText("modalStatus", getStatus(statusMatch).label);
-        }
-
-      } catch (error) {
-        console.error("ALA TV match details error:", error);
-        renderChannels({});
-        renderLineup("lineupHome", []);
-        renderLineup("lineupAway", []);
-      }
-    }
-
-    function closeModal() {
-      $("matchModal").classList.remove("open");
-      document.body.style.overflow = "";
     }
 
     function applyLanguage() {
-      const isArabic = currentLanguage === "ar";
+      const isArabic = state.language === "ar";
 
-      document.documentElement.lang = currentLanguage;
+      document.documentElement.lang = isArabic ? "ar" : "fr";
       document.documentElement.dir = isArabic ? "rtl" : "ltr";
 
-      $("langToggle").textContent = isArabic ? "Français" : "العربية";
+      $("heroTitle").innerHTML = t("heroTitle");
+      $("heroText").textContent = t("heroText");
+      $("dateLabel").textContent = t("dateLabel");
+      $("leagueLabel").textContent = t("leagueLabel");
+      $("searchBtn").textContent = t("searchBtn");
+      $("matchesTitle").textContent = t("matchesTitle");
+      $("langBtn").textContent = t("languageButton");
+      $("footerText").textContent = t("footer");
+      $("modalTitle").textContent = t("detailsTitle");
 
-      document.querySelectorAll("[data-ar][data-fr]").forEach((element) => {
-        const value = element.getAttribute(isArabic ? "data-ar" : "data-fr");
-        element.innerHTML = value;
-      });
-
-      renderMatches(allMatches);
+      buildCompetitionOptions(state.matches);
+      renderMatches(state.matches);
     }
 
-    $("langToggle").addEventListener("click", () => {
-      currentLanguage = currentLanguage === "ar" ? "fr" : "ar";
-      applyLanguage();
-    });
-
-    $("refreshBtn").addEventListener("click", loadMatches);
-    $("matchDate").addEventListener("change", loadMatches);
-    $("leagueSelect").addEventListener("change", loadMatches);
-    $("closeModal").addEventListener("click", closeModal);
-
-    $("matchModal").addEventListener("click", (event) => {
-      if (event.target === $("matchModal")) closeModal();
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeModal();
-    });
-
     function localDateString() {
-      const formatter = new Intl.DateTimeFormat("en-CA", {
+      const parts = new Intl.DateTimeFormat("en-CA", {
         timeZone: "Africa/Algiers",
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
-      });
+      }).formatToParts(new Date());
 
-      const parts = formatter.formatToParts(new Date());
-      const values = {};
-
-      parts.forEach((part) => {
-        if (part.type !== "literal") values[part.type] = part.value;
-      });
-
-      return `${values.year}-${values.month}-${values.day}`;
+      const get = type => parts.find(part => part.type === type)?.value;
+      return `${get("year")}-${get("month")}-${get("day")}`;
     }
 
+    $("searchBtn").addEventListener("click", loadMatches);
+
+    $("competition").addEventListener("change", loadMatches);
+
+    $("matchDate").addEventListener("change", loadMatches);
+
+    $("langBtn").addEventListener("click", () => {
+      state.language = state.language === "ar" ? "fr" : "ar";
+      applyLanguage();
+    });
+
+    $("closeModal").addEventListener("click", () => {
+      $("matchModal").classList.remove("show");
+    });
+
+    $("matchModal").addEventListener("click", event => {
+      if (event.target === $("matchModal")) {
+        $("matchModal").classList.remove("show");
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        $("matchModal").classList.remove("show");
+      }
+    });
+
     $("matchDate").value = localDateString();
+    applyLanguage();
     loadMatches();
   </script>
 </body>

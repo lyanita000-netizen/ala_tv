@@ -27,18 +27,13 @@
     body {
       margin: 0;
       color: var(--text);
-      background:
-        radial-gradient(ellipse at top, #21113b 0%, var(--bg) 52%);
+      background: radial-gradient(ellipse at top, #21113b 0%, var(--bg) 52%);
       font-family: Arial, Tahoma, sans-serif;
       min-height: 100vh;
     }
 
     button, input, select { font: inherit; }
-
-    button {
-      cursor: pointer;
-      border: 0;
-    }
+    button { cursor: pointer; border: 0; }
 
     .container {
       width: min(1150px, 94%);
@@ -137,6 +132,16 @@
       background: linear-gradient(135deg, var(--purple), var(--purple2));
     }
 
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #b69aff;
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
     .section-head {
       display: flex;
       justify-content: space-between;
@@ -160,6 +165,7 @@
       background: rgba(19, 14, 32, .6);
       color: var(--muted);
       line-height: 1.9;
+      margin-bottom: 18px;
     }
 
     .matches {
@@ -170,11 +176,12 @@
     }
 
     .match-card {
+      min-width: 0;
       background: linear-gradient(145deg, #171026, #100b1b);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
-      transition: .2s;
+      transition: border-color .2s, transform .2s;
     }
 
     .match-card:hover {
@@ -191,9 +198,11 @@
       margin-bottom: 20px;
     }
 
+    .league span:first-child { overflow-wrap: anywhere; }
+
     .teams {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       gap: 10px;
       align-items: center;
       text-align: center;
@@ -238,11 +247,7 @@
       border-top: 1px solid var(--border);
     }
 
-    .status {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
+    .status { color: var(--muted); font-size: 12px; }
     .status.live { color: var(--red); }
     .status.finished { color: var(--green); }
 
@@ -254,6 +259,8 @@
       border: 1px solid #493267;
       font-size: 12px;
     }
+
+    .details-btn:hover { background: #493267; }
 
     .modal {
       display: none;
@@ -308,7 +315,10 @@
     }
 
     .detail-row span:first-child { color: var(--muted); }
-    .detail-row span:last-child { text-align: left; overflow-wrap: anywhere; }
+    .detail-row span:last-child {
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
 
     .detail-section { margin-top: 22px; }
 
@@ -338,6 +348,7 @@
     }
 
     .lineup-team {
+      min-width: 0;
       background: #171026;
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -363,6 +374,7 @@
       .logo { font-size: 23px; }
       .lineup-list { grid-template-columns: 1fr; }
       .hero { padding-top: 27px; }
+      .match-card:hover { transform: none; }
     }
   </style>
 </head>
@@ -402,15 +414,20 @@
       <span class="muted" id="matchCount">0 مباراة</span>
     </div>
 
-    <div id="message" class="status-message">جاري تحميل المباريات...</div>
+    <div id="message" class="status-message" role="status" aria-live="polite">
+      جاري تحميل المباريات...
+    </div>
+
     <section id="matches" class="matches"></section>
   </main>
 
-  <div id="matchModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div id="matchModal" class="modal" role="dialog"
+       aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <div class="modal-head">
         <h2 id="modalTitle">تفاصيل المباراة</h2>
-        <button class="close-btn" id="closeModal" type="button" aria-label="إغلاق">×</button>
+        <button class="close-btn" id="closeModal" type="button"
+                aria-label="إغلاق">×</button>
       </div>
       <div id="modalBody"></div>
     </div>
@@ -422,13 +439,14 @@
     "use strict";
 
     const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
-
     const $ = (id) => document.getElementById(id);
 
     const state = {
       matches: [],
+      allMatches: [],
       language: "ar",
-      loading: false
+      loading: false,
+      requestId: 0
     };
 
     const translations = {
@@ -451,6 +469,7 @@
         finished: "انتهت",
         postponed: "مؤجلة",
         cancelled: "أُلغيت",
+        suspended: "متوقفة",
         unknown: "غير متوفر",
         detailsTitle: "تفاصيل المباراة",
         competition: "البطولة",
@@ -458,12 +477,13 @@
         stadium: "الملعب",
         referee: "الحكم",
         channels: "القنوات الناقلة",
-        homeLineup: "تشكيلة الفريق الأول",
-        awayLineup: "تشكيلة الفريق الثاني",
+        homeLineup: "التشكيلة",
+        awayLineup: "التشكيلة",
         noLineup: "التشكيلة غير متوفرة من المصدر.",
         noChannels: "لا توجد قنوات ناقلة متاحة من المصدر.",
         footer: "ALA TV — تابع جديد مباريات كرة القدم.",
-        languageButton: "Français"
+        languageButton: "Français",
+        partialWarning: "تنبيه من مصدر البيانات"
       },
       fr: {
         heroTitle: 'Tous les matchs <span>au même endroit</span>',
@@ -484,6 +504,7 @@
         finished: "Terminé",
         postponed: "Reporté",
         cancelled: "Annulé",
+        suspended: "Suspendu",
         unknown: "Non disponible",
         detailsTitle: "Détails du match",
         competition: "Compétition",
@@ -491,13 +512,136 @@
         stadium: "Stade",
         referee: "Arbitre",
         channels: "Chaînes TV",
-        homeLineup: "Composition — équipe 1",
-        awayLineup: "Composition — équipe 2",
+        homeLineup: "Composition",
+        awayLineup: "Composition",
         noLineup: "Composition non disponible.",
         noChannels: "Aucune chaîne disponible depuis la source.",
         footer: "ALA TV — Toute l'actualité du football.",
-        languageButton: "العربية"
+        languageButton: "العربية",
+        partialWarning: "Avertissement de la source"
       }
+    };
+
+    // أسماء البطولات المعروفة حسب معرف البطولة.
+    const COMPETITION_NAMES = {
+      "2": {
+        ar: "دوري أبطال أوروبا",
+        fr: "Ligue des champions"
+      },
+      "3": {
+        ar: "الدوري الأوروبي",
+        fr: "Ligue Europa"
+      },
+      "12": {
+        ar: "دوري أبطال أفريقيا",
+        fr: "Ligue des champions CAF"
+      },
+      "17": {
+        ar: "دوري أبطال آسيا للنخبة",
+        fr: "Ligue des champions Élite de l'AFC"
+      },
+      "18": {
+        ar: "دوري أبطال آسيا 2",
+        fr: "Ligue des champions 2 de l'AFC"
+      },
+      "39": {
+        ar: "الدوري الإنجليزي الممتاز",
+        fr: "Premier League"
+      },
+      "61": {
+        ar: "الدوري الفرنسي",
+        fr: "Ligue 1"
+      },
+      "78": {
+        ar: "الدوري الألماني",
+        fr: "Bundesliga"
+      },
+      "88": {
+        ar: "الدوري الهولندي",
+        fr: "Eredivisie"
+      },
+      "94": {
+        ar: "الدوري البرتغالي",
+        fr: "Liga Portugal"
+      },
+      "135": {
+        ar: "الدوري الإيطالي",
+        fr: "Serie A"
+      },
+      "140": {
+        ar: "الدوري الإسباني",
+        fr: "La Liga"
+      },
+      "186": {
+        ar: "الرابطة الجزائرية المحترفة الأولى",
+        fr: "Championnat d'Algérie"
+      },
+      "307": {
+        ar: "الدوري السعودي",
+        fr: "Saudi Pro League"
+      },
+      "848": {
+        ar: "دوري المؤتمر الأوروبي",
+        fr: "Ligue Conférence"
+      }
+    };
+
+    const TEAM_NAMES_AR = {
+      "Arsenal": "أرسنال",
+      "Chelsea": "تشيلسي",
+      "Liverpool": "ليفربول",
+      "Manchester City": "مانشستر سيتي",
+      "Manchester City FC": "مانشستر سيتي",
+      "Manchester United": "مانشستر يونايتد",
+      "Manchester United FC": "مانشستر يونايتد",
+      "Tottenham Hotspur": "توتنهام",
+      "Real Madrid": "ريال مدريد",
+      "Barcelona": "برشلونة",
+      "FC Barcelona": "برشلونة",
+      "Atletico Madrid": "أتلتيكو مدريد",
+      "Atlético Madrid": "أتلتيكو مدريد",
+      "Bayern Munich": "بايرن ميونخ",
+      "Borussia Dortmund": "بوروسيا دورتموند",
+      "Paris Saint-Germain": "باريس سان جيرمان",
+      "Inter": "إنتر ميلان",
+      "Inter Milan": "إنتر ميلان",
+      "AC Milan": "إيه سي ميلان",
+      "Juventus": "يوفنتوس",
+      "Napoli": "نابولي",
+      "Roma": "روما",
+      "Algeria": "الجزائر",
+      "USM Alger": "اتحاد العاصمة",
+      "MC Alger": "مولودية الجزائر",
+      "JS Kabylie": "شبيبة القبائل",
+      "CR Belouizdad": "شباب بلوزداد",
+      "ES Setif": "وفاق سطيف",
+      "ES Sétif": "وفاق سطيف",
+      "CS Constantine": "شباب قسنطينة"
+    };
+
+    // شعارات احتياطية للأندية المعروفة.
+    const TEAM_LOGO_FALLBACKS = {
+      "arsenal": "https://crests.football-data.org/57.png",
+      "chelsea": "https://crests.football-data.org/61.png",
+      "manchester city": "https://crests.football-data.org/65.png",
+      "manchester city fc": "https://crests.football-data.org/65.png",
+      "manchester united": "https://crests.football-data.org/66.png",
+      "manchester united fc": "https://crests.football-data.org/66.png",
+      "liverpool": "https://crests.football-data.org/64.png",
+      "tottenham hotspur": "https://crests.football-data.org/73.png",
+      "real madrid": "https://crests.football-data.org/86.png",
+      "barcelona": "https://crests.football-data.org/81.png",
+      "fc barcelona": "https://crests.football-data.org/81.png",
+      "atletico madrid": "https://crests.football-data.org/78.png",
+      "atlético madrid": "https://crests.football-data.org/78.png",
+      "bayern munich": "https://crests.football-data.org/5.png",
+      "borussia dortmund": "https://crests.football-data.org/4.png",
+      "paris saint-germain": "https://crests.football-data.org/524.png",
+      "juventus": "https://crests.football-data.org/109.png",
+      "ac milan": "https://crests.football-data.org/98.png",
+      "inter": "https://crests.football-data.org/108.png",
+      "inter milan": "https://crests.football-data.org/108.png",
+      "napoli": "https://crests.football-data.org/113.png"
     };
 
     function t(key) {
@@ -505,7 +649,7 @@
     }
 
     function escapeHTML(value) {
-      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -517,10 +661,12 @@
     function firstValue(...values) {
       for (const value of values) {
         if (value === null || value === undefined || value === "") continue;
+
         if (typeof value === "object" && !Array.isArray(value)) {
-          if (value.name) return value.name;
-          if (value.title) return value.title;
-          if (value.label) return value.label;
+          const nested = value.name ?? value.title ?? value.label;
+          if (nested !== undefined && nested !== null && nested !== "") {
+            return nested;
+          }
         } else {
           return value;
         }
@@ -539,60 +685,183 @@
     }
 
     function getTeamName(team) {
-      if (typeof team === "string") return team;
-      return firstValue(team?.name, team?.displayName, team?.shortName,
-        team?.team_name, team?.title, team?.name_ar) || t("unknown");
+      if (typeof team === "string") {
+        return state.language === "ar"
+          ? (TEAM_NAMES_AR[team] || team)
+          : team;
+      }
+
+      const originalName = firstValue(
+        team?.name_ar,
+        team?.name,
+        team?.displayName,
+        team?.shortName,
+        team?.team_name,
+        team?.title
+      );
+
+      if (!originalName) return t("unknown");
+      if (state.language !== "ar") return String(originalName);
+
+      return team?.name_ar ||
+        TEAM_NAMES_AR[String(originalName)] ||
+        String(originalName);
     }
 
     function getTeamCrest(team) {
-      if (!team || typeof team !== "object") return "";
-      return firstValue(team.crest, team.logo, team.image, team.logo_url,
-        team.badge, team.team_logo, team.crestUrl);
-    }
-
-    function competitionName(match) {
-      const comp = match.competition || match.league || match.tournament || {};
-      let name = typeof comp === "string"
-        ? comp
-        : firstValue(comp.name, comp.title, comp.displayName, comp.competition_name);
-
-      name = name || firstValue(match.competition_name, match.league_name, match.tournament_name);
-
-      const known = {
-        "comp_ligue_1_fr": "الدوري الفرنسي",
-        "comp_premier_league_eng": "الدوري الإنجليزي",
-        "comp_la_liga_es": "الدوري الإسباني",
-        "comp_serie_a_it": "الدوري الإيطالي",
-        "comp_bundesliga_de": "الدوري الألماني",
-        "comp_ligue_1": "الدوري الفرنسي",
-        "comp_premier_league": "الدوري الإنجليزي",
-        "comp_la_liga": "الدوري الإسباني",
-        "comp_serie_a": "الدوري الإيطالي"
-      };
-
-      if (known[name]) return known[name];
-
-      if (name && name.startsWith("comp_")) {
-        const cleaned = name.replace(/^comp_/, "").replace(/_/g, " ");
-        return cleaned.replace(/\b\w/g, c => c.toUpperCase());
+      if (typeof team === "string" || !team || typeof team !== "object") {
+        return "";
       }
 
-      return name || t("unknown");
+      const raw = firstValue(
+        team.crest,
+        team.logo,
+        team.image,
+        team.logo_url,
+        team.badge,
+        team.team_logo,
+        team.crestUrl,
+        team.img
+      );
+
+      // لا نعرض إلا روابط الصور المعتادة.
+      if (typeof raw !== "string") return "";
+      if (!/^https?:\/\//i.test(raw)) return "";
+      return raw;
+    }
+
+    function getTeamLogoFallback(team) {
+      const rawName = typeof team === "string"
+        ? team
+        : firstValue(
+            team?.name,
+            team?.displayName,
+            team?.shortName,
+            team?.team_name,
+            team?.title
+          );
+
+      const name = String(rawName || "").trim().toLowerCase();
+      return TEAM_LOGO_FALLBACKS[name] || "";
+    }
+
+    // شعار SVG محلي احتياطي: لا يعتمد على اتصال خارجي.
+    function makeFallbackLogo(teamName) {
+      const name = String(teamName || "?").trim();
+      const words = name.split(/\s+/).filter(Boolean);
+      const initials = words.length > 1
+        ? words.slice(0, 2).map(word => word[0]).join("")
+        : (name.slice(0, 2) || "?");
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"
+             viewBox="0 0 96 96">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#33204e"/>
+            </linearGradient>
+          </defs>
+          <rect x="4" y="4" width="88" height="88" rx="22"
+                fill="url(#g)" stroke="#b69aff" stroke-width="3"/>
+          <text x="48" y="56" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="30"
+                font-weight="700" fill="#ffffff">${escapeHTML(initials)}</text>
+        </svg>`;
+
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    // إصلاح دالة اسم البطولة التي كانت ناقصة في النسخة المرسلة.
+    function competitionName(match) {
+      const comp = match.competition || match.league ||
+        match.tournament || match.competitionInfo || {};
+
+      const id = String(firstValue(
+        comp.id,
+        comp.competition_id,
+        comp.league_id,
+        match.competition_id,
+        match.league_id
+      ) || "");
+
+      const localized = COMPETITION_NAMES[id];
+      if (localized) {
+        return localized[state.language] || localized.ar;
+      }
+
+      let name = firstValue(
+        comp.name_ar,
+        comp.name,
+        comp.competition_name,
+        comp.title,
+        comp.displayName,
+        match.competition_name,
+        match.league_name,
+        match.tournament_name,
+        comp.code,
+        comp.slug
+      );
+
+      if (!name && id) name = `comp_${id}`;
+      if (!name) return t("unknown");
+
+      name = String(name);
+
+      if (name.startsWith("comp_")) {
+        name = name.replace(/^comp_/, "").replace(/_/g, " ");
+        name = name.replace(/\b\w/g, char => char.toUpperCase());
+      }
+
+      if (state.language === "ar") {
+        const aliases = {
+          "Premier League": "الدوري الإنجليزي الممتاز",
+          "La Liga": "الدوري الإسباني",
+          "LALIGA": "الدوري الإسباني",
+          "Serie A": "الدوري الإيطالي",
+          "Bundesliga": "الدوري الألماني",
+          "Ligue 1": "الدوري الفرنسي",
+          "UEFA Champions League": "دوري أبطال أوروبا",
+          "UEFA Europa League": "الدوري الأوروبي",
+          "UEFA Conference League": "دوري المؤتمر الأوروبي",
+          "Eredivisie": "الدوري الهولندي",
+          "Primeira Liga": "الدوري البرتغالي",
+          "Saudi Pro League": "الدوري السعودي",
+          "Ligue Professionnelle 1": "الرابطة الجزائرية المحترفة الأولى"
+        };
+
+        return aliases[name] || name;
+      }
+
+      return name;
     }
 
     function competitionId(match) {
-      const comp = match.competition || match.league || match.tournament || {};
+      const comp = match.competition || match.league ||
+        match.tournament || {};
+
       return String(firstValue(
-        comp.id, comp.code, comp.competition_id, comp.slug,
-        match.competition_id, match.competition_code, match.league_id
+        comp.id,
+        comp.code,
+        comp.competition_id,
+        comp.slug,
+        match.competition_id,
+        match.competition_code,
+        match.league_id
       ) || "");
     }
 
     function getKickoff(match) {
       return firstValue(
-        match.kickoffAt, match.utcDate, match.datetime, match.starting_at,
-        match.date, match.match_date, match.fixture?.date,
-        match.start_time, match.time
+        match.kickoffAt,
+        match.utcDate,
+        match.datetime,
+        match.starting_at,
+        match.date,
+        match.match_date,
+        match.fixture?.date,
+        match.start_time,
+        match.time
       );
     }
 
@@ -600,16 +869,21 @@
       const raw = getKickoff(match);
       if (!raw) return t("unknown");
 
-      if (typeof raw === "string" && /^\d{1,2}:\d{2}$/.test(raw)) return raw;
+      if (typeof raw === "string" && /^\d{1,2}:\d{2}$/.test(raw)) {
+        return raw;
+      }
 
       const date = new Date(raw);
       if (Number.isNaN(date.getTime())) return String(raw);
 
-      return new Intl.DateTimeFormat(state.language === "ar" ? "ar-DZ" : "fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Africa/Algiers"
-      }).format(date);
+      return new Intl.DateTimeFormat(
+        state.language === "ar" ? "ar-DZ" : "fr-FR",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Africa/Algiers"
+        }
+      ).format(date);
     }
 
     function formatDateTime(match) {
@@ -619,22 +893,39 @@
       const date = new Date(raw);
       if (Number.isNaN(date.getTime())) return String(raw);
 
-      return new Intl.DateTimeFormat(state.language === "ar" ? "ar-DZ" : "fr-FR", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        timeZone: "Africa/Algiers"
-      }).format(date);
+      return new Intl.DateTimeFormat(
+        state.language === "ar" ? "ar-DZ" : "fr-FR",
+        {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "Africa/Algiers"
+        }
+      ).format(date);
     }
 
     function getScore(match) {
-      const home = firstValue(match.homeScore, match.home_score,
-        match.score?.home, match.scores?.home, match.goals?.home);
-      const away = firstValue(match.awayScore, match.away_score,
-        match.score?.away, match.scores?.away, match.goals?.away);
+      const home = firstValue(
+        match.homeScore,
+        match.home_score,
+        match.score?.home,
+        match.scores?.home,
+        match.goals?.home
+      );
+
+      const away = firstValue(
+        match.awayScore,
+        match.away_score,
+        match.score?.away,
+        match.scores?.away,
+        match.goals?.away
+      );
 
       if (home !== "" && away !== "") return `${home} - ${away}`;
 
-      const score = match.score?.fullTime || match.score?.fulltime;
+      const score = match.score?.fullTime ||
+        match.score?.fulltime ||
+        match.score?.full_time;
+
       if (score && score.home != null && score.away != null) {
         return `${score.home} - ${score.away}`;
       }
@@ -643,24 +934,35 @@
     }
 
     function getStatus(match) {
+      const statusObject = match.fixture?.status || match.status;
       const raw = String(firstValue(
-        match.status, match.state, match.match_status, match.fixture?.status
+        typeof statusObject === "object"
+          ? statusObject.short
+          : statusObject,
+        match.statusShort,
+        match.status_short,
+        match.state,
+        match.match_status
       ) || "").toLowerCase();
 
       if (/live|in.play|in_progress|1h|2h|half.time|first.half|second.half|مباشر/.test(raw)) {
         return { label: t("live"), className: "live" };
       }
 
-      if (/finish|ended|full.time|ft|complete|after.extra|penalt|انتهت/.test(raw)) {
+      if (/finish|ended|full.time|^ft$|complete|after.extra|penalt|انتهت/.test(raw)) {
         return { label: t("finished"), className: "finished" };
       }
 
-      if (/postpon|delay|مؤجل/.test(raw)) {
+      if (/postpon|delay|^pst$|مؤجل/.test(raw)) {
         return { label: t("postponed"), className: "" };
       }
 
-      if (/cancel|abandon|ألغ/.test(raw)) {
+      if (/cancel|abandon|^canc$|ألغ/.test(raw)) {
         return { label: t("cancelled"), className: "" };
+      }
+
+      if (/suspend|^abd$|^int$|متوقف/.test(raw)) {
+        return { label: t("suspended"), className: "" };
       }
 
       return { label: t("scheduled"), className: "" };
@@ -672,6 +974,7 @@
       if (Array.isArray(data?.fixtures)) return data.fixtures;
       if (Array.isArray(data?.data)) return data.data;
       if (Array.isArray(data?.events)) return data.events;
+      if (Array.isArray(data?.response)) return data.response;
       return [];
     }
 
@@ -679,7 +982,8 @@
       const home = getTeamName(getHome(match)).toLowerCase();
       const away = getTeamName(getAway(match)).toLowerCase();
       const kickoff = String(getKickoff(match) || "").slice(0, 16);
-      return `${home}|${away}|${kickoff}`;
+      const comp = competitionId(match);
+      return `${comp}|${home}|${away}|${kickoff}`;
     }
 
     function normalizeMatches(matches) {
@@ -687,7 +991,21 @@
 
       for (const match of matches) {
         if (!match || typeof match !== "object") continue;
-        if (!getTeamName(getHome(match)) || !getTeamName(getAway(match))) continue;
+
+        const home = getHome(match);
+        const away = getAway(match);
+
+        if (!firstValue(
+          typeof home === "string" ? home : home?.name,
+          home?.name_ar,
+          home?.team_name
+        )) continue;
+
+        if (!firstValue(
+          typeof away === "string" ? away : away?.name,
+          away?.name_ar,
+          away?.team_name
+        )) continue;
 
         const key = makeMatchKey(match);
         if (!unique.has(key)) unique.set(key, match);
@@ -696,8 +1014,11 @@
       return [...unique.values()].sort((a, b) => {
         const dateA = new Date(getKickoff(a)).getTime();
         const dateB = new Date(getKickoff(b)).getTime();
+
+        if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0;
         if (Number.isNaN(dateA)) return 1;
         if (Number.isNaN(dateB)) return -1;
+
         return dateA - dateB;
       });
     }
@@ -717,10 +1038,18 @@
         }
       }
 
-      select.innerHTML = `<option value="all">${escapeHTML(t("allCompetitions"))}</option>`;
+      select.replaceChildren();
+
+      const allOption = document.createElement("option");
+      allOption.value = "all";
+      allOption.textContent = t("allCompetitions");
+      select.appendChild(allOption);
 
       [...competitions.entries()]
-        .sort((a, b) => a[1].localeCompare(b[1], state.language === "ar" ? "ar" : "fr"))
+        .sort((a, b) => a[1].localeCompare(
+          b[1],
+          state.language === "ar" ? "ar" : "fr"
+        ))
         .forEach(([id, name]) => {
           const option = document.createElement("option");
           option.value = id;
@@ -735,9 +1064,32 @@
       }
     }
 
+    function createTeamLogo(team, teamName) {
+      const img = document.createElement("img");
+      img.className = "team-logo";
+      img.alt = "";
+      img.loading = "lazy";
+      img.width = 43;
+      img.height = 43;
+
+      const source = getTeamCrest(team) || getTeamLogoFallback(team);
+      const fallback = makeFallbackLogo(teamName);
+
+      // حتى لو تعطل شعار المصدر والشعار الاحتياطي، يظهر شعار SVG محلي.
+      img.addEventListener("error", () => {
+        if (img.dataset.fallbackApplied === "true") return;
+
+        img.dataset.fallbackApplied = "true";
+        img.src = fallback;
+      });
+
+      img.src = source || fallback;
+      return img;
+    }
+
     function renderMatches(matches) {
       const container = $("matches");
-      container.innerHTML = "";
+      container.replaceChildren();
 
       if (!matches.length) {
         $("message").style.display = "block";
@@ -754,67 +1106,111 @@
         const away = getAway(match);
         const homeName = getTeamName(home);
         const awayName = getTeamName(away);
-        const homeLogo = getTeamCrest(home);
-        const awayLogo = getTeamCrest(away);
         const status = getStatus(match);
-        const matchId = String(firstValue(match.id, match.fixture_id, match.match_id) || index);
 
+        // إصلاح الخطأ: تعريف card مرة واحدة فقط.
         const card = document.createElement("article");
         card.className = "match-card";
 
-        card.innerHTML = `
-          <div class="league">
-            <span>${escapeHTML(competitionName(match))}</span>
-            <span>${escapeHTML(formatTime(match))}</span>
-          </div>
+        const league = document.createElement("div");
+        league.className = "league";
 
-          <div class="teams">
-            <div class="team">
-              ${homeLogo ? `<img src="${escapeHTML(homeLogo)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ""}
-              <div class="team-name">${escapeHTML(homeName)}</div>
-            </div>
+        const leagueName = document.createElement("span");
+        leagueName.textContent = competitionName(match);
 
-            <div>
-              <div class="score">${escapeHTML(getScore(match))}</div>
-              <div class="match-time">${escapeHTML(status.label)}</div>
-            </div>
+        const kickoff = document.createElement("span");
+        kickoff.textContent = formatTime(match);
 
-            <div class="team">
-              ${awayLogo ? `<img src="${escapeHTML(awayLogo)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ""}
-              <div class="team-name">${escapeHTML(awayName)}</div>
-            </div>
-          </div>
+        league.append(leagueName, kickoff);
 
-          <div class="match-bottom">
-            <span class="status ${status.className}">${escapeHTML(status.label)}</span>
-            <button class="details-btn" type="button">${escapeHTML(t("details"))}</button>
-          </div>
-        `;
+        const teams = document.createElement("div");
+        teams.className = "teams";
 
-        card.querySelector(".details-btn").addEventListener("click", () => {
-          openMatchDetails(match);
-        });
+        const homeTeam = document.createElement("div");
+        homeTeam.className = "team";
+        homeTeam.appendChild(createTeamLogo(home, homeName));
 
+        const homeLabel = document.createElement("div");
+        homeLabel.className = "team-name";
+        homeLabel.textContent = homeName;
+        homeTeam.appendChild(homeLabel);
+
+        const center = document.createElement("div");
+
+        const score = document.createElement("div");
+        score.className = "score";
+        score.textContent = getScore(match);
+
+        const matchTime = document.createElement("div");
+        matchTime.className = "match-time";
+        matchTime.textContent = status.label;
+
+        center.append(score, matchTime);
+
+        const awayTeam = document.createElement("div");
+        awayTeam.className = "team";
+        awayTeam.appendChild(createTeamLogo(away, awayName));
+
+        const awayLabel = document.createElement("div");
+        awayLabel.className = "team-name";
+        awayLabel.textContent = awayName;
+        awayTeam.appendChild(awayLabel);
+
+        teams.append(homeTeam, center, awayTeam);
+
+        const bottom = document.createElement("div");
+        bottom.className = "match-bottom";
+
+        const statusElement = document.createElement("span");
+        statusElement.className = `status ${status.className}`;
+        statusElement.textContent = status.label;
+
+        const detailsButton = document.createElement("button");
+        detailsButton.className = "details-btn";
+        detailsButton.type = "button";
+        detailsButton.textContent = t("details");
+        detailsButton.setAttribute("aria-label", `${t("details")}: ${homeName} - ${awayName}`);
+        detailsButton.addEventListener("click", () => openMatchDetails(match));
+
+        bottom.append(statusElement, detailsButton);
+        card.append(league, teams, bottom);
         container.appendChild(card);
       });
     }
 
     function extractNames(value) {
+      // بعض المصادر تعيد التشكيلة داخل object يحتوي على players أو squad.
+      if (!Array.isArray(value) && value && typeof value === "object") {
+        value = value.players || value.squad || value.startXI || value.startingXI || [];
+      }
+
       if (!Array.isArray(value)) return [];
 
       return value.map(player => {
         if (typeof player === "string") return player;
 
+        const nestedPlayer = player.player || {};
+
         const name = firstValue(
-          player.name, player.player_name, player.displayName,
-          player.full_name, player.player?.name
+          player.name,
+          player.player_name,
+          player.displayName,
+          player.full_name,
+          nestedPlayer.common_name,
+          nestedPlayer.name
         );
 
         const position = firstValue(
-          player.position, player.pos, player.role, player.player?.position
+          player.positionName,
+          player.position_name,
+          player.position,
+          player.pos,
+          player.role,
+          nestedPlayer.position
         );
 
         if (!name) return "";
+
         return position ? `${name} — ${position}` : name;
       }).filter(Boolean);
     }
@@ -825,14 +1221,24 @@
 
       const possible = side === "home"
         ? [
-            match.homeLineup, match.home_lineup, match.home_players,
-            lineup.home, lineup.homeTeam, lineup.home_team,
-            team.lineup, team.players
+            match.homeLineup,
+            match.home_lineup,
+            match.home_players,
+            lineup.home,
+            lineup.homeTeam,
+            lineup.home_team,
+            team.lineup,
+            team.players
           ]
         : [
-            match.awayLineup, match.away_lineup, match.away_players,
-            lineup.away, lineup.awayTeam, lineup.away_team,
-            team.lineup, team.players
+            match.awayLineup,
+            match.away_lineup,
+            match.away_players,
+            lineup.away,
+            lineup.awayTeam,
+            lineup.away_team,
+            team.lineup,
+            team.players
           ];
 
       for (const item of possible) {
@@ -845,19 +1251,31 @@
 
     function getChannels(match) {
       const possible = [
-        match.broadcast, match.broadcasts, match.channels,
-        match.tvChannels, match.tv_channels, match.broadcasting,
-        match.tv, match.television
+        match.broadcast,
+        match.broadcasts,
+        match.channels,
+        match.tvChannels,
+        match.tv_channels,
+        match.broadcasting,
+        match.tv,
+        match.television
       ];
 
       for (const item of possible) {
         if (!item) continue;
 
         const values = Array.isArray(item) ? item : [item];
+
         const names = values.map(channel => {
           if (typeof channel === "string") return channel;
-          return firstValue(channel.name, channel.title, channel.channel_name,
-            channel.displayName, channel.channel);
+
+          return firstValue(
+            channel.name,
+            channel.title,
+            channel.channel_name,
+            channel.displayName,
+            channel.channel
+          );
         }).filter(Boolean);
 
         if (names.length) return [...new Set(names)];
@@ -868,14 +1286,24 @@
 
     function getVenue(match) {
       return firstValue(
-        match.venue?.name, match.venue, match.stadium?.name,
-        match.stadium, match.ground, match.venue_name, match.stadium_name
+        match.venue?.name,
+        match.venue,
+        match.stadium?.name,
+        match.stadium,
+        match.ground,
+        match.venue_name,
+        match.stadium_name,
+        match.fixture?.venue?.name
       );
     }
 
     function getReferee(match) {
-      const value = firstValue(match.referee?.name, match.referee,
-        match.referee_name, match.officials?.referee);
+      const value = firstValue(
+        match.referee?.name,
+        match.referee,
+        match.referee_name,
+        match.officials?.referee
+      );
 
       if (value) return value;
 
@@ -888,20 +1316,45 @@
     }
 
     function detailRow(label, value) {
-      return `
-        <div class="detail-row">
-          <span>${escapeHTML(label)}</span>
-          <span>${escapeHTML(value || t("unknown"))}</span>
-        </div>
-      `;
+      const row = document.createElement("div");
+      row.className = "detail-row";
+
+      const labelElement = document.createElement("span");
+      labelElement.textContent = label;
+
+      const valueElement = document.createElement("span");
+      valueElement.textContent = value || t("unknown");
+
+      row.append(labelElement, valueElement);
+      return row;
     }
 
     function renderLineup(title, names, emptyMessage) {
-      const content = names.length
-        ? `<ul>${names.map(name => `<li>${escapeHTML(name)}</li>`).join("")}</ul>`
-        : `<p class="muted">${escapeHTML(emptyMessage)}</p>`;
+      const box = document.createElement("div");
+      box.className = "lineup-team";
 
-      return `<div class="lineup-team"><h4>${escapeHTML(title)}</h4>${content}</div>`;
+      const heading = document.createElement("h4");
+      heading.textContent = title;
+      box.appendChild(heading);
+
+      if (!names.length) {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = emptyMessage;
+        box.appendChild(empty);
+        return box;
+      }
+
+      const list = document.createElement("ul");
+
+      names.forEach(name => {
+        const item = document.createElement("li");
+        item.textContent = name;
+        list.appendChild(item);
+      });
+
+      box.appendChild(list);
+      return box;
     }
 
     function openMatchDetails(match) {
@@ -913,55 +1366,109 @@
 
       $("modalTitle").textContent = `${homeName} ${t("vs")} ${awayName}`;
 
-      const channelHTML = channels.length
-        ? channels.map(channel => `<span class="channel">${escapeHTML(channel)}</span>`).join("")
-        : `<p class="muted">${escapeHTML(t("noChannels"))}</p>`;
+      const body = $("modalBody");
+      body.replaceChildren();
 
-      $("modalBody").innerHTML = `
-        ${detailRow(t("competition"), competitionName(match))}
-        ${detailRow(t("dateTime"), formatDateTime(match))}
-        ${detailRow(t("stadium"), getVenue(match))}
-        ${detailRow(t("referee"), getReferee(match))}
+      body.append(
+        detailRow(t("competition"), competitionName(match)),
+        detailRow(t("dateTime"), formatDateTime(match)),
+        detailRow(t("stadium"), getVenue(match)),
+        detailRow(t("referee"), getReferee(match))
+      );
 
-        <section class="detail-section">
-          <h3>${escapeHTML(t("channels"))}</h3>
-          <div class="channel-list">${channelHTML}</div>
-        </section>
+      const channelSection = document.createElement("section");
+      channelSection.className = "detail-section";
 
-        <section class="detail-section">
-          <h3>${escapeHTML(t("homeLineup"))}</h3>
-          <div class="lineup-list">
-            ${renderLineup(homeName, homeLineup, t("noLineup"))}
-            ${renderLineup(awayName, awayLineup, t("noLineup"))}
-          </div>
-        </section>
-      `;
+      const channelHeading = document.createElement("h3");
+      channelHeading.textContent = t("channels");
+      channelSection.appendChild(channelHeading);
+
+      const channelList = document.createElement("div");
+      channelList.className = "channel-list";
+
+      if (channels.length) {
+        channels.forEach(channel => {
+          const item = document.createElement("span");
+          item.className = "channel";
+          item.textContent = channel;
+          channelList.appendChild(item);
+        });
+      } else {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = t("noChannels");
+        channelList.appendChild(empty);
+      }
+
+      channelSection.appendChild(channelList);
+      body.appendChild(channelSection);
+
+      const lineupSection = document.createElement("section");
+      lineupSection.className = "detail-section";
+
+      const lineupHeading = document.createElement("h3");
+      lineupHeading.textContent = t("homeLineup") + " / " + t("awayLineup");
+      lineupSection.appendChild(lineupHeading);
+
+      const lineupList = document.createElement("div");
+      lineupList.className = "lineup-list";
+
+      lineupList.append(
+        renderLineup(homeName, homeLineup, t("noLineup")),
+        renderLineup(awayName, awayLineup, t("noLineup"))
+      );
+
+      lineupSection.appendChild(lineupList);
+      body.appendChild(lineupSection);
 
       $("matchModal").classList.add("show");
+      $("closeModal").focus();
+    }
+
+    function applyCompetitionFilter() {
+      const selected = $("competition").value;
+
+      const filtered = !selected || selected === "all"
+        ? state.allMatches
+        : state.allMatches.filter(match => {
+            const id = competitionId(match);
+            const name = competitionName(match);
+            return id === selected || name === selected;
+          });
+
+      state.matches = filtered;
+      renderMatches(filtered);
     }
 
     async function loadMatches() {
-      if (state.loading) return;
+      const requestId = ++state.requestId;
 
       state.loading = true;
+      $("searchBtn").disabled = true;
       $("message").style.display = "block";
       $("message").textContent = t("loading");
-      $("matches").innerHTML = "";
+      $("matches").replaceChildren();
 
       const date = $("matchDate").value;
-      const selectedCompetition = $("competition").value;
+
+      if (!date) {
+        $("message").textContent = t("error");
+        $("searchBtn").disabled = false;
+        state.loading = false;
+        return;
+      }
 
       try {
-        // المصدر الجديد يجمع المباريات من المصدرين في استجابة واحدة.
         const params = new URLSearchParams({ date });
 
-        if (selectedCompetition && selectedCompetition !== "all") {
-          params.set("competition", selectedCompetition);
-        }
-
+        // نطلب كل البطولات من الخادم ثم نطبق الفلترة محليًا.
+        // هذا يسمح للقائمة بعرض جميع البطولات المتوفرة لذلك التاريخ.
         const response = await fetch(
           `${API_BASE}/all-fixtures?${params.toString()}`,
-          { method: "GET", headers: { "Accept": "application/json" } }
+          {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+          }
         );
 
         if (!response.ok) {
@@ -969,42 +1476,34 @@
         }
 
         const data = await response.json();
-        let matches = normalizeMatches(getArray(data));
 
-        // بعض استجابات الـ API قد تعيد أسماء أو معرفات مختلفة للبطولات.
-        if (selectedCompetition && selectedCompetition !== "all") {
-          matches = matches.filter(match => {
-            const id = competitionId(match);
-            const name = competitionName(match);
-            return id === selectedCompetition || name === selectedCompetition;
-          });
-        }
+        if (requestId !== state.requestId) return;
 
-        state.matches = matches;
-        buildCompetitionOptions(normalizeMatches(getArray(data)));
+        const allMatches = normalizeMatches(getArray(data));
 
-        // إعادة تطبيق اختيار البطولة بعد تحديث القائمة.
-        if (selectedCompetition &&
-            [...$("competition").options].some(option => option.value === selectedCompetition)) {
-          $("competition").value = selectedCompetition;
-        }
+        state.allMatches = allMatches;
+        buildCompetitionOptions(allMatches);
+        applyCompetitionFilter();
 
-        renderMatches(matches);
-
-        if (data && data.partial === true && data.warnings?.length) {
+        if (data && data.partial === true &&
+            Array.isArray(data.warnings) && data.warnings.length) {
           $("message").style.display = "block";
-          $("message").textContent = data.warnings.join(" · ");
-          if (matches.length) {
-            $("message").style.marginBottom = "14px";
-          }
+          $("message").textContent =
+            `${t("partialWarning")}: ${data.warnings.join(" · ")}`;
         }
       } catch (error) {
+        if (requestId !== state.requestId) return;
+
         console.error("ALA TV: failed to load fixtures", error);
         $("message").style.display = "block";
         $("message").textContent = t("error");
+        $("matches").replaceChildren();
         $("matchCount").textContent = `0 ${t("matchCount")}`;
       } finally {
-        state.loading = false;
+        if (requestId === state.requestId) {
+          state.loading = false;
+          $("searchBtn").disabled = false;
+        }
       }
     }
 
@@ -1022,10 +1521,16 @@
       $("matchesTitle").textContent = t("matchesTitle");
       $("langBtn").textContent = t("languageButton");
       $("footerText").textContent = t("footer");
-      $("modalTitle").textContent = t("detailsTitle");
 
-      buildCompetitionOptions(state.matches);
-      renderMatches(state.matches);
+      buildCompetitionOptions(state.allMatches);
+      applyCompetitionFilter();
+
+      if ($("matchModal").classList.contains("show")) {
+        $("closeModal").setAttribute(
+          "aria-label",
+          isArabic ? "إغلاق" : "Fermer"
+        );
+      }
     }
 
     function localDateString() {
@@ -1042,7 +1547,7 @@
 
     $("searchBtn").addEventListener("click", loadMatches);
 
-    $("competition").addEventListener("change", loadMatches);
+    $("competition").addEventListener("change", applyCompetitionFilter);
 
     $("matchDate").addEventListener("change", loadMatches);
 

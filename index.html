@@ -153,20 +153,20 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 <section class="container" id="live">
   <h2 id="liveTitle">منطقة البث المباشر</h2>
 
-  <!-- بطاقة قمة اليوم الترويجية للبث -->
+  <!-- بطاقة قمة اليوم التي تتحدث تلقائياً -->
   <div class="top-match-card">
     <div class="top-match-header">
-      <span class="top-match-badge" id="topMatchComp">دوري أبطال أوروبا</span>
-      <span class="top-match-live-tag">مباشر الآن 🔴</span>
+      <span class="top-match-badge" id="topMatchComp">مباراة اليوم</span>
+      <span class="top-match-live-tag" id="topMatchStatus">مباشر الآن 🔴</span>
     </div>
     
     <div class="top-match-teams">
-      <div class="top-team-name" id="topMatchHome">ريال مدريد</div>
+      <div class="top-team-name" id="topMatchHome">الفريق الأول</div>
       <div style="background:#090911; border:1px solid var(--purple); padding:6px 14px; border-radius:8px; font-weight:bold; color:var(--light);">VS</div>
-      <div class="top-team-name" id="topMatchAway">مانشستر سيتي</div>
+      <div class="top-team-name" id="topMatchAway">الفريق الثاني</div>
     </div>
     
-    <button class="btn-direct-stream" type="button" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'ريال مدريد × مانشستر سيتي', 'دوري أبطال أوروبا')">
+    <button class="btn-direct-stream" id="topMatchBtn" type="button" onclick="playCurrentTopMatch()">
       ▶ تشغيل البث المباشر للمباراة
     </button>
   </div>
@@ -182,7 +182,7 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     </div>
 
     <div class="video-responsive">
-      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'بث مباشر', 'ALA TV Live')">
+      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource(MAIN_STREAM_URL, 'بث مباشر', 'ALA TV Live')">
         <div class="play-icon">▶</div>
         <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
         <p id="playerText">اضغط هنا أو على أي مباراة لتشغيل البث فوراً.</p>
@@ -223,9 +223,17 @@ const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
 let language = "ar";
 let allMatches = [];
 let activeMatch = null;
+let currentTopMatchObj = null;
 
 // رابط البث المباشر الوحيد
 const MAIN_STREAM_URL = "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26";
+
+// قائمة بأبرز الأندية الكبرى للتعرف التلقائي على مباريات القمة
+const TOP_TEAMS = [
+  "Real Madrid", "Barcelona", "Man City", "Manchester City", "Liverpool", "Arsenal", "Chelsea", "Man United", 
+  "Bayern", "Dortmund", "Paris", "PSG", "Inter", "Milan", "Juventus", "Napoli", "Al Ahly", "Zamalek", "Wydad", "Raja",
+  "ريال مدريد", "برشلونة", "مانشستر سيتي", "ليفربول", "أرسنال", "بايرن ميونخ", "باريس", "الأهلي", "الزمالك"
+];
 
 const $ = id => document.getElementById(id);
 
@@ -342,6 +350,53 @@ function startStream(match) {
   const comp = match.competition?.name || "";
 
   playSingleSource(MAIN_STREAM_URL, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
+}
+
+function playCurrentTopMatch() {
+  if (currentTopMatchObj) {
+    startStream(currentTopMatchObj);
+  } else {
+    playSingleSource(MAIN_STREAM_URL, "قمة اليوم", "ALA TV Live");
+  }
+}
+
+// دالة التحديث التلقائي لخانة القمة وفق نتائج ومباريات اليوم
+function updateTopMatchAutomatically(matches) {
+  if (!matches || !matches.length) return;
+
+  // 1. مباراة قمة جارية الآن
+  let featured = matches.find(m => 
+    m.status === "IN_PLAY" && 
+    TOP_TEAMS.some(t => (m.homeTeam?.name + " " + m.awayTeam?.name).toLowerCase().includes(t.toLowerCase()))
+  );
+
+  // 2. إذا لم يجد، أي مباراة مباشرة الآن
+  if (!featured) {
+    featured = matches.find(m => m.status === "IN_PLAY");
+  }
+
+  // 3. إذا لم تبدأ المباريات، يختار أول قمة مبرمجة لليوم
+  if (!featured) {
+    featured = matches.find(m => 
+      TOP_TEAMS.some(t => (m.homeTeam?.name + " " + m.awayTeam?.name).toLowerCase().includes(t.toLowerCase()))
+    );
+  }
+
+  // 4. خيار افتراضي: أول مباراة في الجدول
+  if (!featured) featured = matches[0];
+
+  currentTopMatchObj = featured;
+
+  const home = getName(featured.homeTeam);
+  const away = getName(featured.awayTeam);
+  const comp = featured.competition?.name || (language === "ar" ? "مباراة اليوم" : "Match du jour");
+
+  $("topMatchHome").textContent = home;
+  $("topMatchAway").textContent = away;
+  $("topMatchComp").textContent = comp;
+  $("topMatchStatus").textContent = featured.status === "IN_PLAY" 
+    ? (language === "ar" ? "مباشر الآن 🔴" : "En direct 🔴")
+    : formatTime(featured);
 }
 
 function renderMatches() {
@@ -511,6 +566,7 @@ async function loadMatches() {
 
     allMatches = data;
     renderMatches();
+    updateTopMatchAutomatically(allMatches);
   } catch (error) {
     console.error("ALA TV fixtures error:", error);
     list.innerHTML = `<div class="message">${
@@ -571,6 +627,7 @@ function toggleLanguage() {
   }
 
   renderMatches();
+  if (allMatches.length) updateTopMatchAutomatically(allMatches);
   $("refreshBtn").textContent = ar ? "تحديث" : "Actualiser";
 }
 

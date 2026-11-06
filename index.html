@@ -92,7 +92,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .player-meta .match-name{font-weight:bold;font-size:17px;color:white}
 .player-meta .match-comp{color:var(--light);font-size:13px}
 
-/* منطقة الفيديو وحاوية ملء الشاشة */
 .video-responsive{position:relative;width:100%;padding-top:56.25%;background:#020205;border-radius:12px;overflow:hidden}
 .video-responsive:fullscreen, .video-responsive:-webkit-full-screen {
   padding-top: 0 !important;
@@ -102,7 +101,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 }
 .video-responsive iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
-/* زر تكبير الشاشة المخصص للهاتف والكمبيوتر */
+/* زر تكبير الشاشة المخصص */
 .fullscreen-btn {
   position: absolute;
   top: 12px;
@@ -131,7 +130,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   fill: currentColor;
 }
 
-/* طبقات التغطية الأساسية */
+/* غطاء الشعار في الأعلى فقط */
 .video-cover-top {
   position: absolute;
   top: 3.2%;
@@ -156,53 +155,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 }
 .video-cover-top span {
   color: var(--purple);
-}
-
-.video-cover-bottom {
-  position: absolute;
-  bottom: 3.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 58%;
-  min-width: 320px;
-  max-width: 630px;
-  height: 48px;
-  background: #12111d;
-  color: #f5f3ff;
-  padding: 0 16px;
-  border-radius: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 2px solid rgba(139, 92, 246, 0.55);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.95);
-  z-index: 10;
-  pointer-events: none !important;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.bottom-promo-text {
-  font-size: 13px;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  direction: rtl;
-}
-
-.store-badges {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 5px 10px;
-  border-radius: 16px;
-}
-.store-badges svg {
-  width: 18px;
-  height: 18px;
-  fill: #ffffff;
 }
 
 .stream-disclaimer{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid #28203d;border-radius:10px;font-size:12px;line-height:1.7;color:#a3a0b5;text-align:center}
@@ -233,7 +185,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   header{justify-content:center}nav{justify-content:center}
 }
 
-/* تنسيقات الشاشات الصغيرة والهواتف */
 @media(max-width:650px){
   #live.container {
     width: 98% !important;
@@ -264,20 +215,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     font-size: 13px !important;
     top: 2% !important;
     right: 2% !important;
-  }
-  .video-cover-bottom {
-    width: 92% !important;
-    min-width: 0 !important;
-    height: 32px !important;
-    bottom: 2% !important;
-    padding: 0 8px !important;
-  }
-  .bottom-promo-text {
-    font-size: 10px !important;
-  }
-  .store-badges svg {
-    width: 13px !important;
-    height: 13px !important;
   }
   .btn-channel {
     flex: 1 1 45%;
@@ -361,21 +298,12 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     </div>
 
     <div class="video-responsive" id="videoContainer">
-      <!-- زر تكبير الشاشة في الهاتف والكمبيوتر -->
       <button type="button" class="fullscreen-btn" onclick="toggleFullScreen()" title="ملء الشاشة" aria-label="ملء الشاشة">
         <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
       </button>
 
-      <!-- أغطية المشغل -->
+      <!-- غطاء الشعار في الزاوية العلوية فقط -->
       <div class="video-cover-top">ALA <span>TV</span></div>
-
-      <div class="video-cover-bottom">
-        <div class="store-badges">
-          <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001.001-.001z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-.93 2.73 1 .08 2.02-.48 2.64-1.23z"/></svg>
-        </div>
-        <span class="bottom-promo-text" id="bottomCoverText">حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية</span>
-      </div>
 
       <iframe id="streamIframe" 
               src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26" 
@@ -442,7 +370,6 @@ const LEAGUE_PRIORITIES = [
 
 const $ = id => document.getElementById(id);
 
-/* دالة ملء الشاشة المتوافقة مع أجهزة الهواتف الذكية */
 function toggleFullScreen() {
   const elem = $("videoContainer");
   if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
@@ -847,10 +774,6 @@ function toggleLanguage() {
   $("disclaimerBox").innerHTML = ar
     ? '⚠️ <strong>إخلاء مسؤولية:</strong> موقع <strong>ALA TV</strong> لا يستضيف أي بث على خوادمه الخاصة، والمشغلات مأخوذة من شبكات ومصادر خارجية متاحة للعامة. لإزالة أي محتوى يُرجى <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">مراسلتنا لحذف الرابط فوراً</a>.'
     : '⚠️ <strong>Avertissement :</strong> Le site <strong>ALA TV</strong> n\'héberge aucun flux sur ses serveurs. Les lecteurs proviennent de sources externes publiques. Pour toute suppression de contenu, veuillez <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">nous contacter pour retirer le lien immédiatement</a>.';
-
-  $("bottomCoverText").textContent = ar
-    ? "حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية"
-    : "Téléchargez l'application Koora Live pour suivre toute l'actualité";
 
   $("leagueFilter").innerHTML = ar
     ? '<option value="all">كل المباريات</option><option value="cl">أبطال أوروبا</option><option value="pl">الدوري الإنجليزي</option><option value="la_liga">الدوري الإسباني</option><option value="serie_a">الدوري الإيطالي</option><option value="ligue_1">الدوري الفرنسي</option>'

@@ -54,15 +54,21 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .notice{color:var(--muted);font-size:13px;line-height:1.7}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:14px;padding:25px;text-align:center;color:var(--muted);line-height:1.8}
 
+/* مباريات القمة المميزة */
+.top-match-card{background:var(--panel);border:2px solid var(--purple);border-radius:16px;padding:20px;margin-bottom:25px;box-shadow:0 8px 25px rgba(139,92,246,0.15)}
+.top-match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.top-match-badge{background:rgba(139,92,246,0.2);color:var(--light);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
+.top-match-live-tag{background:var(--red);color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:bold;animation:pulse 1.5s infinite}
+.top-match-teams{display:flex;justify-content:space-around;align-items:center;margin:15px 0}
+.top-team-name{font-size:18px;font-weight:bold;color:white}
+.btn-direct-stream{width:100%;background:linear-gradient(135deg,var(--purple),#6d28d9);color:white;padding:12px;border-radius:10px;border:none;font-size:15px;font-weight:bold;cursor:pointer;transition:.2s}
+.btn-direct-stream:hover{filter:brightness(1.15);box-shadow:0 0 15px rgba(139,92,246,0.5)}
+
 /* المشغل المتجاوب */
 .player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:18px;overflow:hidden;padding:18px}
 .player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #28203d}
 .player-meta .match-name{font-weight:bold;font-size:17px;color:white}
 .player-meta .match-comp{color:var(--light);font-size:13px}
-.server-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.btn-server{background:#1e1a33;color:var(--text);border:1px solid #3e2f5b;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer}
-.btn-server.active{background:var(--purple);border-color:var(--purple);color:white}
-.btn-server:hover{background:#2e244d}
 .video-responsive{position:relative;width:100%;padding-top:56.25%;background:#020205;border-radius:12px;overflow:hidden}
 .video-responsive iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .player-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:radial-gradient(ellipse at center,#1e1533,#080711);cursor:pointer}
@@ -108,6 +114,7 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <div class="logo">ALA <span>TV</span></div>
   <nav>
     <a href="#home" data-ar="الرئيسية" data-fr="Accueil">الرئيسية</a>
+    <a href="#featured-live" data-ar="قمة اليوم" data-fr="Top Match">قمة اليوم</a>
     <a href="#matches" data-ar="المباريات" data-fr="Matchs">المباريات</a>
     <a href="#live" data-ar="البث المباشر" data-fr="Direct">البث المباشر</a>
   </nav>
@@ -117,13 +124,70 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 <section class="hero" id="home">
   <h1 id="heroTitle">عالم كرة القدم مع <span>ALA TV</span></h1>
   <p id="heroText">تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد.</p>
-  <a href="#matches"><button id="heroBtn" type="button">اكتشف المباريات ↓</button></a>
+  <a href="#featured-live"><button id="heroBtn" type="button">شاهد قمة اليوم مباشرة ↓</button></a>
 </section>
 
 <main>
+
+<!-- خانة مباريات القمة المختارة للبث -->
+<section class="container" id="featured-live">
+  <h2>🔥 قمة اليوم المنقولة مباشرة</h2>
+  
+  <div class="top-match-card">
+    <div class="top-match-header">
+      <span class="top-match-badge" id="topMatchComp">دوري أبطال أوروبا</span>
+      <span class="top-match-live-tag">مباشر الآن 🔴</span>
+    </div>
+    
+    <div class="top-match-teams">
+      <div class="top-team-name" id="topMatchHome">ريال مدريد</div>
+      <div style="background:#090911; border:1px solid var(--purple); padding:6px 14px; border-radius:8px; font-weight:bold; color:var(--light);">VS</div>
+      <div class="top-team-name" id="topMatchAway">مانشستر سيتي</div>
+    </div>
+    
+    <!-- عند الضغط يتم تشغيل مصدر البث مباشرة في المشغل أدناه -->
+    <button class="btn-direct-stream" type="button" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'ريال مدريد × مانشستر سيتي', 'دوري أبطال أوروبا')">
+      ▶ تشغيل البث المباشر للمباراة
+    </button>
+  </div>
+</section>
+
+<!-- مشغل البث الرئيسي -->
+<section class="container" id="live">
+  <h2 id="liveTitle">منطقة البث المباشر</h2>
+  
+  <div class="player-wrapper">
+    <div class="player-meta">
+      <div>
+        <div class="match-name" id="currentStreamTitle">اختر مباراة من القائمة أو اضغط للتشغيل</div>
+        <div class="match-comp" id="currentStreamSub">البث المباشر المباشر بدقة عالية وبدون تقطيع</div>
+      </div>
+      <div class="status live" id="liveTag">مباشر • LIVE</div>
+    </div>
+
+    <!-- شاشة المشغل بمصدر واحد -->
+    <div class="video-responsive">
+      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'بث مباشر', 'ALA TV Live')">
+        <div class="play-icon">▶</div>
+        <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
+        <p id="playerText">اضغط هنا أو على زر المباراة لتشغيل البث فوراً.</p>
+      </div>
+      <iframe id="streamIframe" 
+              src="" 
+              allowfullscreen="true" 
+              webkitallowfullscreen="true" 
+              mozallowfullscreen="true" 
+              style="display:none;">
+      </iframe>
+    </div>
+  </div>
+  <p class="notice" id="legalNotice">يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو.</p>
+</section>
+
+<!-- قائمة المباريات ومواعيدها -->
 <section class="container" id="matches">
   <div class="section-head">
-    <h2 id="matchesTitle">مباريات كرة القدم</h2>
+    <h2 id="matchesTitle">جدول مباريات اليوم</h2>
     <div class="filters">
       <input type="date" id="matchDate" aria-label="تاريخ المباريات">
       <select id="leagueFilter" aria-label="فلترة المباريات">
@@ -141,43 +205,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<section class="container" id="live">
-  <h2 id="liveTitle">منطقة البث المباشر</h2>
-  
-  <div class="player-wrapper">
-    <div class="player-meta">
-      <div>
-        <div class="match-name" id="currentStreamTitle">اختر مباراة من القائمة أو اضغط للتشغيل</div>
-        <div class="match-comp" id="currentStreamSub">البث المباشر يدعم جميع الجودات والهواتف</div>
-      </div>
-      <div class="status live" id="liveTag">مباشر • LIVE</div>
-    </div>
-
-    <!-- أزرار السيرفرات -->
-    <div class="server-bar" id="serverBar">
-      <button class="btn-server active" type="button" onclick="switchServer(1)">سيرفر 1 (Dailymotion)</button>
-      <button class="btn-server" type="button" onclick="switchServer(2)">سيرفر 2 (تجريبي)</button>
-      <button class="btn-server" type="button" onclick="switchServer(3)">سيرفر 3 (بديل)</button>
-    </div>
-
-    <!-- شاشة المشغل -->
-    <div class="video-responsive">
-      <div class="player-placeholder" id="playerPlaceholder" onclick="switchServer(1)">
-        <div class="play-icon">▶</div>
-        <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
-        <p id="playerText">اضغط هنا أو على السيرفر لتشغيل البث التجريبي فوراً.</p>
-      </div>
-      <iframe id="streamIframe" 
-              src="" 
-              allowfullscreen="true" 
-              webkitallowfullscreen="true" 
-              mozallowfullscreen="true" 
-              style="display:none;">
-      </iframe>
-    </div>
-  </div>
-  <p class="notice" id="legalNotice">يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو.</p>
-</section>
 </main>
 
 <footer>
@@ -202,16 +229,9 @@ const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
 let language = "ar";
 let allMatches = [];
 let activeMatch = null;
-let currentServers = null;
 
-/* روابط تجريبية مسموحة بالتضمين دون حظر */
-const streamDatabase = {
-  defaultLive: {
-    1: "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26",
-    2: "https://912acsss8af382.sirtv.top/playerv5.php?match=4828708&key=9f39972b67d6ce22189507d008acwc26",
-    3: "https://www.dailymotion.com/embed/video/x8m4j75"
-  }
-};
+// رابط البث الوحيد المباشر
+const MAIN_STREAM_URL = "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26";
 
 const $ = id => document.getElementById(id);
 
@@ -307,42 +327,28 @@ function teamMarkup(team) {
   </div>`;
 }
 
-/* تشغيل البث لمباراة معينة */
+/* دالة تشغيل البث المباشر بمصدر وحيد ونظيف */
+function playSingleSource(url, title, comp) {
+  const streamUrl = url || MAIN_STREAM_URL;
+  const iframe = $("streamIframe");
+  const placeholder = $("playerPlaceholder");
+
+  if (title) $("currentStreamTitle").textContent = title;
+  if (comp) $("currentStreamSub").textContent = comp;
+
+  iframe.src = streamUrl;
+  iframe.style.display = "block";
+  placeholder.style.display = "none";
+
+  $("live").scrollIntoView({ behavior: "smooth" });
+}
+
 function startStream(match) {
   const home = getName(match.homeTeam);
   const away = getName(match.awayTeam);
   const comp = match.competition?.name || "";
 
-  $("currentStreamTitle").textContent = `${home} × ${away}`;
-  $("currentStreamSub").textContent = `${comp} • ${formatTime(match)}`;
-
-  currentServers = (match && streamDatabase[match.id]) ? streamDatabase[match.id] : streamDatabase.defaultLive;
-  switchServer(1);
-
-  $("live").scrollIntoView({ behavior: "smooth" });
-}
-
-/* تبديل السيرفر داخل المشغل */
-function switchServer(serverNum) {
-  const buttons = document.querySelectorAll(".btn-server");
-  buttons.forEach((btn, idx) => {
-    btn.classList.toggle("active", idx === (serverNum - 1));
-  });
-
-  const activeSrcs = currentServers || streamDatabase.defaultLive;
-  const url = activeSrcs ? activeSrcs[serverNum] : "";
-  const iframe = $("streamIframe");
-  const placeholder = $("playerPlaceholder");
-
-  if (url && url.trim() !== "") {
-    iframe.src = url;
-    iframe.style.display = "block";
-    placeholder.style.display = "none";
-  } else {
-    iframe.src = "about:blank";
-    iframe.style.display = "none";
-    placeholder.style.display = "flex";
-  }
+  playSingleSource(MAIN_STREAM_URL, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }
 
 function renderMatches() {
@@ -550,8 +556,8 @@ function toggleLanguage() {
     ? "تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد."
     : "Suivez les matchs, les horaires, les résultats et le streaming au même endroit.";
 
-  $("heroBtn").textContent = ar ? "اكتشف المباريات ↓" : "Découvrir les matchs ↓";
-  $("matchesTitle").textContent = ar ? "مباريات كرة القدم" : "Matchs de football";
+  $("heroBtn").textContent = ar ? "شاهد قمة اليوم مباشرة ↓" : "Voir le match du jour ↓";
+  $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";
   $("liveTitle").textContent = ar ? "منطقة البث المباشر" : "Espace de diffusion en direct";
   $("legalNotice").textContent = ar
     ? "يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو."

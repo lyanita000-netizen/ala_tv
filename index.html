@@ -54,8 +54,8 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .notice{color:var(--muted);font-size:13px;line-height:1.7}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:14px;padding:25px;text-align:center;color:var(--muted);line-height:1.8}
 
-/* مباريات القمة المميزة */
-.top-match-card{background:var(--panel);border:2px solid var(--purple);border-radius:16px;padding:20px;margin-bottom:25px;box-shadow:0 8px 25px rgba(139,92,246,0.15)}
+/* بطاقة مباراة القمة */
+.top-match-card{background:var(--panel);border:2px solid var(--purple);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 8px 25px rgba(139,92,246,0.15)}
 .top-match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .top-match-badge{background:rgba(139,92,246,0.2);color:var(--light);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
 .top-match-live-tag{background:var(--red);color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:bold;animation:pulse 1.5s infinite}
@@ -114,7 +114,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <div class="logo">ALA <span>TV</span></div>
   <nav>
     <a href="#home" data-ar="الرئيسية" data-fr="Accueil">الرئيسية</a>
-    <a href="#featured-live" data-ar="قمة اليوم" data-fr="Top Match">قمة اليوم</a>
     <a href="#matches" data-ar="المباريات" data-fr="Matchs">المباريات</a>
     <a href="#live" data-ar="البث المباشر" data-fr="Direct">البث المباشر</a>
   </nav>
@@ -124,67 +123,12 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 <section class="hero" id="home">
   <h1 id="heroTitle">عالم كرة القدم مع <span>ALA TV</span></h1>
   <p id="heroText">تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد.</p>
-  <a href="#featured-live"><button id="heroBtn" type="button">شاهد قمة اليوم مباشرة ↓</button></a>
+  <a href="#matches"><button id="heroBtn" type="button">جدول مباريات اليوم ↓</button></a>
 </section>
 
 <main>
 
-<!-- خانة مباريات القمة المختارة للبث -->
-<section class="container" id="featured-live">
-  <h2>🔥 قمة اليوم المنقولة مباشرة</h2>
-  
-  <div class="top-match-card">
-    <div class="top-match-header">
-      <span class="top-match-badge" id="topMatchComp">دوري أبطال أوروبا</span>
-      <span class="top-match-live-tag">مباشر الآن 🔴</span>
-    </div>
-    
-    <div class="top-match-teams">
-      <div class="top-team-name" id="topMatchHome">ريال مدريد</div>
-      <div style="background:#090911; border:1px solid var(--purple); padding:6px 14px; border-radius:8px; font-weight:bold; color:var(--light);">VS</div>
-      <div class="top-team-name" id="topMatchAway">مانشستر سيتي</div>
-    </div>
-    
-    <!-- عند الضغط يتم تشغيل مصدر البث مباشرة في المشغل أدناه -->
-    <button class="btn-direct-stream" type="button" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'ريال مدريد × مانشستر سيتي', 'دوري أبطال أوروبا')">
-      ▶ تشغيل البث المباشر للمباراة
-    </button>
-  </div>
-</section>
-
-<!-- مشغل البث الرئيسي -->
-<section class="container" id="live">
-  <h2 id="liveTitle">منطقة البث المباشر</h2>
-  
-  <div class="player-wrapper">
-    <div class="player-meta">
-      <div>
-        <div class="match-name" id="currentStreamTitle">اختر مباراة من القائمة أو اضغط للتشغيل</div>
-        <div class="match-comp" id="currentStreamSub">البث المباشر المباشر بدقة عالية وبدون تقطيع</div>
-      </div>
-      <div class="status live" id="liveTag">مباشر • LIVE</div>
-    </div>
-
-    <!-- شاشة المشغل بمصدر واحد -->
-    <div class="video-responsive">
-      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'بث مباشر', 'ALA TV Live')">
-        <div class="play-icon">▶</div>
-        <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
-        <p id="playerText">اضغط هنا أو على زر المباراة لتشغيل البث فوراً.</p>
-      </div>
-      <iframe id="streamIframe" 
-              src="" 
-              allowfullscreen="true" 
-              webkitallowfullscreen="true" 
-              mozallowfullscreen="true" 
-              style="display:none;">
-      </iframe>
-    </div>
-  </div>
-  <p class="notice" id="legalNotice">يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو.</p>
-</section>
-
-<!-- قائمة المباريات ومواعيدها -->
+<!-- 1. جدول المباريات في الأعلى أولاً -->
 <section class="container" id="matches">
   <div class="section-head">
     <h2 id="matchesTitle">جدول مباريات اليوم</h2>
@@ -203,6 +147,56 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     <div class="message">جاري تحميل المباريات...</div>
   </div>
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
+</section>
+
+<!-- 2. منطقة البث المباشر وقسم القمة في الأسفل -->
+<section class="container" id="live">
+  <h2 id="liveTitle">منطقة البث المباشر</h2>
+
+  <!-- بطاقة قمة اليوم الترويجية للبث -->
+  <div class="top-match-card">
+    <div class="top-match-header">
+      <span class="top-match-badge" id="topMatchComp">دوري أبطال أوروبا</span>
+      <span class="top-match-live-tag">مباشر الآن 🔴</span>
+    </div>
+    
+    <div class="top-match-teams">
+      <div class="top-team-name" id="topMatchHome">ريال مدريد</div>
+      <div style="background:#090911; border:1px solid var(--purple); padding:6px 14px; border-radius:8px; font-weight:bold; color:var(--light);">VS</div>
+      <div class="top-team-name" id="topMatchAway">مانشستر سيتي</div>
+    </div>
+    
+    <button class="btn-direct-stream" type="button" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'ريال مدريد × مانشستر سيتي', 'دوري أبطال أوروبا')">
+      ▶ تشغيل البث المباشر للمباراة
+    </button>
+  </div>
+  
+  <!-- شاشة المشغل -->
+  <div class="player-wrapper">
+    <div class="player-meta">
+      <div>
+        <div class="match-name" id="currentStreamTitle">اختر مباراة من القائمة أو اضغط للتشغيل</div>
+        <div class="match-comp" id="currentStreamSub">البث المباشر عالي السرعة لجميع الأجهزة</div>
+      </div>
+      <div class="status live" id="liveTag">مباشر • LIVE</div>
+    </div>
+
+    <div class="video-responsive">
+      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource('https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26', 'بث مباشر', 'ALA TV Live')">
+        <div class="play-icon">▶</div>
+        <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
+        <p id="playerText">اضغط هنا أو على أي مباراة لتشغيل البث فوراً.</p>
+      </div>
+      <iframe id="streamIframe" 
+              src="" 
+              allowfullscreen="true" 
+              webkitallowfullscreen="true" 
+              mozallowfullscreen="true" 
+              style="display:none;">
+      </iframe>
+    </div>
+  </div>
+  <p class="notice" id="legalNotice">يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو.</p>
 </section>
 
 </main>
@@ -230,7 +224,7 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-// رابط البث الوحيد المباشر
+// رابط البث المباشر الوحيد
 const MAIN_STREAM_URL = "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26";
 
 const $ = id => document.getElementById(id);
@@ -327,7 +321,6 @@ function teamMarkup(team) {
   </div>`;
 }
 
-/* دالة تشغيل البث المباشر بمصدر وحيد ونظيف */
 function playSingleSource(url, title, comp) {
   const streamUrl = url || MAIN_STREAM_URL;
   const iframe = $("streamIframe");
@@ -556,7 +549,7 @@ function toggleLanguage() {
     ? "تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد."
     : "Suivez les matchs, les horaires, les résultats et le streaming au même endroit.";
 
-  $("heroBtn").textContent = ar ? "شاهد قمة اليوم مباشرة ↓" : "Voir le match du jour ↓";
+  $("heroBtn").textContent = ar ? "جدول مباريات اليوم ↓" : "Matchs du jour ↓";
   $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";
   $("liveTitle").textContent = ar ? "منطقة البث المباشر" : "Espace de diffusion en direct";
   $("legalNotice").textContent = ar

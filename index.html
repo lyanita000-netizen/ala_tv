@@ -91,10 +91,47 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #28203d}
 .player-meta .match-name{font-weight:bold;font-size:17px;color:white}
 .player-meta .match-comp{color:var(--light);font-size:13px}
+
+/* منطقة الفيديو وحاوية ملء الشاشة */
 .video-responsive{position:relative;width:100%;padding-top:56.25%;background:#020205;border-radius:12px;overflow:hidden}
+.video-responsive:fullscreen, .video-responsive:-webkit-full-screen {
+  padding-top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+}
 .video-responsive iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
-/* تحسين الطبقات للهاتف وتفادي حجب النقرات */
+/* زر تكبير الشاشة المخصص للهاتف والكمبيوتر */
+.fullscreen-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(17, 16, 28, 0.9);
+  color: #f5f3ff;
+  border: 1px solid rgba(139, 92, 246, 0.6);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 25;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  transition: .2s;
+}
+.fullscreen-btn:hover {
+  background: var(--purple);
+  transform: scale(1.05);
+}
+.fullscreen-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* طبقات التغطية الأساسية */
 .video-cover-top {
   position: absolute;
   top: 3.2%;
@@ -195,7 +232,32 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   .matches{grid-template-columns:repeat(2,minmax(0,1fr))}
   header{justify-content:center}nav{justify-content:center}
 }
-@media(max-width:600px){
+
+/* تنسيقات الشاشات الصغيرة والهواتف */
+@media(max-width:650px){
+  #live.container {
+    width: 98% !important;
+    margin: 15px auto !important;
+    padding: 0 !important;
+  }
+  .player-wrapper {
+    padding: 6px !important;
+    border-radius: 12px !important;
+  }
+  .video-responsive {
+    padding-top: 66% !important;
+    border-radius: 8px !important;
+  }
+  .fullscreen-btn {
+    top: 8px !important;
+    left: 8px !important;
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .fullscreen-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
   .video-cover-top {
     width: 105px !important;
     height: 34px !important;
@@ -204,9 +266,9 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     right: 2% !important;
   }
   .video-cover-bottom {
-    width: 94% !important;
+    width: 92% !important;
     min-width: 0 !important;
-    height: 34px !important;
+    height: 32px !important;
     bottom: 2% !important;
     padding: 0 8px !important;
   }
@@ -217,15 +279,20 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     width: 13px !important;
     height: 13px !important;
   }
+  .btn-channel {
+    flex: 1 1 45%;
+    font-size: 11px;
+    padding: 8px 6px;
+    text-align: center;
+  }
 }
+
 @media(max-width:520px){
   .matches{grid-template-columns:1fr}
   .hero{padding:32px 18px}
-  .container{width:92%}
   .section-head{align-items:flex-start}
   .filters{width:100%}
   .filters select,.filters input{flex:1;min-width:0}
-  .player-wrapper{padding:12px}
 }
 </style>
 </head>
@@ -293,7 +360,13 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
 
-    <div class="video-responsive">
+    <div class="video-responsive" id="videoContainer">
+      <!-- زر تكبير الشاشة في الهاتف والكمبيوتر -->
+      <button type="button" class="fullscreen-btn" onclick="toggleFullScreen()" title="ملء الشاشة" aria-label="ملء الشاشة">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </button>
+
+      <!-- أغطية المشغل -->
       <div class="video-cover-top">ALA <span>TV</span></div>
 
       <div class="video-cover-bottom">
@@ -304,7 +377,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
         <span class="bottom-promo-text" id="bottomCoverText">حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية</span>
       </div>
 
-      <!-- وسم الـ iframe مزوّد بكامل صلاحيات الهواتف واللمس المتعدد -->
       <iframe id="streamIframe" 
               src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26" 
               allowfullscreen="true" 
@@ -369,6 +441,35 @@ const LEAGUE_PRIORITIES = [
 ];
 
 const $ = id => document.getElementById(id);
+
+/* دالة ملء الشاشة المتوافقة مع أجهزة الهواتف الذكية */
+function toggleFullScreen() {
+  const elem = $("videoContainer");
+  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock("landscape").catch(() => {});
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+}
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -728,14 +829,14 @@ function toggleLanguage() {
 
   $("heroText").textContent = ar
     ? "تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد."
-    : "Suivez les matchs, les horaires, les نتائج et le streaming au même endroit.";
+    : "Suivez les matchs, les horaires, les résultats et le streaming au même endroit.";
 
   $("heroBtn").textContent = ar ? "جدول مباريات اليوم ↓" : "Matchs du jour ↓";
   $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";
   $("liveTitle").textContent = ar ? "🔥 أهم 5 قمم منقولة اليوم" : "🔥 Top 5 Matchs en direct";
   $("legalNotice").textContent = ar
     ? "يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو."
-    : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune فيديو.";
+    : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune vidéo.";
   $("footerText").textContent = ar
     ? "كرة القدم تجمعنا — منصتك الرياضية الأولى للبث والنتائج."
     : "Le football nous rassemble — votre plateforme de direct et scores.";

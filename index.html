@@ -285,14 +285,14 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <div class="player-wrapper">
     <!-- أزرار الاختيار بين المباريات -->
     <div class="stream-switchers">
-      <button type="button" id="btnSevilla" class="btn-channel active" onclick="switchMatch('sevilla')">⚪ مباراة إشبيلية (مباشر الآن)</button>
-      <button type="button" id="btnEverton" class="btn-channel" onclick="switchMatch('everton')">🔵 مباراة إيفرتون (مباشر)</button>
+      <button type="button" id="btnEverton" class="btn-channel active" onclick="switchMatch('everton')">🔵 مباراة إيفرتون (مباشر الآن)</button>
+      <button type="button" id="btnSevilla" class="btn-channel" onclick="switchMatch('sevilla')">⚪ مباراة إشبيلية (مباشر)</button>
     </div>
 
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">إشبيلية × المنافس</div>
-        <div class="match-comp" id="currentStreamSub">الدوري الإسباني (La Liga) • بث مباشر عالي السرعة</div>
+        <div class="match-name" id="currentStreamTitle">إيفرتون × المنافس</div>
+        <div class="match-comp" id="currentStreamSub">الدوري الإنجليزي الممتاز • بث مباشر عالي السرعة</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
@@ -304,15 +304,15 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
       <!-- كبسولة الترويج لتطبيق Koora Live -->
       <div class="video-cover-bottom">
         <div class="store-badges">
-          <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001.001-.001z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001z"/></svg>
           <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-.93 2.73 1 .08 2.02-.48 2.64-1.23z"/></svg>
         </div>
         <span class="bottom-promo-text" id="bottomCoverText">حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية</span>
       </div>
 
-      <!-- مشغل البث المباشر الفعلي المفتوح على مباراة إشبيلية -->
+      <!-- مشغل البث المباشر الفعلي المفتوح مباشرة على مباراة إيفرتون -->
       <iframe id="streamIframe" 
-              src="https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26" 
+              src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26" 
               allowfullscreen="true" 
               webkitallowfullscreen="true" 
               mozallowfullscreen="true" 
@@ -353,17 +353,17 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-// روابط البث المباشر المحدثة
+// روابط البث المباشر
 const STREAMS = {
-  sevilla: {
-    title: "إشبيلية × المنافس",
-    comp: "الدوري الإسباني (La Liga) • بث مباشر عالي السرعة",
-    url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26"
-  },
   everton: {
     title: "إيفرتون × المنافس",
     comp: "الدوري الإنجليزي الممتاز • بث مباشر عالي السرعة",
     url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26"
+  },
+  sevilla: {
+    title: "إشبيلية × المنافس",
+    comp: "الدوري الإسباني (La Liga) • بث مباشر عالي السرعة",
+    url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26"
   }
 };
 
@@ -440,8 +440,8 @@ function switchMatch(key) {
   if (!item) return;
 
   document.querySelectorAll(".btn-channel").forEach(btn => btn.classList.remove("active"));
-  if (key === 'sevilla') $("btnSevilla").classList.add("active");
   if (key === 'everton') $("btnEverton").classList.add("active");
+  if (key === 'sevilla') $("btnSevilla").classList.add("active");
 
   playSingleSource(item.url, item.title, item.comp);
 }
@@ -461,7 +461,7 @@ function startStream(match) {
   const away = getName(match?.awayTeam);
   const comp = match?.competition?.name || "";
 
-  playSingleSource(STREAMS.sevilla.url, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
+  playSingleSource(STREAMS.everton.url, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }
 
 function updateTop5Matches(matches) {
@@ -471,7 +471,24 @@ function updateTop5Matches(matches) {
     return;
   }
 
-  const sorted = [...matches].sort((a, b) => {
+  // استبدال أي مباراة لأودينيزي بمباراة إيفرتون برمجياً
+  let processedMatches = matches.map(m => {
+    const isUdinese = (m.homeTeam?.name || "").toLowerCase().includes("udinese") || 
+                      (m.awayTeam?.name || "").toLowerCase().includes("udinese");
+    if (isUdinese) {
+      return {
+        ...m,
+        id: 999999,
+        homeTeam: { name: "إيفرتون", crest: "https://crests.football-data.org/62.png" },
+        awayTeam: { name: "المنافس", crest: "" },
+        competition: { name: "الدوري الإنجليزي الممتاز" },
+        status: "IN_PLAY"
+      };
+    }
+    return m;
+  });
+
+  const sorted = [...processedMatches].sort((a, b) => {
     const isLiveA = a.status === "IN_PLAY" ? 1 : 0;
     const isLiveB = b.status === "IN_PLAY" ? 1 : 0;
     if (isLiveA !== isLiveB) return isLiveB - isLiveA;

@@ -217,8 +217,8 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <div class="player-wrapper">
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">اختر مباراة للتشغيل</div>
-        <div class="match-comp" id="currentStreamSub">البث المباشر عالي السرعة لجميع الأجهزة</div>
+        <div class="match-name" id="currentStreamTitle">اتحاد الجزائر × مولودية وهران</div>
+        <div class="match-comp" id="currentStreamSub">الرابطة المحترفة الأولى الجزائرية • بث تجريبي</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
@@ -238,16 +238,17 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
         </span>
       </div>
 
-      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource(MAIN_STREAM_URL, 'بث مباشر', 'ALA TV Live')">
+      <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource(MAIN_STREAM_URL, 'اتحاد الجزائر × مولودية وهران', 'الرابطة المحترفة الأولى • بث مباشر')">
         <div class="play-icon">▶</div>
         <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
-        <p id="playerText">اضغط على أي مباراة في الأعلى لتشغيل البث فوراً.</p>
+        <p id="playerText">اضغط هنا أو على أي مباراة لتشغيل البث فوراً.</p>
       </div>
       <iframe id="streamIframe" 
               src="" 
               allowfullscreen="true" 
               webkitallowfullscreen="true" 
               mozallowfullscreen="true" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               style="display:none;">
       </iframe>
     </div>
@@ -285,8 +286,8 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-// رابط البث المباشر الرئيسي
-const MAIN_STREAM_URL = "https://www.youtube.com/embed/live_stream?channel=UC...&autoplay=1";
+// رابط فيديو تجريبي جاهز ومضمون 100% للتأكد من عمل المشغل والشعارات
+const MAIN_STREAM_URL = "https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?autoplay=1&enablejsapi=1";
 
 // الأولويات الصارمة للبطولات الخمس الكبرى
 const LEAGUE_PRIORITIES = [
@@ -380,9 +381,9 @@ function playSingleSource(url, title, comp) {
 }
 
 function startStream(match) {
-  const home = getName(match.homeTeam);
-  const away = getName(match.awayTeam);
-  const comp = match.competition?.name || "";
+  const home = getName(match?.homeTeam);
+  const away = getName(match?.awayTeam);
+  const comp = match?.competition?.name || "";
 
   playSingleSource(MAIN_STREAM_URL, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }

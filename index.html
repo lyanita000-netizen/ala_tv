@@ -54,15 +54,16 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .notice{color:var(--muted);font-size:13px;line-height:1.7}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:14px;padding:25px;text-align:center;color:var(--muted);line-height:1.8}
 
-/* بطاقة مباراة القمة */
-.top-match-card{background:var(--panel);border:2px solid var(--purple);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 8px 25px rgba(139,92,246,0.15)}
-.top-match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.top-match-badge{background:rgba(139,92,246,0.2);color:var(--light);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
-.top-match-live-tag{background:var(--red);color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:bold;animation:pulse 1.5s infinite}
-.top-match-teams{display:flex;justify-content:space-around;align-items:center;margin:15px 0}
-.top-team-name{font-size:18px;font-weight:bold;color:white}
-.btn-direct-stream{width:100%;background:linear-gradient(135deg,var(--purple),#6d28d9);color:white;padding:12px;border-radius:10px;border:none;font-size:15px;font-weight:bold;cursor:pointer;transition:.2s}
-.btn-direct-stream:hover{filter:brightness(1.15);box-shadow:0 0 15px rgba(139,92,246,0.5)}
+/* شبكة بطاقات القمم الخمس */
+.top-matches-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:20px}
+.top-match-card{background:var(--panel);border:1px solid #332748;border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.25)}
+.top-match-card:hover{border-color:var(--purple);transform:translateY(-2px)}
+.top-match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px}
+.top-match-badge{background:rgba(139,92,246,0.15);color:var(--light);padding:3px 8px;border-radius:12px;font-weight:bold}
+.top-match-live-tag{background:var(--red);color:white;padding:2px 7px;border-radius:5px;font-weight:bold;animation:pulse 1.5s infinite}
+.top-match-teams{display:flex;justify-content:space-between;align-items:center;margin:10px 0;font-weight:bold;font-size:13px}
+.btn-top-stream{background:var(--purple);color:white;padding:9px;border-radius:8px;border:none;font-size:12px;font-weight:bold;cursor:pointer;width:100%;transition:.2s}
+.btn-top-stream:hover{filter:brightness(1.15)}
 
 /* المشغل المتجاوب */
 .player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:18px;overflow:hidden;padding:18px}
@@ -128,7 +129,7 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 
 <main>
 
-<!-- 1. جدول المباريات في الأعلى أولاً -->
+<!-- 1. جدول المباريات في الأعلى -->
 <section class="container" id="matches">
   <div class="section-head">
     <h2 id="matchesTitle">جدول مباريات اليوم</h2>
@@ -136,8 +137,11 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
       <input type="date" id="matchDate" aria-label="تاريخ المباريات">
       <select id="leagueFilter" aria-label="فلترة المباريات">
         <option value="all">كل المباريات</option>
-        <option value="europe">أوروبا</option>
-        <option value="arab">مباريات عربية</option>
+        <option value="cl">أبطال أوروبا</option>
+        <option value="pl">الدوري الإنجليزي</option>
+        <option value="la_liga">الدوري الإسباني</option>
+        <option value="serie_a">الدوري الإيطالي</option>
+        <option value="ligue_1">الدوري الفرنسي</option>
       </select>
       <button id="refreshBtn" type="button" onclick="loadMatches()">تحديث</button>
     </div>
@@ -149,33 +153,20 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<!-- 2. منطقة البث المباشر وقسم القمة في الأسفل -->
+<!-- 2. منطقة البث المباشر وأهم 5 مباريات في الأسفل -->
 <section class="container" id="live">
-  <h2 id="liveTitle">منطقة البث المباشر</h2>
+  <h2 id="liveTitle">🔥 أهم 5 قمم منقولة اليوم</h2>
 
-  <!-- بطاقة قمة اليوم التي تتحدث تلقائياً -->
-  <div class="top-match-card">
-    <div class="top-match-header">
-      <span class="top-match-badge" id="topMatchComp">مباراة اليوم</span>
-      <span class="top-match-live-tag" id="topMatchStatus">مباشر الآن 🔴</span>
-    </div>
-    
-    <div class="top-match-teams">
-      <div class="top-team-name" id="topMatchHome">الفريق الأول</div>
-      <div style="background:#090911; border:1px solid var(--purple); padding:6px 14px; border-radius:8px; font-weight:bold; color:var(--light);">VS</div>
-      <div class="top-team-name" id="topMatchAway">الفريق الثاني</div>
-    </div>
-    
-    <button class="btn-direct-stream" id="topMatchBtn" type="button" onclick="playCurrentTopMatch()">
-      ▶ تشغيل البث المباشر للمباراة
-    </button>
+  <!-- شبكة الـ 5 خانات التلقائية -->
+  <div class="top-matches-grid" id="topMatchesList">
+    <div class="message" style="grid-column: 1/-1;">جاري تحديد أهم مباريات اليوم...</div>
   </div>
   
   <!-- شاشة المشغل -->
   <div class="player-wrapper">
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">اختر مباراة من القائمة أو اضغط للتشغيل</div>
+        <div class="match-name" id="currentStreamTitle">اختر مباراة للتشغيل</div>
         <div class="match-comp" id="currentStreamSub">البث المباشر عالي السرعة لجميع الأجهزة</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
@@ -185,7 +176,7 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
       <div class="player-placeholder" id="playerPlaceholder" onclick="playSingleSource(MAIN_STREAM_URL, 'بث مباشر', 'ALA TV Live')">
         <div class="play-icon">▶</div>
         <h3 id="playerTitle">مساحة البث المباشر لـ ALA TV</h3>
-        <p id="playerText">اضغط هنا أو على أي مباراة لتشغيل البث فوراً.</p>
+        <p id="playerText">اضغط على أي مباراة في الأعلى لتشغيل البث فوراً.</p>
       </div>
       <iframe id="streamIframe" 
               src="" 
@@ -223,16 +214,17 @@ const API_BASE = "https://ala-tv-api.lyanita000.workers.dev";
 let language = "ar";
 let allMatches = [];
 let activeMatch = null;
-let currentTopMatchObj = null;
 
-// رابط البث المباشر الوحيد
+// رابط البث المباشر الرئيسي
 const MAIN_STREAM_URL = "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26";
 
-// قائمة بأبرز الأندية الكبرى للتعرف التلقائي على مباريات القمة
-const TOP_TEAMS = [
-  "Real Madrid", "Barcelona", "Man City", "Manchester City", "Liverpool", "Arsenal", "Chelsea", "Man United", 
-  "Bayern", "Dortmund", "Paris", "PSG", "Inter", "Milan", "Juventus", "Napoli", "Al Ahly", "Zamalek", "Wydad", "Raja",
-  "ريال مدريد", "برشلونة", "مانشستر سيتي", "ليفربول", "أرسنال", "بايرن ميونخ", "باريس", "الأهلي", "الزمالك"
+// الأولويات الصارمة للبطولات الخمس الكبرى
+const LEAGUE_PRIORITIES = [
+  { key: "cl", rank: 1, words: ["champions league", "ابطال اوروبا", "أبطال أوروبا"] },
+  { key: "pl", rank: 2, words: ["premier league", "الانجليزي", "الدوري الإنجليزي"] },
+  { key: "la_liga", rank: 3, words: ["la liga", "primera", "الاسباني", "الدوري الإسباني"] },
+  { key: "serie_a", rank: 4, words: ["serie a", "الايطالي", "الدوري الإيطالي"] },
+  { key: "ligue_1", rank: 5, words: ["ligue 1", "الفرنسي", "الدوري الفرنسي"] }
 ];
 
 const $ = id => document.getElementById(id);
@@ -271,9 +263,6 @@ function formatTime(match) {
 
   return new Intl.DateTimeFormat(language === "ar" ? "ar-DZ" : "fr-FR", {
     timeZone: "Africa/Algiers",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false
@@ -295,38 +284,14 @@ function statusLabel(status) {
   return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
 }
 
-function isArabMatch(match) {
-  const keywords = [
-    "الجزائر","مصر","المغرب","تونس","السعودية","قطر","الإمارات",
-    "العراق","الأردن","فلسطين","لبنان","سوريا","عمان","الكويت",
-    "البحرين","الاهلي","الأهلي","الزمالك","الوداد","الرجاء",
-    "Algeria","Egypt","Morocco","Tunisia","Saudi","Qatar","UAE",
-    "Iraq","Jordan","Palestine","Lebanon","Syria","Oman","Kuwait",
-    "Bahrain","Al Ahly","Zamalek","Wydad","Raja","USM Alger",
-    "MC Alger","JS Kabylie","CR Belouizdad","ES Sétif"
-  ];
-
-  const text = [
-    match.homeTeam?.name, match.awayTeam?.name, match.competition?.name
-  ].join(" ");
-
-  return keywords.some(word => text.toLowerCase().includes(word.toLowerCase()));
-}
-
-function leagueGroup(match) {
-  return isArabMatch(match) ? "arab" : "europe";
-}
-
-function teamMarkup(team) {
-  const name = getName(team);
-  const logo = team?.crest
-    ? `<img class="team-logo" src="${escapeHTML(team.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">`
-    : "";
-
-  return `<div class="team-side">
-    ${logo}
-    <span class="team">${escapeHTML(name)}</span>
-  </div>`;
+function getLeagueInfo(match) {
+  const comp = (match.competition?.name || "").toLowerCase();
+  for (const item of LEAGUE_PRIORITIES) {
+    if (item.words.some(w => comp.includes(w))) {
+      return item;
+    }
+  }
+  return { key: "other", rank: 99 };
 }
 
 function playSingleSource(url, title, comp) {
@@ -352,60 +317,78 @@ function startStream(match) {
   playSingleSource(MAIN_STREAM_URL, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }
 
-function playCurrentTopMatch() {
-  if (currentTopMatchObj) {
-    startStream(currentTopMatchObj);
-  } else {
-    playSingleSource(MAIN_STREAM_URL, "قمة اليوم", "ALA TV Live");
+// إنشاء وتحديث الخانات الـ 5 الأهم وفق الأولويات
+function updateTop5Matches(matches) {
+  const container = $("topMatchesList");
+  if (!matches || !matches.length) {
+    container.innerHTML = `<div class="message" style="grid-column: 1/-1;">لا توجد مباريات متاحة اليوم.</div>`;
+    return;
   }
+
+  // ترتيب المباريات: أولاً المباشرة الآن ثم حسب رتبة الدوري (أبطال أوروبا، إنجلترا، إسبانيا، إيطاليا، فرنسا)
+  const sorted = [...matches].sort((a, b) => {
+    const isLiveA = a.status === "IN_PLAY" ? 1 : 0;
+    const isLiveB = b.status === "IN_PLAY" ? 1 : 0;
+    if (isLiveA !== isLiveB) return isLiveB - isLiveA;
+
+    const rankA = getLeagueInfo(a).rank;
+    const rankB = getLeagueInfo(b).rank;
+    return rankA - rankB;
+  });
+
+  // أخذ أول 5 مباريات فقط
+  const top5 = sorted.slice(0, 5);
+
+  container.innerHTML = top5.map((match, i) => {
+    const home = getName(match.homeTeam);
+    const away = getName(match.awayTeam);
+    const comp = match.competition?.name || (language === "ar" ? "قمة اليوم" : "Match");
+    const isLive = match.status === "IN_PLAY";
+    const statusText = isLive 
+      ? (language === "ar" ? "مباشر 🔴" : "Direct 🔴") 
+      : formatTime(match);
+
+    return `
+      <div class="top-match-card">
+        <div>
+          <div class="top-match-header">
+            <span class="top-match-badge">${escapeHTML(comp)}</span>
+            <span class="${isLive ? 'top-match-live-tag' : 'status'}">${escapeHTML(statusText)}</span>
+          </div>
+          <div class="top-match-teams">
+            <span>${escapeHTML(home)}</span>
+            <span style="color:var(--purple);font-size:11px;">VS</span>
+            <span>${escapeHTML(away)}</span>
+          </div>
+        </div>
+        <button class="btn-top-stream" type="button" onclick="startStream(allMatches.find(m => m.id === ${match.id}) || top5[${i}])">
+          ▶ تشغيل البث
+        </button>
+      </div>
+    `;
+  }).join("");
 }
 
-// دالة التحديث التلقائي لخانة القمة وفق نتائج ومباريات اليوم
-function updateTopMatchAutomatically(matches) {
-  if (!matches || !matches.length) return;
+function teamMarkup(team) {
+  const name = getName(team);
+  const logo = team?.crest
+    ? `<img class="team-logo" src="${escapeHTML(team.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">`
+    : "";
 
-  // 1. مباراة قمة جارية الآن
-  let featured = matches.find(m => 
-    m.status === "IN_PLAY" && 
-    TOP_TEAMS.some(t => (m.homeTeam?.name + " " + m.awayTeam?.name).toLowerCase().includes(t.toLowerCase()))
-  );
-
-  // 2. إذا لم يجد، أي مباراة مباشرة الآن
-  if (!featured) {
-    featured = matches.find(m => m.status === "IN_PLAY");
-  }
-
-  // 3. إذا لم تبدأ المباريات، يختار أول قمة مبرمجة لليوم
-  if (!featured) {
-    featured = matches.find(m => 
-      TOP_TEAMS.some(t => (m.homeTeam?.name + " " + m.awayTeam?.name).toLowerCase().includes(t.toLowerCase()))
-    );
-  }
-
-  // 4. خيار افتراضي: أول مباراة في الجدول
-  if (!featured) featured = matches[0];
-
-  currentTopMatchObj = featured;
-
-  const home = getName(featured.homeTeam);
-  const away = getName(featured.awayTeam);
-  const comp = featured.competition?.name || (language === "ar" ? "مباراة اليوم" : "Match du jour");
-
-  $("topMatchHome").textContent = home;
-  $("topMatchAway").textContent = away;
-  $("topMatchComp").textContent = comp;
-  $("topMatchStatus").textContent = featured.status === "IN_PLAY" 
-    ? (language === "ar" ? "مباشر الآن 🔴" : "En direct 🔴")
-    : formatTime(featured);
+  return `<div class="team-side">
+    ${logo}
+    <span class="team">${escapeHTML(name)}</span>
+  </div>`;
 }
 
 function renderMatches() {
   const list = $("matchList");
   const selected = $("leagueFilter").value;
 
-  const matches = allMatches.filter(match =>
-    selected === "all" || leagueGroup(match) === selected
-  );
+  const matches = allMatches.filter(match => {
+    if (selected === "all") return true;
+    return getLeagueInfo(match).key === selected;
+  });
 
   if (!matches.length) {
     list.innerHTML = `<div class="message">${
@@ -566,7 +549,7 @@ async function loadMatches() {
 
     allMatches = data;
     renderMatches();
-    updateTopMatchAutomatically(allMatches);
+    updateTop5Matches(allMatches);
   } catch (error) {
     console.error("ALA TV fixtures error:", error);
     list.innerHTML = `<div class="message">${
@@ -607,7 +590,7 @@ function toggleLanguage() {
 
   $("heroBtn").textContent = ar ? "جدول مباريات اليوم ↓" : "Matchs du jour ↓";
   $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";
-  $("liveTitle").textContent = ar ? "منطقة البث المباشر" : "Espace de diffusion en direct";
+  $("liveTitle").textContent = ar ? "🔥 أهم 5 قمم منقولة اليوم" : "🔥 Top 5 Matchs en direct";
   $("legalNotice").textContent = ar
     ? "يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو."
     : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune vidéo.";
@@ -619,15 +602,15 @@ function toggleLanguage() {
     : "Les matchs affichés dépendent des données fournies par le fournisseur.";
 
   $("leagueFilter").innerHTML = ar
-    ? '<option value="all">كل المباريات</option><option value="europe">أوروبا</option><option value="arab">مباريات عربية</option>'
-    : '<option value="all">Tous les matchs</option><option value="europe">Europe</option><option value="arab">Matchs arabes</option>';
+    ? '<option value="all">كل المباريات</option><option value="cl">أبطال أوروبا</option><option value="pl">الدوري الإنجليزي</option><option value="la_liga">الدوري الإسباني</option><option value="serie_a">الدوري الإيطالي</option><option value="ligue_1">الدوري الفرنسي</option>'
+    : '<option value="all">Tous les matchs</option><option value="cl">Ligue des Champions</option><option value="pl">Premier League</option><option value="la_liga">La Liga</option><option value="serie_a">Serie A</option><option value="ligue_1">Ligue 1</option>';
 
   if ($("matchModal").classList.contains("open") && activeMatch) {
     openMatchDetails(activeMatch);
   }
 
   renderMatches();
-  if (allMatches.length) updateTopMatchAutomatically(allMatches);
+  if (allMatches.length) updateTop5Matches(allMatches);
   $("refreshBtn").textContent = ar ? "تحديث" : "Actualiser";
 }
 

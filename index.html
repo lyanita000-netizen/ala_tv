@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="monetag" content="68d201f3550c63676e20f1305f27f4da">
 <script>(function(s){s.dataset.zone='12201455',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#090911">
 <meta name="description" content="ALA TV - بث مباشر لمباريات كرة القدم ومواعيدها ونتائجها.">
 <title>ALA TV | عالم كرة القدم والبث المباشر</title>
@@ -54,7 +54,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .notice{color:var(--muted);font-size:13px;line-height:1.7}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:14px;padding:25px;text-align:center;color:var(--muted);line-height:1.8}
 
-/* شبكة بطاقات القمم الخمس */
 .top-matches-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:20px}
 .top-match-card{background:var(--panel);border:1px solid #332748;border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.25)}
 .top-match-card:hover{border-color:var(--purple);transform:translateY(-2px)}
@@ -65,7 +64,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .btn-top-stream{background:var(--purple);color:white;padding:9px;border-radius:8px;border:none;font-size:12px;font-weight:bold;cursor:pointer;width:100%;transition:.2s}
 .btn-top-stream:hover{filter:brightness(1.15)}
 
-/* أزرار التبديل السريع */
 .stream-switchers {
   display: flex;
   gap: 10px;
@@ -89,7 +87,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   border-color: var(--purple);
 }
 
-/* المشغل المتجاوب */
 .player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:18px;overflow:hidden;padding:18px}
 .player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #28203d}
 .player-meta .match-name{font-weight:bold;font-size:17px;color:white}
@@ -97,7 +94,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .video-responsive{position:relative;width:100%;padding-top:56.25%;background:#020205;border-radius:12px;overflow:hidden}
 .video-responsive iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
-/* طبقات التغطية المدروسة */
+/* تحسين الطبقات للهاتف وتفادي حجب النقرات */
 .video-cover-top {
   position: absolute;
   top: 3.2%;
@@ -116,7 +113,9 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   border: 2px solid rgba(139, 92, 246, 0.7);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.95);
   z-index: 10;
-  pointer-events: none;
+  pointer-events: none !important;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .video-cover-top span {
   color: var(--purple);
@@ -141,7 +140,9 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   border: 2px solid rgba(139, 92, 246, 0.55);
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.95);
   z-index: 10;
-  pointer-events: none;
+  pointer-events: none !important;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .bottom-promo-text {
@@ -167,7 +168,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   fill: #ffffff;
 }
 
-/* شريط إخلاء المسؤولية */
 .stream-disclaimer{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid #28203d;border-radius:10px;font-size:12px;line-height:1.7;color:#a3a0b5;text-align:center}
 .stream-disclaimer strong{color:#e2d9f3}
 .stream-disclaimer a{color:var(--light);text-decoration:underline;font-weight:bold;transition:.2s}
@@ -175,7 +175,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 
 footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;color:var(--muted);border-top:1px solid #29223f}
 
-/* تفاصيل المباراة */
 .modal{position:fixed;inset:0;z-index:1000;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}
 .modal.open{display:flex}
 .modal-box{width:100%;max-width:620px;max-height:90vh;overflow:auto;background:#141421;border:1px solid #443361;border-radius:18px;padding:22px}
@@ -198,25 +197,25 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 }
 @media(max-width:600px){
   .video-cover-top {
-    width: 115px;
-    height: 40px;
-    font-size: 14px;
-    top: 2.5%;
-    right: 2.5%;
+    width: 105px !important;
+    height: 34px !important;
+    font-size: 13px !important;
+    top: 2% !important;
+    right: 2% !important;
   }
   .video-cover-bottom {
-    width: 90%;
-    min-width: 0;
-    height: 38px;
-    bottom: 2.5%;
-    padding: 0 10px;
+    width: 94% !important;
+    min-width: 0 !important;
+    height: 34px !important;
+    bottom: 2% !important;
+    padding: 0 8px !important;
   }
   .bottom-promo-text {
-    font-size: 10px;
+    font-size: 10px !important;
   }
   .store-badges svg {
-    width: 14px;
-    height: 14px;
+    width: 13px !important;
+    height: 13px !important;
   }
 }
 @media(max-width:520px){
@@ -250,7 +249,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
 
 <main>
 
-<!-- 1. جدول المباريات في الأعلى -->
 <section class="container" id="matches">
   <div class="section-head">
     <h2 id="matchesTitle">جدول مباريات اليوم</h2>
@@ -274,7 +272,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<!-- 2. منطقة البث المباشر -->
 <section class="container" id="live">
   <h2 id="liveTitle">🔥 أهم 5 قمم منقولة اليوم</h2>
 
@@ -283,7 +280,6 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   </div>
   
   <div class="player-wrapper">
-    <!-- أزرار الاختيار بين المباريات -->
     <div class="stream-switchers">
       <button type="button" id="btnEverton" class="btn-channel active" onclick="switchMatch('everton')">🔵 مباراة إيفرتون (مباشر الآن)</button>
       <button type="button" id="btnSevilla" class="btn-channel" onclick="switchMatch('sevilla')">⚪ مباراة إشبيلية (مباشر)</button>
@@ -298,29 +294,27 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
     </div>
 
     <div class="video-responsive">
-      <!-- غطاء الشعار العلوي -->
       <div class="video-cover-top">ALA <span>TV</span></div>
 
-      <!-- كبسولة الترويج لتطبيق Koora Live -->
       <div class="video-cover-bottom">
         <div class="store-badges">
-          <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001.001-.001z"/></svg>
           <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-.93 2.73 1 .08 2.02-.48 2.64-1.23z"/></svg>
         </div>
         <span class="bottom-promo-text" id="bottomCoverText">حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية</span>
       </div>
 
-      <!-- مشغل البث المباشر الفعلي المفتوح مباشرة على مباراة إيفرتون -->
+      <!-- وسم الـ iframe مزوّد بكامل صلاحيات الهواتف واللمس المتعدد -->
       <iframe id="streamIframe" 
               src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26" 
               allowfullscreen="true" 
               webkitallowfullscreen="true" 
               mozallowfullscreen="true" 
-              allow="autoplay; encrypted-media">
+              allow="autoplay *; fullscreen *; encrypted-media *; picture-in-picture *"
+              playsinline>
       </iframe>
     </div>
 
-    <!-- شريط إخلاء المسؤولية -->
     <div class="stream-disclaimer" id="disclaimerBox">
       ⚠️ <strong>إخلاء مسؤولية:</strong> موقع <strong>ALA TV</strong> لا يستضيف أي بث على خوادمه الخاصة، والمشغلات مأخوذة من شبكات ومصادر خارجية متاحة للعامة. لإزالة أي محتوى يُرجى <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">مراسلتنا لحذف الرابط فوراً</a>.
     </div>
@@ -353,7 +347,6 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-// روابط البث المباشر
 const STREAMS = {
   everton: {
     title: "إيفرتون × المنافس",
@@ -471,7 +464,6 @@ function updateTop5Matches(matches) {
     return;
   }
 
-  // استبدال أي مباراة لأودينيزي بمباراة إيفرتون برمجياً
   let processedMatches = matches.map(m => {
     const isUdinese = (m.homeTeam?.name || "").toLowerCase().includes("udinese") || 
                       (m.awayTeam?.name || "").toLowerCase().includes("udinese");
@@ -589,12 +581,6 @@ function renderMatches() {
   list.querySelectorAll("[data-match-index]").forEach((card, index) => {
     const match = matches[index];
     card.addEventListener("click", () => openMatchDetails(match));
-    card.addEventListener("keydown", event => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openMatchDetails(match);
-      }
-    });
   });
 }
 
@@ -742,7 +728,7 @@ function toggleLanguage() {
 
   $("heroText").textContent = ar
     ? "تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد."
-    : "Suivez les matchs, les horaires, les résultats et le streaming au même endroit.";
+    : "Suivez les matchs, les horaires, les نتائج et le streaming au même endroit.";
 
   $("heroBtn").textContent = ar ? "جدول مباريات اليوم ↓" : "Matchs du jour ↓";
   $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";

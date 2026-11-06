@@ -65,6 +65,30 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .btn-top-stream{background:var(--purple);color:white;padding:9px;border-radius:8px;border:none;font-size:12px;font-weight:bold;cursor:pointer;width:100%;transition:.2s}
 .btn-top-stream:hover{filter:brightness(1.15)}
 
+/* أزرار التبديل السريع */
+.stream-switchers {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.btn-channel {
+  background: #1b172a;
+  border: 1px solid #372954;
+  color: #ddd6fe;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+.btn-channel:hover, .btn-channel.active {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+}
+
 /* المشغل المتجاوب */
 .player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:18px;overflow:hidden;padding:18px}
 .player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #28203d}
@@ -73,7 +97,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .video-responsive{position:relative;width:100%;padding-top:56.25%;background:#020205;border-radius:12px;overflow:hidden}
 .video-responsive iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
-/* طبقات التغطية المدروسة على حسب أبعاد البث */
+/* طبقات التغطية المدروسة */
 .video-cover-top {
   position: absolute;
   top: 3.2%;
@@ -250,30 +274,34 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<!-- 2. منطقة البث المباشر وأهم 5 مباريات في الأسفل -->
+<!-- 2. منطقة البث المباشر -->
 <section class="container" id="live">
   <h2 id="liveTitle">🔥 أهم 5 قمم منقولة اليوم</h2>
 
-  <!-- شبكة الـ 5 خانات التلقائية -->
   <div class="top-matches-grid" id="topMatchesList">
     <div class="message" style="grid-column: 1/-1;">جاري تحديد أهم مباريات اليوم...</div>
   </div>
   
-  <!-- شاشة المشغل -->
   <div class="player-wrapper">
+    <!-- أزرار الاختيار بين المباريات -->
+    <div class="stream-switchers">
+      <button type="button" id="btnSevilla" class="btn-channel active" onclick="switchMatch('sevilla')">⚪ مباراة إشبيلية (مباشر الآن)</button>
+      <button type="button" id="btnEverton" class="btn-channel" onclick="switchMatch('everton')">🔵 مباراة إيفرتون (مباشر)</button>
+    </div>
+
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">اتحاد الجزائر × مولودية وهران</div>
-        <div class="match-comp" id="currentStreamSub">الرابطة المحترفة الأولى • بث مباشر</div>
+        <div class="match-name" id="currentStreamTitle">إشبيلية × المنافس</div>
+        <div class="match-comp" id="currentStreamSub">الدوري الإسباني (La Liga) • بث مباشر عالي السرعة</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
 
     <div class="video-responsive">
-      <!-- غطاء شعار SIR TV العلوي -->
+      <!-- غطاء الشعار العلوي -->
       <div class="video-cover-top">ALA <span>TV</span></div>
 
-      <!-- كبسولة تغطية إعلان KoraPlus السفلي -->
+      <!-- كبسولة الترويج لتطبيق Koora Live -->
       <div class="video-cover-bottom">
         <div class="store-badges">
           <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a2.124 2.124 0 0 1-.22-.396V2.21c.063-.14.137-.273.219-.396zm11.3 9.071l2.428-2.428-10.97-6.27 8.542 8.698zm0 2.23l-8.542 8.698 10.97-6.27-2.428-2.428zm1.115-1.115l3.197 1.827c1.037.593 1.037 1.56 0 2.153l-2.083 1.19-2.228-2.229 1.114-1.115v-.002l-.001-.001.001-.002.001-.002.001-.001.001-.001z"/></svg>
@@ -282,9 +310,9 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
         <span class="bottom-promo-text" id="bottomCoverText">حمل تطبيق Koora Live لمتابعة المستجدات والأخبار الحصرية</span>
       </div>
 
-      <!-- المشغل الخارجي التلقائي -->
+      <!-- مشغل البث المباشر الفعلي المفتوح على مباراة إشبيلية -->
       <iframe id="streamIframe" 
-              src="https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26" 
+              src="https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26" 
               allowfullscreen="true" 
               webkitallowfullscreen="true" 
               mozallowfullscreen="true" 
@@ -292,7 +320,7 @@ footer{margin-top:50px;background:#11101c;padding:25px 6%;text-align:center;colo
       </iframe>
     </div>
 
-    <!-- شريط إخلاء المسؤولية القانوني -->
+    <!-- شريط إخلاء المسؤولية -->
     <div class="stream-disclaimer" id="disclaimerBox">
       ⚠️ <strong>إخلاء مسؤولية:</strong> موقع <strong>ALA TV</strong> لا يستضيف أي بث على خوادمه الخاصة، والمشغلات مأخوذة من شبكات ومصادر خارجية متاحة للعامة. لإزالة أي محتوى يُرجى <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">مراسلتنا لحذف الرابط فوراً</a>.
     </div>
@@ -325,7 +353,19 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-const MAIN_STREAM_URL = "https://912acsss8af382.sirtv.top/playerv5.php?match=4828703&key=9f39972b67d6ce22189507d008acwc26";
+// روابط البث المباشر المحدثة
+const STREAMS = {
+  sevilla: {
+    title: "إشبيلية × المنافس",
+    comp: "الدوري الإسباني (La Liga) • بث مباشر عالي السرعة",
+    url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26"
+  },
+  everton: {
+    title: "إيفرتون × المنافس",
+    comp: "الدوري الإنجليزي الممتاز • بث مباشر عالي السرعة",
+    url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26"
+  }
+};
 
 const LEAGUE_PRIORITIES = [
   { key: "cl", rank: 1, words: ["champions league", "ابطال اوروبا", "أبطال أوروبا"] },
@@ -395,14 +435,24 @@ function getLeagueInfo(match) {
   return { key: "other", rank: 99 };
 }
 
+function switchMatch(key) {
+  const item = STREAMS[key];
+  if (!item) return;
+
+  document.querySelectorAll(".btn-channel").forEach(btn => btn.classList.remove("active"));
+  if (key === 'sevilla') $("btnSevilla").classList.add("active");
+  if (key === 'everton') $("btnEverton").classList.add("active");
+
+  playSingleSource(item.url, item.title, item.comp);
+}
+
 function playSingleSource(url, title, comp) {
-  const streamUrl = url || MAIN_STREAM_URL;
   const iframe = $("streamIframe");
 
   if (title) $("currentStreamTitle").textContent = title;
   if (comp) $("currentStreamSub").textContent = comp;
 
-  if (iframe) iframe.src = streamUrl;
+  if (iframe) iframe.src = url;
   $("live").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -411,7 +461,7 @@ function startStream(match) {
   const away = getName(match?.awayTeam);
   const comp = match?.competition?.name || "";
 
-  playSingleSource(MAIN_STREAM_URL, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
+  playSingleSource(STREAMS.sevilla.url, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }
 
 function updateTop5Matches(matches) {
@@ -682,7 +732,7 @@ function toggleLanguage() {
   $("liveTitle").textContent = ar ? "🔥 أهم 5 قمم منقولة اليوم" : "🔥 Top 5 Matchs en direct";
   $("legalNotice").textContent = ar
     ? "يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو."
-    : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune vidéo.";
+    : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune فيديو.";
   $("footerText").textContent = ar
     ? "كرة القدم تجمعنا — منصتك الرياضية الأولى للبث والنتائج."
     : "Le football nous rassemble — votre plateforme de direct et scores.";

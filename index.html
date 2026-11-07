@@ -13,6 +13,7 @@
   --bg:#090911; --panel:#141421; --purple:#8b5cf6;
   --light:#c4b5fd; --text:#f5f3ff; --muted:#aaa6bd;
   --red:#ef4444; --green:#22c55e; --blue:#0088cc;
+  --card-bg:#161526; --card-border:#2b2640;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;scroll-behavior:smooth}
@@ -27,7 +28,7 @@ button{background:var(--purple);color:white;border:0;border-radius:8px;padding:8
 button:hover{filter:brightness(1.15)}
 
 /* Hero Section */
-.hero{margin:16px auto;width:92%;max-width:1200px;padding:25px 16px;border-radius:14px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
+.hero{margin:16px auto;width:92%;max-width:1100px;padding:26px 16px;border-radius:14px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
 .hero h1{font-size:clamp(20px,4vw,34px);margin:0 0 8px}
 .hero h1 span{color:var(--light)}
 .hero p{color:#ddd6fe;line-height:1.5;font-size:13px;margin-bottom:16px}
@@ -41,121 +42,131 @@ button:hover{filter:brightness(1.15)}
 .btn-ios{background:#2a2838;border-color:#4a3b69}
 .btn-matches-jump{background:var(--purple)}
 
-.container{width:92%;max-width:1200px;margin:18px auto}
-.section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.container{width:92%;max-width:1100px;margin:18px auto}
+.section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
 h2{font-size:18px;margin:0}
 h2:before{content:"";display:inline-block;width:4px;height:16px;background:var(--purple);margin-left:6px;vertical-align:middle;border-radius:4px}
 [dir="ltr"] h2:before{margin-left:0;margin-right:6px}
 .filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 select,input[type="date"]{background:var(--panel);color:var(--text);border:1px solid #3a3150;border-radius:6px;padding:6px 8px;font-size:12px;max-width:100%}
 
-/* Matches Grid - تصميم مضغوط وأنيق */
-.matches{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(215px, 1fr));
-  gap:8px;
-}
-.match{
-  background:var(--panel);
-  border:1px solid #252233;
-  border-radius:10px;
-  padding:8px 8px 6px;
-  text-align:center;
-  transition:.15s;
-  cursor:pointer;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-.match:hover{border-color:var(--purple);transform:translateY(-1px)}
-.league{
-  color:var(--light);
-  font-size:10px;
-  margin-bottom:6px;
-  font-weight:600;
-  white-space:nowrap;
+/* Matches Section - تصميم المجموعات حسب الدوري (النموذج 2) */
+.league-group{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:12px;
+  margin-bottom:14px;
   overflow:hidden;
-  text-overflow:ellipsis;
-  opacity:0.85;
 }
-.teams{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:4px;
-}
-.team-side{
-  width:40%;
-  min-width:0;
-  display:flex;
-  align-items:center;
-  flex-direction:column;
-  gap:3px;
-}
-.team{
+.league-header{
+  background:#1a172c;
+  padding:10px 14px;
+  font-size:12.5px;
   font-weight:bold;
-  font-size:11px;
-  line-height:1.2;
+  color:var(--light);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.league-header::before{
+  content:"🏆";
+  font-size:14px;
+}
+
+.match-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+  transition:background .15s ease;
+}
+.match-row:last-child{
+  border-bottom:none;
+}
+.match-row:hover{
+  background:rgba(139, 92, 246, 0.08);
+}
+
+/* جانب الفريقين */
+.team-item{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.team-item.home{
+  justify-content:flex-start;
+}
+.team-item.away{
+  justify-content:flex-end;
+  text-align:left;
+}
+.team-item-logo{
+  width:24px;
+  height:24px;
+  object-fit:contain;
+  flex-shrink:0;
+}
+.team-item-name{
+  font-size:12.5px;
+  font-weight:bold;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  width:100%;
 }
-.team-logo{width:26px;height:26px;object-fit:contain}
-.center-meta{
-  width:20%;
+
+/* عمود النتيجة والتوقيت بالوسط */
+.match-mid{
+  width:160px;
+  flex-shrink:0;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  gap:4px;
 }
-.ball{font-size:11px;color:var(--muted);font-weight:bold}
-.score{
+.match-score{
   font-size:14px;
   font-weight:900;
-  color:white;
-  white-space:nowrap;
+  color:#fff;
   direction:ltr;
-  background:rgba(255,255,255,0.06);
-  padding:2px 6px;
+  background:rgba(255,255,255,0.07);
+  padding:2px 8px;
   border-radius:6px;
+  letter-spacing:1px;
 }
-.match-bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-top:6px;
-  padding-top:4px;
-  border-top:1px solid rgba(255,255,255,0.04);
+.match-time{
+  font-size:11px;
+  font-weight:bold;
+  color:var(--muted);
 }
-.time{color:var(--muted);font-size:10px;font-weight:bold}
-.status{display:inline-block;background:#231c33;color:var(--light);border-radius:10px;padding:2px 7px;font-size:9.5px}
-.status.finished{background:#182e23;color:#86efac}
 
-/* شارات ومؤقت المباشر والاستراحة الصغير والمضغوط */
+/* شارات ومؤقت المباشر والاستراحة */
 .live-badge-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  padding: 2px 6px;
-  border-radius: 10px;
+  gap: 5px;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  padding: 2px 7px;
+  border-radius: 12px;
   animation: pulseLive 2s infinite ease-in-out;
 }
 .live-badge-wrapper.paused {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.16);
+  border-color: rgba(34, 197, 94, 0.5);
   animation: none;
 }
 @keyframes pulseLive {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.75; }
 }
-
 .live-badge-text {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: bold;
   color: #fca5a5;
   white-space: nowrap;
@@ -163,7 +174,6 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .live-badge-wrapper.paused .live-badge-text {
   color: #86efac;
 }
-
 .circle-timer {
   position: relative;
   width: 14px;
@@ -193,8 +203,11 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   stroke: var(--green);
 }
 
+.status{display:inline-block;background:#231c33;color:var(--light);border-radius:8px;padding:2px 7px;font-size:10px}
+.status.finished{background:#182e23;color:#86efac}
+
 .notice{color:var(--muted);font-size:11px;line-height:1.5;margin-top:8px}
-.message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:10px;padding:14px;text-align:center;color:var(--muted);font-size:12px}
+.message{background:var(--panel);border:1px solid #29263a;border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:12px}
 
 /* Stream Section */
 .stream-switchers {
@@ -351,47 +364,40 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
   margin-top: 4px;
 }
 
-/* تكيف ممتاز مع شاشات الهواتف */
 @media(max-width:650px){
-  .matches{
-    grid-template-columns: 1fr 1fr !important;
-    gap: 6px !important;
+  .match-row{
+    padding:8px 8px;
   }
-  .match{
-    padding: 6px 5px !important;
-    border-radius: 8px !important;
+  .team-item-logo{
+    width:20px;
+    height:20px;
   }
-  .team-logo{
-    width: 22px !important;
-    height: 22px !important;
+  .team-item-name{
+    font-size:11px;
   }
-  .team{
-    font-size: 10px !important;
+  .match-mid{
+    width:115px;
   }
-  .score{
-    font-size: 12px !important;
-    padding: 1px 4px !important;
+  .match-score{
+    font-size:12.5px;
+    padding:1px 5px;
   }
-  .time{
-    font-size: 9px !important;
-  }
-  .status{
-    font-size: 8.5px !important;
-    padding: 1px 5px !important;
-  }
-  .live-badge-wrapper{
-    padding: 1px 4px !important;
+  .match-time{
+    font-size:9.5px;
   }
   .live-badge-text{
-    font-size: 8.5px !important;
+    font-size:8.5px;
+  }
+  .live-badge-wrapper{
+    padding:1px 5px;
   }
   .circle-timer{
-    width: 12px !important;
-    height: 12px !important;
+    width:12px;
+    height:12px;
   }
   .circle-timer svg{
-    width: 12px !important;
-    height: 12px !important;
+    width:12px;
+    height:12px;
   }
   .hero-actions {
     flex-direction: column;
@@ -401,12 +407,6 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
     width: 100%;
     justify-content: center;
     padding: 9px;
-  }
-}
-
-@media(max-width:340px){
-  .matches{
-    grid-template-columns: 1fr !important;
   }
 }
 </style>
@@ -468,7 +468,7 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
     </div>
   </div>
 
-  <div class="matches" id="matchList" aria-live="polite">
+  <div id="matchList" aria-live="polite">
     <div class="message">جاري تحميل المباريات...</div>
   </div>
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
@@ -684,8 +684,8 @@ function statusLabel(status) {
     TIMED: ["مبرمجة", "Programmée"],
     IN_PLAY: ["مباشر", "En direct"],
     LIVE: ["مباشر", "En direct"],
-    "1H": ["مباشر 1", "Direct 1"],
-    "2H": ["مباشر 2", "Direct 2"],
+    "1H": ["مباشر (1)", "Direct (1)"],
+    "2H": ["مباشر (2)", "Direct (2)"],
     PAUSED: ["استراحة", "Mi-temps"],
     HT: ["استراحة", "Mi-temps"],
     HALF_TIME: ["استراحة", "Mi-temps"],
@@ -702,7 +702,7 @@ function statusLabel(status) {
 function renderMatchStatus(match) {
   const rawStatus = String(match.status || "").toUpperCase().trim();
   const ar = language === "ar";
-  const circumference = 25.1; // 2 * PI * 4
+  const circumference = 25.1;
 
   const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY", "PLAYING"].includes(rawStatus);
   const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
@@ -805,28 +805,17 @@ function playSingleSource(url, title, comp) {
   $("live").scrollIntoView({ behavior: "smooth" });
 }
 
-function teamMarkup(team) {
-  const name = getName(team);
-  const logo = team?.crest
-    ? `<img class="team-logo" src="${escapeHTML(team.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">`
-    : "";
-
-  return `<div class="team-side" title="${escapeHTML(name)}">
-    ${logo}
-    <span class="team">${escapeHTML(name)}</span>
-  </div>`;
-}
-
+/* دالة رندر المباريات بنظام التجميع حسب الدوري (النموذج 2) */
 function renderMatches() {
   const list = $("matchList");
   const selected = $("leagueFilter").value;
 
-  const matches = allMatches.filter(match => {
+  const filteredMatches = allMatches.filter(match => {
     if (selected === "all") return true;
     return getLeagueInfo(match).key === selected;
   });
 
-  if (!matches.length) {
+  if (!filteredMatches.length) {
     list.innerHTML = `<div class="message">${
       allMatches.length
         ? (language === "ar" ? "لا توجد مباريات في هذا التصنيف." : "Aucun match.")
@@ -835,36 +824,61 @@ function renderMatches() {
     return;
   }
 
-  list.innerHTML = matches.map((match, index) => {
-    const home = match.homeTeam || {};
-    const away = match.awayTeam || {};
-    const score = match.score?.fullTime;
-    const hasScore = score?.home != null && score?.away != null;
+  // تجميع المباريات حسب اسم الدوري
+  const groups = {};
+  filteredMatches.forEach(match => {
+    const leagueName = match.competition?.name || (language === "ar" ? "بطولات أخرى" : "Autres compétitions");
+    if (!groups[leagueName]) groups[leagueName] = [];
+    groups[leagueName].push(match);
+  });
 
-    return `<article class="match" tabindex="0" role="button"
-         aria-label="${escapeHTML(getName(home))} ضد ${escapeHTML(getName(away))}"
-         data-match-index="${index}">
-      <div class="league">${escapeHTML(match.competition?.name || "—")}</div>
-      <div class="teams">
-        ${teamMarkup(home)}
-        <div class="center-meta">
-          ${hasScore
-            ? `<div class="score">${escapeHTML(score.home)} - ${escapeHTML(score.away)}</div>`
-            : `<div class="ball">VS</div>`
-          }
+  let html = "";
+  for (const [leagueName, matches] of Object.entries(groups)) {
+    html += `
+      <section class="league-group">
+        <div class="league-header">${escapeHTML(leagueName)}</div>
+        <div class="league-matches">
+          ${matches.map(match => {
+            const home = match.homeTeam || {};
+            const away = match.awayTeam || {};
+            const score = match.score?.fullTime;
+            const hasScore = score?.home != null && score?.away != null;
+
+            return `
+              <div class="match-row" tabindex="0" role="button" data-match-id="${match.id}">
+                <div class="team-item home">
+                  ${home.crest ? `<img class="team-item-logo" src="${escapeHTML(home.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+                  <span class="team-item-name">${escapeHTML(getName(home))}</span>
+                </div>
+
+                <div class="match-mid">
+                  ${hasScore 
+                    ? `<div class="match-score">${escapeHTML(score.home)} - ${escapeHTML(score.away)}</div>` 
+                    : `<div class="match-time">${escapeHTML(formatTime(match))}</div>`
+                  }
+                  ${renderMatchStatus(match)}
+                </div>
+
+                <div class="team-item away">
+                  <span class="team-item-name">${escapeHTML(getName(away))}</span>
+                  ${away.crest ? `<img class="team-item-logo" src="${escapeHTML(away.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+                </div>
+              </div>
+            `;
+          }).join("")}
         </div>
-        ${teamMarkup(away)}
-      </div>
-      <div class="match-bottom">
-        <span class="time">${escapeHTML(formatTime(match))}</span>
-        ${renderMatchStatus(match)}
-      </div>
-    </article>`;
-  }).join("");
+      </section>
+    `;
+  }
 
-  list.querySelectorAll("[data-match-index]").forEach((card, index) => {
-    const match = matches[index];
-    card.addEventListener("click", () => openMatchDetails(match));
+  list.innerHTML = html;
+
+  list.querySelectorAll("[data-match-id]").forEach(card => {
+    const mId = card.getAttribute("data-match-id");
+    const match = allMatches.find(m => String(m.id) === String(mId));
+    if (match) {
+      card.addEventListener("click", () => openMatchDetails(match));
+    }
   });
 }
 

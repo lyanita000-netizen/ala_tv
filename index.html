@@ -74,7 +74,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .status{display:inline-block;background:#28203c;color:var(--light);border-radius:14px;padding:4px 9px;font-size:10px}
 .status.finished{background:#20372c;color:#a7f3c0}
 
-/* شارات ومؤقت المباشر والاستراحة الدائري */
+/* مؤشر المباشر والاستراحة الدائري */
 .live-badge-wrapper {
   display: inline-flex;
   align-items: center;
@@ -82,7 +82,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   gap: 7px;
   background: rgba(239, 68, 68, 0.16);
   border: 1px solid rgba(239, 68, 68, 0.5);
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 16px;
   animation: pulseLive 2s infinite ease-in-out;
 }
@@ -651,8 +651,14 @@ function statusLabel(status) {
     SCHEDULED: ["لم تبدأ", "À venir"],
     TIMED: ["مبرمجة", "Programmée"],
     IN_PLAY: ["مباشر", "En direct"],
+    LIVE: ["مباشر", "En direct"],
+    "1H": ["مباشر (شوط 1)", "En direct (1MT)"],
+    "2H": ["مباشر (شوط 2)", "En direct (2MT)"],
     PAUSED: ["استراحة", "Mi-temps"],
+    HT: ["استراحة", "Mi-temps"],
+    HALF_TIME: ["استراحة", "Mi-temps"],
     FINISHED: ["انتهت", "Terminée"],
+    FT: ["انتهت", "Terminée"],
     POSTPONED: ["مؤجلة", "Reportée"],
     SUSPENDED: ["متوقفة", "Suspendue"],
     CANCELLED: ["أُلغيت", "Annulée"],
@@ -661,21 +667,46 @@ function statusLabel(status) {
   return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
 }
 
-// دالة عرض الحالة مع مؤقت الدائرة التنازلي للشوط
 function renderMatchStatus(match) {
-  const status = match.status || "SCHEDULED";
+  const rawStatus = String(match.status || "").toUpperCase().trim();
   const ar = language === "ar";
-  const circumference = 37.7; // 2 * PI * 6 (نصف القطر 6)
+  const circumference = 37.7;
 
-  // 1. مباشر الآن
-  if (status === "IN_PLAY") {
+  let diffMins = -999;
+  if (match.utcDate) {
+    const startMs = new Date(match.utcDate).getTime();
+    diffMins = Math.floor((Date.now() - startMs) / 60000);
+  }
+
+  const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY"].includes(rawStatus);
+  const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
+  const isFinishedExplicit = ["FINISHED", "FT", "FULL_TIME"].includes(rawStatus);
+
+  const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 45 && diffMins <= 60);
+  const isLive = !isHalfTime && !isFinishedExplicit && (isLiveExplicit || (diffMins >= 0 && diffMins <= 125));
+
+  if (isHalfTime) {
+    const strokeOffset = circumference * 0.5;
+    return `
+      <div class="live-badge-wrapper paused">
+        <div class="circle-timer">
+          <svg>
+            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
+            <circle class="circle-bar" cx="9" cy="9" r="6" 
+              stroke-dasharray="${circumference}" 
+              stroke-dashoffset="${strokeOffset}">
+            </circle>
+          </svg>
+        </div>
+        <span class="live-badge-text">${ar ? 'استراحة' : 'Mi-temps'}</span>
+      </div>
+    `;
+  }
+
+  if (isLive) {
     let min = parseInt(match.minute, 10);
     if (isNaN(min) || min < 1) {
-      if (match.utcDate) {
-        const diffMs = Date.now() - new Date(match.utcDate).getTime();
-        const diffMins = Math.floor(diffMs / 60000);
-        if (diffMins > 0 && diffMins < 120) min = diffMins;
-      }
+      if (diffMins > 0 && diffMins < 120) min = diffMins;
     }
 
     const currentMin = min || 1;
@@ -701,28 +732,8 @@ function renderMatchStatus(match) {
     `;
   }
 
-  // 2. استراحة بين الشوطين (الدائرة ثابتة عند المنتصف والأخضر شغال)
-  if (status === "PAUSED") {
-    const strokeOffset = circumference * 0.5;
-    return `
-      <div class="live-badge-wrapper paused">
-        <div class="circle-timer">
-          <svg>
-            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
-            <circle class="circle-bar" cx="9" cy="9" r="6" 
-              stroke-dasharray="${circumference}" 
-              stroke-dashoffset="${strokeOffset}">
-            </circle>
-          </svg>
-        </div>
-        <span class="live-badge-text">${ar ? 'استراحة' : 'Mi-temps'}</span>
-      </div>
-    `;
-  }
-
-  // 3. الحالات العادية
-  const isFinished = status === "FINISHED";
-  return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(status))}</span>`;
+  const isFinished = isFinishedExplicit || diffMins > 125;
+  return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(rawStatus || (isFinished ? "FINISHED" : "SCHEDULED")))}</span>`;
 }
 
 function getLeagueInfo(match) {

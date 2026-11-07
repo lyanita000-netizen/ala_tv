@@ -50,7 +50,7 @@ h2:before{content:"";display:inline-block;width:4px;height:16px;background:var(-
 .filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 select,input[type="date"]{background:var(--panel);color:var(--text);border:1px solid #3a3150;border-radius:6px;padding:6px 8px;font-size:12px;max-width:100%}
 
-/* Matches Section - تصميم المجموعات حسب الدوري */
+/* Matches Section */
 .league-group{
   background:var(--card-bg);
   border:1px solid var(--card-border);
@@ -477,11 +477,11 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
 
   <div class="player-wrapper">
     <div class="stream-switchers">
-      <button type="button" class="btn-channel active" onclick="switchStreamMatch('tottenham', this)">⚪ توتنهام × ليدز (13:30)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('tottenham', this)">⚪ توتنهام × ليدز (13:30)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('rasing', this)">⚪ مالقا × راسينج (14:00)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('bayern', this)">🔴 بايرن ميونخ × ماينز (15:30)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('dortmund', this)">🟡 دورتموند × إلفيرسبيرغ (15:30)</button>
-      <button type="button" class="btn-channel" onclick="switchStreamMatch('arsenal', this)">🔴 آرسنال × هال سيتي (16:00)</button>
+      <button type="button" class="btn-channel active" onclick="switchStreamMatch('arsenal', this)">🔴 آرسنال × هال سيتي (16:00)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('wac', this)">🔴 الوداد × الكوكب (17:00)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('hilal', this)">🔵 الهلال × الاتفاق (18:00)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('city', this)">🔵 مان سيتي × نوتنجهام (18:30)</button>
@@ -493,8 +493,8 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
 
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">توتنهام هوتسبر × ليدز يونايتد</div>
-        <div class="match-comp" id="currentStreamSub">الدوري الإنجليزي الممتاز • 13:30 بتوقيت الجزائر</div>
+        <div class="match-name" id="currentStreamTitle">آرسنال × هال سيتي</div>
+        <div class="match-comp" id="currentStreamSub">الدوري الإنجليزي • 16:00 بتوقيت الجزائر</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
@@ -505,7 +505,7 @@ footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;colo
       </button>
 
       <iframe id="streamIframe" 
-        src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742005&key=9f39972b67d6ce22189507d008acwc26" 
+        src="https://912acsss8af382.sirtv.top/playerv5.php?match=4742011&key=9f39972b67d6ce22189507d008acwc26" 
         allowfullscreen="true" 
         webkitallowfullscreen="true" 
         mozallowfullscreen="true" 
@@ -609,12 +609,13 @@ const STREAMS = {
   }
 };
 
+/* مصفوفة الكلمات الدلالية الموسّعة للتعرف على كل تسميات الدوريات بأي شكل */
 const LEAGUE_PRIORITIES = [
-  { key: "cl", rank: 1, words: ["champions league", "ابطال اوروبا", "أبطال أوروبا"] },
-  { key: "pl", rank: 2, words: ["premier league", "الانجليزي", "الدوري الإنجليزي"] },
-  { key: "la_liga", rank: 3, words: ["la liga", "primera", "الاسباني", "الدوري الإسباني"] },
-  { key: "serie_a", rank: 4, words: ["serie a", "الايطالي", "الدوري الإيطالي"] },
-  { key: "ligue_1", rank: 5, words: ["ligue 1", "الفرنسي", "الدوري الفرنسي"] }
+  { key: "cl", rank: 1, words: ["champions", "ابطال", "أبطال", "uefa"] },
+  { key: "pl", rank: 2, words: ["premier", "انجليز", "إنجليز", "انكليز", "إنكليز", "الممتاز", "england"] },
+  { key: "la_liga", rank: 3, words: ["la liga", "laliga", "primera", "اسبان", "إسبان", "spain"] },
+  { key: "serie_a", rank: 4, words: ["serie a", "ايطال", "إيطال", "italy"] },
+  { key: "ligue_1", rank: 5, words: ["ligue 1", "فرنس", "france"] }
 ];
 
 const $ = id => document.getElementById(id);
@@ -668,9 +669,9 @@ function getName(team) {
 }
 
 function formatTime(match) {
-  if (!match?.utcDate) return language === "ar" ? "—" : "—";
+  if (!match?.utcDate) return "—";
   const date = new Date(match.utcDate);
-  if (Number.isNaN(date.getTime())) return language === "ar" ? "—" : "—";
+  if (Number.isNaN(date.getTime())) return "—";
 
   const adjustedTime = new Date(date.getTime() - (60 * 60 * 1000));
 
@@ -821,7 +822,7 @@ function renderMatches() {
   if (!filteredMatches.length) {
     list.innerHTML = `<div class="message">${
       allMatches.length
-        ? (language === "ar" ? "لا توجد مباريات في هذا التصنيف." : "Aucun match.")
+        ? (language === "ar" ? "لا توجد مباريات في هذا التصنيف حالياً." : "Aucun match dans cette catégorie.")
         : (language === "ar" ? "لا توجد مباريات متاحة لهذا التاريخ." : "Aucun match.")
     }</div>`;
     return;

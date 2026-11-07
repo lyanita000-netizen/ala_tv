@@ -82,19 +82,20 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .stream-switchers {
   display: flex;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 .btn-channel {
   background: #1b172a;
   border: 1px solid #372954;
   color: #ddd6fe;
-  padding: 7px 14px;
-  border-radius: 7px;
+  padding: 8px 12px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
   transition: .2s;
+  white-space: nowrap;
 }
 .btn-channel:hover, .btn-channel.active {
   background: var(--purple);
@@ -213,11 +214,16 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
     width: 18px !important;
     height: 18px !important;
   }
+  .stream-switchers {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
   .btn-channel {
-    flex: 1 1 45%;
+    flex: 0 0 auto;
     font-size: 11px;
-    padding: 7px 5px;
-    text-align: center;
+    padding: 6px 10px;
   }
   .hero-actions {
     flex-direction: column;
@@ -278,7 +284,7 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <p id="heroText">تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد.</p>
   
   <div class="hero-actions">
-    <!-- زر التيليغرام -->
+    <!-- رابط قناة التيليغرام -->
     <a href="https://t.me/ALATV_LIVE_STREAM" target="_blank" rel="noopener noreferrer" class="btn-action btn-telegram">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .36z"/></svg>
       <span id="btnTgText">قناة التيليغرام الرسمية</span>
@@ -296,7 +302,7 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
       <span id="btnIosText">تطبيق آيفون (iOS)</span>
     </a>
 
-    <!-- زر النزول للمباريات -->
+    <!-- زر التمرير إلى المباريات -->
     <a href="#matches" class="btn-action btn-matches-jump">
       <span id="heroBtn">جدول المباريات ↓</span>
     </a>
@@ -328,20 +334,29 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<!-- مشغل البث المباشر الفعلي مباشرة بدون قسم الـ 5 مباريات -->
+<!-- مشغل البث المباشر (Plug and Play لجميع مباريات اليوم) -->
 <section class="container" id="live">
   <h2 id="liveTitle">📺 البث المباشر</h2>
 
   <div class="player-wrapper">
+    <!-- شريط أزرار التبديل لجميع مباريات السبت -->
     <div class="stream-switchers">
-      <button type="button" id="btnEverton" class="btn-channel active" onclick="switchMatch('everton')">🔵 قمة 1 (مباشر الآن)</button>
-      <button type="button" id="btnSevilla" class="btn-channel" onclick="switchMatch('sevilla')">⚪ قمة 2 (مباشر)</button>
+      <button type="button" class="btn-channel active" onclick="switchStreamMatch('tottenham', this)">⚪ توتنهام × ليدز (13:30)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('bayern', this)">🔴 بايرن ميونخ × ماينز (15:30)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('arsenal', this)">🔴 آرسنال × هال سيتي (16:00)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('wac', this)">🔴 الوداد × الكوكب (17:00)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('hilal', this)">🔵 الهلال × الاتفاق (18:00)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('city', this)">🔵 مان سيتي × نوتنجهام (18:30)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('bilbao', this)">⚪ بلباو × أوساسونا (18:30)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('ahly', this)">🔴 الأهلي × السكة الحديد (19:00)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('real', this)">👑 ريال مدريد × فالنسيا (21:00)</button>
+      <button type="button" class="btn-channel" onclick="switchStreamMatch('psg', this)">🔵 باريس × تروا (21:05)</button>
     </div>
 
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">البث المباشر • المشغل الرئيسي</div>
-        <div class="match-comp" id="currentStreamSub">بث مباشر عالي السرعة بدون تقطيع</div>
+        <div class="match-name" id="currentStreamTitle">توتنهام هوتسبر × ليدز يونايتد</div>
+        <div class="match-comp" id="currentStreamSub">الدوري الإنجليزي الممتاز • 13:30 بتوقيت الجزائر</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
@@ -393,16 +408,57 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
+// قاعدة بيانات روابط المباريات - يكفيك وضع رابط كل مباراة هنا عند توفره
 const STREAMS = {
-  everton: {
-    title: "مباراة اليوم الأولى",
-    comp: "بث مباشر عالي السرعة",
+  tottenham: {
+    title: "توتنهام هوتسبر × ليدز يونايتد",
+    comp: "الدوري الإنجليزي الممتاز • 13:30 بتوقيت الجزائر",
     url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26"
   },
-  sevilla: {
-    title: "مباراة اليوم الثانية",
-    comp: "بث مباشر عالي السرعة",
+  bayern: {
+    title: "بايرن ميونخ × ماينز 05",
+    comp: "الدوري الألماني (بوندسليغا) • 15:30 بتوقيت الجزائر",
     url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26"
+  },
+  arsenal: {
+    title: "آرسنال × هال سيتي",
+    comp: "الدوري الإنجليزي • 16:00 بتوقيت الجزائر",
+    url: ""
+  },
+  wac: {
+    title: "الوداد الرياضي × الكوكب المراكشي",
+    comp: "الدوري المغربي للمحترفين • 17:00 بتوقيت الجزائر",
+    url: ""
+  },
+  hilal: {
+    title: "الهلال × الاتفاق",
+    comp: "دوري روشن السعودي • 18:00 بتوقيت الجزائر",
+    url: ""
+  },
+  city: {
+    title: "مانشستر سيتي × نوتنجهام فورست",
+    comp: "الدوري الإنجليزي الممتاز • 18:30 بتوقيت الجزائر",
+    url: ""
+  },
+  bilbao: {
+    title: "أتلتيك بلباو × أوساسونا",
+    comp: "الدوري الإسباني (La Liga) • 18:30 بتوقيت الجزائر",
+    url: ""
+  },
+  ahly: {
+    title: "الأهلي × السكة الحديد",
+    comp: "الدوري المصري الممتاز • 19:00 بتوقيت الجزائر",
+    url: ""
+  },
+  real: {
+    title: "ريال مدريد × فالنسيا",
+    comp: "الدوري الإسباني (La Liga) • 21:00 بتوقيت الجزائر",
+    url: ""
+  },
+  psg: {
+    title: "باريس سان جيرمان × تروا",
+    comp: "الدوري الفرنسي (Ligue 1) • 21:05 بتوقيت الجزائر",
+    url: ""
   }
 };
 
@@ -500,13 +556,12 @@ function getLeagueInfo(match) {
   return { key: "other", rank: 99 };
 }
 
-function switchMatch(key) {
+function switchStreamMatch(key, btnElement) {
   const item = STREAMS[key];
   if (!item) return;
 
-  document.querySelectorAll(".btn-channel").forEach(btn => btn.classList.remove("active"));
-  if (key === 'everton') $("btnEverton").classList.add("active");
-  if (key === 'sevilla') $("btnSevilla").classList.add("active");
+  document.querySelectorAll(".stream-switchers .btn-channel").forEach(btn => btn.classList.remove("active"));
+  if (btnElement) btnElement.classList.add("active");
 
   playSingleSource(item.url, item.title, item.comp);
 }
@@ -517,16 +572,14 @@ function playSingleSource(url, title, comp) {
   if (title) $("currentStreamTitle").textContent = title;
   if (comp) $("currentStreamSub").textContent = comp;
 
-  if (iframe) iframe.src = url;
+  if (iframe) {
+    if (url && url.trim() !== "") {
+      iframe.src = url;
+    } else {
+      iframe.src = "about:blank";
+    }
+  }
   $("live").scrollIntoView({ behavior: "smooth" });
-}
-
-function startStream(match) {
-  const home = getName(match?.homeTeam);
-  const away = getName(match?.awayTeam);
-  const comp = match?.competition?.name || "";
-
-  playSingleSource(STREAMS.everton.url, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
 }
 
 function teamMarkup(team) {
@@ -623,8 +676,8 @@ function openMatchDetails(match) {
       <div class="detail-team">${awayLogo}${escapeHTML(getName(away))}</div>
     </div>
 
-    <button type="button" class="btn-watch-modal" onclick="closeMatchDetails(); startStream(activeMatch);">
-      📺 ${language === "ar" ? "مشاهدة البث المباشر للمباراة" : "Regarder le match en direct"}
+    <button type="button" class="btn-watch-modal" onclick="closeMatchDetails(); $('live').scrollIntoView({ behavior: 'smooth' });">
+      📺 ${language === "ar" ? "الذهاب إلى مشغل البث المباشر" : "Aller au lecteur de direct"}
     </button>
 
     <div class="detail-row" style="margin-top:12px">

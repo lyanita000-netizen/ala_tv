@@ -12,7 +12,7 @@
 :root {
   --bg:#090911; --panel:#141421; --purple:#8b5cf6;
   --light:#c4b5fd; --text:#f5f3ff; --muted:#aaa6bd;
-  --red:#ef4444; --green:#22c55e;
+  --red:#ef4444; --green:#22c55e; --blue:#0088cc;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;scroll-behavior:smooth}
@@ -25,10 +25,22 @@ nav a:hover{color:var(--light)}
 button,select,input{font:inherit}
 button{background:var(--purple);color:white;border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:bold;transition:.2s}
 button:hover{filter:brightness(1.15)}
+
+/* Hero Section & Action Buttons */
 .hero{margin:22px auto;width:90%;max-width:1200px;padding:35px 20px;border-radius:18px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
 .hero h1{font-size:clamp(24px,4.5vw,42px);margin:0 0 12px}
 .hero h1 span{color:var(--light)}
-.hero p{color:#ddd6fe;line-height:1.7;font-size:14px}
+.hero p{color:#ddd6fe;line-height:1.7;font-size:14px;margin-bottom:20px}
+
+.hero-actions{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}
+.btn-action{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:bold;text-decoration:none;color:white;transition:transform .2s, filter .2s;border:1px solid rgba(255,255,255,0.1)}
+.btn-action:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.btn-action svg{width:18px;height:18px;fill:currentColor}
+.btn-telegram{background:var(--blue)}
+.btn-android{background:var(--green)}
+.btn-ios{background:#2a2838;border-color:#4a3b69}
+.btn-matches-jump{background:var(--purple)}
+
 .container{width:90%;max-width:1200px;margin:24px auto}
 .section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px}
 h2{font-size:20px;margin:0}
@@ -37,7 +49,7 @@ h2:before{content:"";display:inline-block;width:4px;height:18px;background:var(-
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 select,input[type="date"]{background:var(--panel);color:var(--text);border:1px solid #3a3150;border-radius:8px;padding:8px 10px;font-size:13px;max-width:100%}
 
-/* تصغير شبكة وقوالب المباريات */
+/* Matches Grid */
 .matches{display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:12px}
 .match{
   background:var(--panel);
@@ -66,16 +78,7 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .notice{color:var(--muted);font-size:12px;line-height:1.6;margin-top:10px}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:12px;padding:18px;text-align:center;color:var(--muted);line-height:1.7;font-size:13px}
 
-.top-matches-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:10px;margin-bottom:16px}
-.top-match-card{background:var(--panel);border:1px solid #332748;border-radius:12px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;transition:.2s;box-shadow:0 3px 12px rgba(0,0,0,0.2)}
-.top-match-card:hover{border-color:var(--purple);transform:translateY(-2px)}
-.top-match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px}
-.top-match-badge{background:rgba(139,92,246,0.15);color:var(--light);padding:2px 7px;border-radius:10px;font-weight:bold;font-size:10px}
-.top-match-live-tag{background:var(--red);color:white;padding:2px 6px;border-radius:4px;font-weight:bold;font-size:10px;animation:pulse 1.5s infinite}
-.top-match-teams{display:flex;justify-content:space-between;align-items:center;margin:8px 0;font-weight:bold;font-size:12px}
-.btn-top-stream{background:var(--purple);color:white;padding:7px;border-radius:7px;border:none;font-size:11px;font-weight:bold;cursor:pointer;width:100%;transition:.2s}
-.btn-top-stream:hover{filter:brightness(1.15)}
-
+/* Stream Section */
 .stream-switchers {
   display: flex;
   gap: 8px;
@@ -216,8 +219,17 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
     padding: 7px 5px;
     text-align: center;
   }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-action {
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+  }
   .matches{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; /* بطاقتان في كل سطر في الهاتف لتقليل الارتفاع */
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
   }
   .match{
@@ -264,7 +276,31 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
 <section class="hero" id="home">
   <h1 id="heroTitle">عالم كرة القدم مع <span>ALA TV</span></h1>
   <p id="heroText">تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد.</p>
-  <a href="#matches"><button id="heroBtn" type="button">جدول مباريات اليوم ↓</button></a>
+  
+  <div class="hero-actions">
+    <!-- زر التيليغرام -->
+    <a href="https://t.me/ALATV_LIVE_STREAM" target="_blank" rel="noopener noreferrer" class="btn-action btn-telegram">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .36z"/></svg>
+      <span id="btnTgText">قناة التيليغرام الرسمية</span>
+    </a>
+
+    <!-- تطبيق أندرويد -->
+    <a href="https://play.google.com/store/apps/details?id=com.walid.kooralive" target="_blank" rel="noopener noreferrer" class="btn-action btn-android">
+      <svg viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.411 13.854 8 12 8s-3.5902.411-5.1368.9497L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+      <span id="btnAndroidText">تطبيق أندرويد (أخبار ونتائج)</span>
+    </a>
+
+    <!-- تطبيق آيفون -->
+    <a href="https://apps.apple.com/app/id6805597332" target="_blank" rel="noopener noreferrer" class="btn-action btn-ios">
+      <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 1.01-2.87-.96.04-2.15.65-2.82 1.44-.58.68-1.1 1.76-1.03 2.81 1.07.08 2.23-.57 2.84-1.38z"/></svg>
+      <span id="btnIosText">تطبيق آيفون (iOS)</span>
+    </a>
+
+    <!-- زر النزول للمباريات -->
+    <a href="#matches" class="btn-action btn-matches-jump">
+      <span id="heroBtn">جدول المباريات ↓</span>
+    </a>
+  </div>
 </section>
 
 <main>
@@ -292,23 +328,20 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
+<!-- مشغل البث المباشر الفعلي مباشرة بدون قسم الـ 5 مباريات -->
 <section class="container" id="live">
-  <h2 id="liveTitle">🔥 أهم 5 قمم منقولة اليوم</h2>
+  <h2 id="liveTitle">📺 البث المباشر</h2>
 
-  <div class="top-matches-grid" id="topMatchesList">
-    <div class="message" style="grid-column: 1/-1;">جاري تحديد أهم مباريات اليوم...</div>
-  </div>
-  
   <div class="player-wrapper">
     <div class="stream-switchers">
-      <button type="button" id="btnEverton" class="btn-channel active" onclick="switchMatch('everton')">🔵 مباراة إيفرتون (مباشر الآن)</button>
-      <button type="button" id="btnSevilla" class="btn-channel" onclick="switchMatch('sevilla')">⚪ مباراة إشبيلية (مباشر)</button>
+      <button type="button" id="btnEverton" class="btn-channel active" onclick="switchMatch('everton')">🔵 قمة 1 (مباشر الآن)</button>
+      <button type="button" id="btnSevilla" class="btn-channel" onclick="switchMatch('sevilla')">⚪ قمة 2 (مباشر)</button>
     </div>
 
     <div class="player-meta">
       <div>
-        <div class="match-name" id="currentStreamTitle">إيفرتون × المنافس</div>
-        <div class="match-comp" id="currentStreamSub">الدوري الإنجليزي الممتاز • بث مباشر عالي السرعة</div>
+        <div class="match-name" id="currentStreamTitle">البث المباشر • المشغل الرئيسي</div>
+        <div class="match-comp" id="currentStreamSub">بث مباشر عالي السرعة بدون تقطيع</div>
       </div>
       <div class="status live" id="liveTag">مباشر • LIVE</div>
     </div>
@@ -362,13 +395,13 @@ let activeMatch = null;
 
 const STREAMS = {
   everton: {
-    title: "إيفرتون × المنافس",
-    comp: "الدوري الإنجليزي الممتاز • بث مباشر عالي السرعة",
+    title: "مباراة اليوم الأولى",
+    comp: "بث مباشر عالي السرعة",
     url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4742008&key=9f39972b67d6ce22189507d008acwc26"
   },
   sevilla: {
-    title: "إشبيلية × المنافس",
-    comp: "الدوري الإسباني (La Liga) • بث مباشر عالي السرعة",
+    title: "مباراة اليوم الثانية",
+    comp: "بث مباشر عالي السرعة",
     url: "https://912acsss8af382.sirtv.top/playerv5.php?match=4750794&key=9f39972b67d6ce22189507d008acwc26"
   }
 };
@@ -494,71 +527,6 @@ function startStream(match) {
   const comp = match?.competition?.name || "";
 
   playSingleSource(STREAMS.everton.url, `${home} × ${away}`, `${comp} • ${formatTime(match)}`);
-}
-
-function updateTop5Matches(matches) {
-  const container = $("topMatchesList");
-  if (!matches || !matches.length) {
-    container.innerHTML = `<div class="message" style="grid-column: 1/-1;">لا توجد مباريات متاحة اليوم.</div>`;
-    return;
-  }
-
-  let processedMatches = matches.map(m => {
-    const isUdinese = (m.homeTeam?.name || "").toLowerCase().includes("udinese") || 
-                      (m.awayTeam?.name || "").toLowerCase().includes("udinese");
-    if (isUdinese) {
-      return {
-        ...m,
-        id: 999999,
-        homeTeam: { name: "إيفرتون", crest: "https://crests.football-data.org/62.png" },
-        awayTeam: { name: "المنافس", crest: "" },
-        competition: { name: "الدوري الإنجليزي الممتاز" },
-        status: "IN_PLAY"
-      };
-    }
-    return m;
-  });
-
-  const sorted = [...processedMatches].sort((a, b) => {
-    const isLiveA = a.status === "IN_PLAY" ? 1 : 0;
-    const isLiveB = b.status === "IN_PLAY" ? 1 : 0;
-    if (isLiveA !== isLiveB) return isLiveB - isLiveA;
-
-    const rankA = getLeagueInfo(a).rank;
-    const rankB = getLeagueInfo(b).rank;
-    return rankA - rankB;
-  });
-
-  const top5 = sorted.slice(0, 5);
-
-  container.innerHTML = top5.map((match, i) => {
-    const home = getName(match.homeTeam);
-    const away = getName(match.awayTeam);
-    const comp = match.competition?.name || (language === "ar" ? "قمة اليوم" : "Match");
-    const isLive = match.status === "IN_PLAY";
-    const statusText = isLive 
-      ? (language === "ar" ? "مباشر 🔴" : "Direct 🔴") 
-      : formatTime(match);
-
-    return `
-      <div class="top-match-card">
-        <div>
-          <div class="top-match-header">
-            <span class="top-match-badge">${escapeHTML(comp)}</span>
-            <span class="${isLive ? 'top-match-live-tag' : 'status'}">${escapeHTML(statusText)}</span>
-          </div>
-          <div class="top-match-teams">
-            <span>${escapeHTML(home)}</span>
-            <span style="color:var(--purple);font-size:10px;">VS</span>
-            <span>${escapeHTML(away)}</span>
-          </div>
-        </div>
-        <button class="btn-top-stream" type="button" onclick="startStream(allMatches.find(m => m.id === ${match.id}) || top5[${i}])">
-          ▶ تشغيل البث
-        </button>
-      </div>
-    `;
-  }).join("");
 }
 
 function teamMarkup(team) {
@@ -730,7 +698,6 @@ async function loadMatches() {
 
     allMatches = data;
     renderMatches();
-    updateTop5Matches(allMatches);
   } catch (error) {
     console.error("ALA TV fixtures error:", error);
     list.innerHTML = `<div class="message">${
@@ -769,9 +736,12 @@ function toggleLanguage() {
     ? "تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد."
     : "Suivez les matchs, les horaires, les résultats et le streaming au même endroit.";
 
-  $("heroBtn").textContent = ar ? "جدول مباريات اليوم ↓" : "Matchs du jour ↓";
+  $("btnTgText").textContent = ar ? "قناة التيليغرام الرسمية" : "Canal Telegram";
+  $("btnAndroidText").textContent = ar ? "تطبيق أندرويد (أخبار ونتائج)" : "App Android (Scores/News)";
+  $("btnIosText").textContent = ar ? "تطبيق آيفون (iOS)" : "App iPhone (iOS)";
+  $("heroBtn").textContent = ar ? "جدول المباريات ↓" : "Matchs du jour ↓";
   $("matchesTitle").textContent = ar ? "جدول مباريات اليوم" : "Matchs du jour";
-  $("liveTitle").textContent = ar ? "🔥 أهم 5 قمم منقولة اليوم" : "🔥 Top 5 Matchs en direct";
+  $("liveTitle").textContent = ar ? "📺 البث المباشر" : "📺 Streaming en direct";
   $("legalNotice").textContent = ar
     ? "يتم استضافة البث عبر خوادم تضمين خارجية. الموقع لا يقوم بتخزين أي فيديو."
     : "Le flux est hébergé via des serveurs externes. Le site ne stocke aucune vidéo.";
@@ -795,7 +765,6 @@ function toggleLanguage() {
   }
 
   renderMatches();
-  if (allMatches.length) updateTop5Matches(allMatches);
   $("refreshBtn").textContent = ar ? "تحديث" : "Actualiser";
 }
 

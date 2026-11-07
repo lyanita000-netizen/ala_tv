@@ -72,9 +72,68 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 .score{font-size:17px;font-weight:900;color:white}
 .time{color:var(--muted);font-size:11px;margin:10px 0 6px}
 .status{display:inline-block;background:#28203c;color:var(--light);border-radius:14px;padding:4px 9px;font-size:10px}
-.status.live{background:#49202c;color:#ffb4c0;animation:pulse 1.8s infinite}
 .status.finished{background:#20372c;color:#a7f3c0}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* شارات ومؤقت المباشر والاستراحة الدائري */
+.live-badge-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  padding: 3px 10px;
+  border-radius: 16px;
+  animation: pulseLive 2s infinite ease-in-out;
+}
+.live-badge-wrapper.paused {
+  background: rgba(34, 197, 94, 0.16);
+  border-color: rgba(34, 197, 94, 0.5);
+  animation: none;
+}
+@keyframes pulseLive {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+.live-badge-text {
+  font-size: 11px;
+  font-weight: bold;
+  color: #ffb4c0;
+}
+.live-badge-wrapper.paused .live-badge-text {
+  color: #a7f3c0;
+}
+
+.circle-timer {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.circle-timer svg {
+  transform: rotate(-90deg);
+  width: 18px;
+  height: 18px;
+}
+.circle-timer circle {
+  fill: none;
+  stroke-width: 2.6;
+}
+.circle-timer .circle-bg {
+  stroke: rgba(255, 255, 255, 0.15);
+}
+.circle-timer .circle-bar {
+  stroke: var(--red);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+.live-badge-wrapper.paused .circle-bar {
+  stroke: var(--green);
+}
+
 .notice{color:var(--muted);font-size:12px;line-height:1.6;margin-top:10px}
 .message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:12px;padding:18px;text-align:center;color:var(--muted);line-height:1.7;font-size:13px}
 
@@ -591,7 +650,7 @@ function statusLabel(status) {
   const labels = {
     SCHEDULED: ["لم تبدأ", "À venir"],
     TIMED: ["مبرمجة", "Programmée"],
-    IN_PLAY: ["مباشرة الآن", "En direct"],
+    IN_PLAY: ["مباشر", "En direct"],
     PAUSED: ["استراحة", "Mi-temps"],
     FINISHED: ["انتهت", "Terminée"],
     POSTPONED: ["مؤجلة", "Reportée"],
@@ -600,6 +659,70 @@ function statusLabel(status) {
     AWARDED: ["نتيجة معتمدة", "Résultat homologué"]
   };
   return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
+}
+
+// دالة عرض الحالة مع مؤقت الدائرة التنازلي للشوط
+function renderMatchStatus(match) {
+  const status = match.status || "SCHEDULED";
+  const ar = language === "ar";
+  const circumference = 37.7; // 2 * PI * 6 (نصف القطر 6)
+
+  // 1. مباشر الآن
+  if (status === "IN_PLAY") {
+    let min = parseInt(match.minute, 10);
+    if (isNaN(min) || min < 1) {
+      if (match.utcDate) {
+        const diffMs = Date.now() - new Date(match.utcDate).getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        if (diffMins > 0 && diffMins < 120) min = diffMins;
+      }
+    }
+
+    const currentMin = min || 1;
+    const currentHalfMinute = currentMin > 45 ? Math.min(currentMin - 45, 45) : currentMin;
+    const percentLeft = Math.max(0, (45 - currentHalfMinute) / 45);
+    const strokeOffset = circumference * (1 - percentLeft);
+
+    const minDisplay = min ? `${min}'` : (ar ? "مباشر" : "Live");
+
+    return `
+      <div class="live-badge-wrapper">
+        <div class="circle-timer">
+          <svg>
+            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
+            <circle class="circle-bar" cx="9" cy="9" r="6" 
+              stroke-dasharray="${circumference}" 
+              stroke-dashoffset="${strokeOffset}">
+            </circle>
+          </svg>
+        </div>
+        <span class="live-badge-text">${ar ? 'مباشر' : 'Live'} • ${minDisplay}</span>
+      </div>
+    `;
+  }
+
+  // 2. استراحة بين الشوطين (الدائرة ثابتة عند المنتصف والأخضر شغال)
+  if (status === "PAUSED") {
+    const strokeOffset = circumference * 0.5;
+    return `
+      <div class="live-badge-wrapper paused">
+        <div class="circle-timer">
+          <svg>
+            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
+            <circle class="circle-bar" cx="9" cy="9" r="6" 
+              stroke-dasharray="${circumference}" 
+              stroke-dashoffset="${strokeOffset}">
+            </circle>
+          </svg>
+        </div>
+        <span class="live-badge-text">${ar ? 'استراحة' : 'Mi-temps'}</span>
+      </div>
+    `;
+  }
+
+  // 3. الحالات العادية
+  const isFinished = status === "FINISHED";
+  return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(status))}</span>`;
 }
 
 function getLeagueInfo(match) {
@@ -671,9 +794,6 @@ function renderMatches() {
     const away = match.awayTeam || {};
     const score = match.score?.fullTime;
     const hasScore = score?.home != null && score?.away != null;
-    const status = match.status || "SCHEDULED";
-    const statusClass = status === "IN_PLAY" ? "live" :
-      status === "FINISHED" ? "finished" : "";
 
     return `<article class="match" tabindex="0" role="button"
          aria-label="${escapeHTML(getName(home))} ضد ${escapeHTML(getName(away))}"
@@ -688,7 +808,7 @@ function renderMatches() {
         ${teamMarkup(away)}
       </div>
       <div class="time">${escapeHTML(formatTime(match))}</div>
-      <span class="status ${statusClass}">${escapeHTML(statusLabel(status))}</span>
+      ${renderMatchStatus(match)}
     </article>`;
   }).join("");
 
@@ -765,7 +885,6 @@ async function openMatchDetails(match) {
     if (fullData.venue) $("modalVenue").textContent = fullData.venue;
     if (fullData.referee) $("modalReferee").textContent = fullData.referee;
 
-    // فلترة القنوات وإزالة التكرار
     const rawChannels = Array.isArray(fullData.broadcast) ? fullData.broadcast : [];
     const uniqueNames = [...new Set(rawChannels.map(ch => (ch.name || ch.channel_name || "").trim()).filter(Boolean))];
 
@@ -783,7 +902,6 @@ async function openMatchDetails(match) {
       $("modalChannels").textContent = language === "ar" ? "سيتم التحديد قبل اللقاء" : "Non renseigné";
     }
 
-    // التشكيلة
     const homePlayers = fullData.lineups?.home?.players || [];
     const awayPlayers = fullData.lineups?.away?.players || [];
 

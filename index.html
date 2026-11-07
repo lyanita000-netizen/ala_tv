@@ -170,21 +170,61 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 
 footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;color:var(--muted);border-top:1px solid #29223f;font-size:13px}
 
-.modal{position:fixed;inset:0;z-index:1000;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}
+/* Modal Details & Lineups */
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.open{display:flex}
-.modal-box{width:100%;max-width:550px;max-height:90vh;overflow:auto;background:#141421;border:1px solid #443361;border-radius:16px;padding:18px}
-.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.close-btn{background:#302642;font-size:18px;padding:4px 10px}
+.modal-box{width:100%;max-width:580px;max-height:90vh;overflow-y:auto;background:#141421;border:1px solid #443361;border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.7)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #28203d;padding-bottom:12px}
+.close-btn{background:#302642;font-size:18px;padding:4px 12px;border-radius:8px}
 .detail-teams{display:flex;align-items:center;justify-content:space-around;gap:10px;text-align:center;margin:18px 0}
 .detail-team{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:bold;font-size:13px}
 .detail-team img{width:52px;height:52px;object-fit:contain;display:block;margin:0 auto 8px}
 .detail-score{font-size:22px;font-weight:900}
-.detail-row{padding:10px 0;border-bottom:1px solid #302941;line-height:1.6;font-size:13px}
-.detail-label{color:var(--light);font-size:12px;display:block;margin-bottom:3px}
+.detail-row{padding:10px 0;border-bottom:1px solid #28203d;line-height:1.6;font-size:13px}
+.detail-label{color:var(--light);font-size:12px;font-weight:bold;display:block;margin-bottom:4px}
 .channel-list{display:flex;gap:6px;flex-wrap:wrap}
-.channel{background:#29213d;border:1px solid #493568;border-radius:8px;padding:7px 10px;font-size:12px}
-.btn-watch-modal{width:100%;margin-top:15px;padding:12px;font-size:14px;background:#16a34a}
+.channel{background:#29213d;border:1px solid #493568;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:bold;color:#f5f3ff}
+.btn-watch-modal{width:100%;margin-top:15px;padding:12px;font-size:14px;background:#16a34a;border:none;border-radius:10px;color:white;font-weight:bold;cursor:pointer;transition:.2s}
 .btn-watch-modal:hover{background:#15803d}
+
+.lineup-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #302941;
+}
+.lineup-col {
+  flex: 1;
+}
+.lineup-col strong {
+  display: block;
+  font-size: 12px;
+  color: var(--light);
+  margin-bottom: 6px;
+  border-bottom: 1px solid #3a3150;
+  padding-bottom: 4px;
+}
+.lineup-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 11px;
+}
+.lineup-col ul li {
+  padding: 3px 0;
+  color: #ddd6fe;
+  border-bottom: 1px dashed rgba(255,255,255,0.05);
+}
+.notice-lineup {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 4px;
+}
 
 @media(max-width:800px){
   header{justify-content:center}nav{justify-content:center}
@@ -233,6 +273,10 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
     width: 100%;
     justify-content: center;
     padding: 11px;
+  }
+  .lineup-container {
+    flex-direction: column;
+    gap: 14px;
   }
   .matches{
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -284,7 +328,7 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <p id="heroText">تابع مباريات كرة القدم ومواعيدها ونتائجها وشاهد البث المباشر في مكان واحد.</p>
   
   <div class="hero-actions">
-    <!-- رابط قناة التيليغرام -->
+    <!-- قناة التيليغرام -->
     <a href="https://t.me/ALATV_LIVE_STREAM" target="_blank" rel="noopener noreferrer" class="btn-action btn-telegram">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .36z"/></svg>
       <span id="btnTgText">قناة التيليغرام الرسمية</span>
@@ -334,12 +378,11 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <p class="notice" id="matchesNotice">تُعرض المباريات حسب البيانات المتوفرة من مزوّد النتائج.</p>
 </section>
 
-<!-- مشغل البث المباشر (Plug and Play لجميع مباريات اليوم) -->
+<!-- مشغل البث المباشر (Plug and Play لجميع مباريات السبت) -->
 <section class="container" id="live">
   <h2 id="liveTitle">📺 البث المباشر</h2>
 
   <div class="player-wrapper">
-    <!-- شريط أزرار التبديل لجميع مباريات السبت -->
     <div class="stream-switchers">
       <button type="button" class="btn-channel active" onclick="switchStreamMatch('tottenham', this)">⚪ توتنهام × ليدز (13:30)</button>
       <button type="button" class="btn-channel" onclick="switchStreamMatch('bayern', this)">🔴 بايرن ميونخ × ماينز (15:30)</button>
@@ -391,10 +434,11 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   <small>© 2026 ALA TV</small>
 </footer>
 
+<!-- نافذة تفاصيل المباراة ومركز البيانات المطور -->
 <div class="modal" id="matchModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 id="modalTitle">تفاصيل المباراة</h3>
+      <h3 id="modalTitle">تفاصيل المباراة والتشكيلة</h3>
       <button class="close-btn" type="button" onclick="closeMatchDetails()" aria-label="إغلاق">×</button>
     </div>
     <div id="matchDetails"></div>
@@ -408,7 +452,7 @@ let language = "ar";
 let allMatches = [];
 let activeMatch = null;
 
-// قاعدة بيانات روابط المباريات - يكفيك وضع رابط كل مباراة هنا عند توفره
+// قاعدة بيانات روابط المباريات - ضع رابط أي مباراة بين علامتي التنصيص url: ""
 const STREAMS = {
   tottenham: {
     title: "توتنهام هوتسبر × ليدز يونايتد",
@@ -657,22 +701,39 @@ function openMatchDetails(match) {
     ? `<div class="channel-list">${channels.map(channel =>
         `<span class="channel">${escapeHTML(channel.name || "TV")}</span>`
       ).join("")}</div>`
-    : `<span>${language === "ar" ? "لا توجد قنوات مسجلة لهذه المباراة." : "Aucune chaîne renseignée."}</span>`;
+    : `<span>${language === "ar" ? "سيتم تحديد القنوات قبل اللقاء" : "Chaînes non renseignées"}</span>`;
 
-  const homeLogo = home.crest
-    ? `<img src="${escapeHTML(home.crest)}" alt="" onerror="this.style.display='none'">` : "";
-  const awayLogo = away.crest
-    ? `<img src="${escapeHTML(away.crest)}" alt="" onerror="this.style.display='none'">` : "";
+  // قراءة التشكيلة الرسمية من مزود البيانات إذا كانت متوفرة
+  const homeLineup = Array.isArray(match.lineup?.home) ? match.lineup.home : [];
+  const awayLineup = Array.isArray(match.lineup?.away) ? match.lineup.away : [];
+  
+  let lineupHTML = "";
+  if (homeLineup.length || awayLineup.length) {
+    lineupHTML = `
+      <div class="lineup-container">
+        <div class="lineup-col">
+          <strong>تشكيلة ${escapeHTML(getName(home))}</strong>
+          <ul>${homeLineup.map(p => `<li>${escapeHTML(p.name || p)}</li>`).join("")}</ul>
+        </div>
+        <div class="lineup-col">
+          <strong>تشكيلة ${escapeHTML(getName(away))}</strong>
+          <ul>${awayLineup.map(p => `<li>${escapeHTML(p.name || p)}</li>`).join("")}</ul>
+        </div>
+      </div>
+    `;
+  } else {
+    lineupHTML = `<div class="notice-lineup">${language === "ar" ? "تصدر التشكيلة الرسمية قبل صافرة البداية بساعة تقريباً." : "Compositions d'équipes disponibles 1h avant le coup d'envoi."}</div>`;
+  }
 
-  $("modalTitle").textContent = language === "ar" ? "تفاصيل المباراة" : "Détails du match";
+  const homeLogo = home.crest ? `<img src="${escapeHTML(home.crest)}" alt="" onerror="this.style.display='none'">` : "";
+  const awayLogo = away.crest ? `<img src="${escapeHTML(away.crest)}" alt="" onerror="this.style.display='none'">` : "";
+
+  $("modalTitle").textContent = language === "ar" ? "تفاصيل ومركز المباراة" : "Détails du match";
 
   $("matchDetails").innerHTML = `
     <div class="detail-teams">
       <div class="detail-team">${homeLogo}${escapeHTML(getName(home))}</div>
-      <div class="detail-score">${hasScore
-        ? `${escapeHTML(score.home)} - ${escapeHTML(score.away)}`
-        : "VS"
-      }</div>
+      <div class="detail-score">${hasScore ? `${escapeHTML(score.home)} - ${escapeHTML(score.away)}` : "VS"}</div>
       <div class="detail-team">${awayLogo}${escapeHTML(getName(away))}</div>
     </div>
 
@@ -680,34 +741,34 @@ function openMatchDetails(match) {
       📺 ${language === "ar" ? "الذهاب إلى مشغل البث المباشر" : "Aller au lecteur de direct"}
     </button>
 
-    <div class="detail-row" style="margin-top:12px">
-      <span class="detail-label">${language === "ar" ? "البطولة" : "Compétition"}</span>
+    <div class="detail-row" style="margin-top:14px">
+      <span class="detail-label">🏆 ${language === "ar" ? "البطولة" : "Compétition"}</span>
       ${escapeHTML(match.competition?.name || "—")}
     </div>
+
     <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "التوقيت المحلي" : "Heure locale"}</span>
+      <span class="detail-label">⏰ ${language === "ar" ? "التوقيت المحلي" : "Heure locale"}</span>
       ${escapeHTML(formatTime(match))}
     </div>
+
     <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "الحالة" : "Statut"}</span>
-      ${escapeHTML(statusLabel(match.status || "SCHEDULED"))}
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "الجولة" : "Journée"}</span>
-      ${escapeHTML(match.matchday || match.stage || "—")}
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "الملعب" : "Stade"}</span>
-      ${escapeHTML(match.venue || (language === "ar" ? "غير متوفر" : "Non renseigné"))}
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "الحكم" : "Arbitre"}</span>
-      ${escapeHTML(match.referees?.map(ref => ref.name).filter(Boolean).join("، ") ||
-        (language === "ar" ? "غير متوفر" : "Non renseigné"))}
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">${language === "ar" ? "القنوات الناقلة" : "Chaînes"}</span>
+      <span class="detail-label">📡 ${language === "ar" ? "القنوات الناقلة" : "Chaînes"}</span>
       ${channelHTML}
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">🏟️ ${language === "ar" ? "الملعب" : "Stade"}</span>
+      ${escapeHTML(match.venue || (language === "ar" ? "غير متوفر حالياً" : "Non renseigné"))}
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">⚖️ ${language === "ar" ? "حكم اللقاء" : "Arbitre"}</span>
+      ${escapeHTML(match.referees?.map(ref => ref.name).filter(Boolean).join("، ") || (language === "ar" ? "لم يُحدد بعد" : "Non désigné"))}
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">📋 ${language === "ar" ? "تشكيلة الفريقين" : "Formations"}</span>
+      ${lineupHTML}
     </div>
   `;
 

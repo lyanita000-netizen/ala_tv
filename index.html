@@ -633,17 +633,21 @@ function getName(team) {
   return team?.name || (language === "ar" ? "فريق غير معروف" : "Équipe inconnue");
 }
 
+// 1. تصحيح وقت العرض ليتطابق تماماً مع توقيت الجزائر
 function formatTime(match) {
   if (!match?.utcDate) return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
   const date = new Date(match.utcDate);
   if (Number.isNaN(date.getTime())) return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
+
+  // حسم ساعة فارق التوقيت لضبطه محلياً بدقة
+  const adjustedTime = new Date(date.getTime() - (60 * 60 * 1000));
 
   return new Intl.DateTimeFormat(language === "ar" ? "ar-DZ" : "fr-FR", {
     timeZone: "Africa/Algiers",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false
-  }).format(date);
+  }).format(adjustedTime);
 }
 
 function statusLabel(status) {
@@ -667,14 +671,11 @@ function statusLabel(status) {
   return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
 }
 
-// دالة العرض الدقيقة مع مراعاة فارق التوقيت والشوطين
+// 2. تصحيح حالة المباراة ومؤقت الدائرة وفق التوقيت الفعلي
 function renderMatchStatus(match) {
   const rawStatus = String(match.status || "").toUpperCase().trim();
   const ar = language === "ar";
   const circumference = 37.7;
-
-  const score = match.score?.fullTime;
-  const hasScore = score?.home != null || score?.away != null;
 
   const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY", "PLAYING"].includes(rawStatus);
   const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
@@ -682,21 +683,21 @@ function renderMatchStatus(match) {
 
   let diffMins = -999;
   if (match.utcDate) {
-    const startMs = new Date(match.utcDate).getTime();
+    // حساب الفارق الزمني الحقيقي بعد ضبط الساعة
+    const startMs = new Date(match.utcDate).getTime() - (60 * 60 * 1000);
     diffMins = Math.floor((Date.now() - startMs) / 60000);
   }
 
-  // الكشف عن الاستراحة بين الشوطين بدقة
-  const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 47 && diffMins <= 62);
-  
-  // الكشف عن المباشر
+  // كشف الاستراحة بين الشوطين (بين دقيقة 45 و 60 تقريباً أو بحالة الـ API)
+  const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 45 && diffMins <= 60);
+
+  // كشف المباشر (أثناء وقت المباراة الحقيقي)
   const isLive = !isHalfTime && !isFinishedExplicit && (
     isLiveExplicit || 
-    (diffMins >= 0 && diffMins <= 120) || 
-    (hasScore && !isFinishedExplicit && diffMins >= 0)
+    (diffMins >= 0 && diffMins <= 118)
   );
 
-  // 1. استراحة بين الشوطين
+  // 1. استراحة بين الشوطين (أخضر + دائرة ثابتة)
   if (isHalfTime) {
     const strokeOffset = circumference * 0.5;
     return `
@@ -715,22 +716,20 @@ function renderMatchStatus(match) {
     `;
   }
 
-  // 2. مباشر الآن
+  // 2. مباشر الآن (أحمر + الدائرة المتناقصة حسب وقت الشوط)
   if (isLive) {
     let min = parseInt(match.minute, 10);
     if (isNaN(min) || min < 1) {
-      if (diffMins > 0 && diffMins <= 120) {
+      if (diffMins > 0) {
         // حسم 15 دقيقة الاستراحة للشوط الثاني
         min = diffMins > 60 ? diffMins - 15 : Math.min(diffMins, 45);
       }
     }
 
-    const currentMin = min || 1;
+    const currentMin = Math.min(min || 1, 90);
     const currentHalfMinute = currentMin > 45 ? Math.min(currentMin - 45, 45) : currentMin;
     const percentLeft = Math.max(0, (45 - currentHalfMinute) / 45);
     const strokeOffset = circumference * (1 - percentLeft);
-
-    const minDisplay = min ? `${min}'` : (ar ? "مباشر" : "Live");
 
     return `
       <div class="live-badge-wrapper">
@@ -743,13 +742,13 @@ function renderMatchStatus(match) {
             </circle>
           </svg>
         </div>
-        <span class="live-badge-text">${ar ? 'مباشر' : 'Live'} • ${minDisplay}</span>
+        <span class="live-badge-text">${ar ? 'مباشر' : 'Live'} • ${currentMin}'</span>
       </div>
     `;
   }
 
   // 3. الحالات العادية
-  const isFinished = isFinishedExplicit || diffMins > 130;
+  const isFinished = isFinishedExplicit || diffMins > 120;
   return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(rawStatus || (isFinished ? "FINISHED" : "SCHEDULED")))}</span>`;
 }
 

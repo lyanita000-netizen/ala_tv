@@ -16,114 +16,173 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;scroll-behavior:smooth}
-header{background:#11101c;border-bottom:1px solid #29223f;padding:14px 6%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.logo{font-size:26px;font-weight:900;color:white}
+header{background:#11101c;border-bottom:1px solid #29223f;padding:12px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:900;color:white}
 .logo span{color:var(--purple)}
-nav{display:flex;gap:20px;flex-wrap:wrap}
-nav a{color:var(--text);text-decoration:none;font-size:14px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+nav a{color:var(--text);text-decoration:none;font-size:13px}
 nav a:hover{color:var(--light)}
 button,select,input{font:inherit}
-button{background:var(--purple);color:white;border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:bold;transition:.2s}
+button{background:var(--purple);color:white;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold;transition:.2s}
 button:hover{filter:brightness(1.15)}
 
 /* Hero Section */
-.hero{margin:22px auto;width:90%;max-width:1200px;padding:35px 20px;border-radius:18px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
-.hero h1{font-size:clamp(24px,4.5vw,42px);margin:0 0 12px}
+.hero{margin:16px auto;width:92%;max-width:1200px;padding:25px 16px;border-radius:14px;background:radial-gradient(ellipse at top,#422080,#171329 55%,#11101a);text-align:center;border:1px solid #352450}
+.hero h1{font-size:clamp(20px,4vw,34px);margin:0 0 8px}
 .hero h1 span{color:var(--light)}
-.hero p{color:#ddd6fe;line-height:1.7;font-size:14px;margin-bottom:20px}
+.hero p{color:#ddd6fe;line-height:1.5;font-size:13px;margin-bottom:16px}
 
-.hero-actions{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}
-.btn-action{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:bold;text-decoration:none;color:white;transition:transform .2s, filter .2s;border:1px solid rgba(255,255,255,0.1)}
+.hero-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.btn-action{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:bold;text-decoration:none;color:white;transition:transform .2s, filter .2s;border:1px solid rgba(255,255,255,0.1)}
 .btn-action:hover{transform:translateY(-2px);filter:brightness(1.15)}
-.btn-action svg{width:18px;height:18px;fill:currentColor}
+.btn-action svg{width:16px;height:16px;fill:currentColor}
 .btn-telegram{background:var(--blue)}
 .btn-android{background:var(--green)}
 .btn-ios{background:#2a2838;border-color:#4a3b69}
 .btn-matches-jump{background:var(--purple)}
 
-.container{width:90%;max-width:1200px;margin:24px auto}
-.section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px}
-h2{font-size:20px;margin:0}
-h2:before{content:"";display:inline-block;width:4px;height:18px;background:var(--purple);margin-left:8px;vertical-align:middle;border-radius:4px}
-[dir="ltr"] h2:before{margin-left:0;margin-right:8px}
-.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-select,input[type="date"]{background:var(--panel);color:var(--text);border:1px solid #3a3150;border-radius:8px;padding:8px 10px;font-size:13px;max-width:100%}
+.container{width:92%;max-width:1200px;margin:18px auto}
+.section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+h2{font-size:18px;margin:0}
+h2:before{content:"";display:inline-block;width:4px;height:16px;background:var(--purple);margin-left:6px;vertical-align:middle;border-radius:4px}
+[dir="ltr"] h2:before{margin-left:0;margin-right:6px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+select,input[type="date"]{background:var(--panel);color:var(--text);border:1px solid #3a3150;border-radius:6px;padding:6px 8px;font-size:12px;max-width:100%}
 
-/* Matches Grid */
-.matches{display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:12px}
+/* Matches Grid - تصميم مضغوط وأنيق */
+.matches{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(215px, 1fr));
+  gap:8px;
+}
 .match{
   background:var(--panel);
-  border:1px solid #29263a;
-  border-radius:12px;
-  padding:12px 10px;
+  border:1px solid #252233;
+  border-radius:10px;
+  padding:8px 8px 6px;
   text-align:center;
-  transition:.2s;
+  transition:.15s;
   cursor:pointer;
   min-width:0;
-  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
-.match:hover{border-color:var(--purple);transform:translateY(-2px)}
-.league{color:var(--light);font-size:11px;margin-bottom:10px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.teams{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.team-side{width:42%;min-width:0;display:flex;align-items:center;flex-direction:column;gap:5px}
-.team{font-weight:bold;font-size:12px;line-height:1.3;overflow-wrap:anywhere}
-.team-logo{width:34px;height:34px;object-fit:contain}
-.ball{font-size:14px;color:var(--light);font-weight:bold}
-.score{font-size:17px;font-weight:900;color:white}
-.time{color:var(--muted);font-size:11px;margin:10px 0 6px}
-.status{display:inline-block;background:#28203c;color:var(--light);border-radius:14px;padding:4px 9px;font-size:10px}
-.status.finished{background:#20372c;color:#a7f3c0}
+.match:hover{border-color:var(--purple);transform:translateY(-1px)}
+.league{
+  color:var(--light);
+  font-size:10px;
+  margin-bottom:6px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  opacity:0.85;
+}
+.teams{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
+}
+.team-side{
+  width:40%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  gap:3px;
+}
+.team{
+  font-weight:bold;
+  font-size:11px;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  width:100%;
+}
+.team-logo{width:26px;height:26px;object-fit:contain}
+.center-meta{
+  width:20%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.ball{font-size:11px;color:var(--muted);font-weight:bold}
+.score{
+  font-size:14px;
+  font-weight:900;
+  color:white;
+  white-space:nowrap;
+  direction:ltr;
+  background:rgba(255,255,255,0.06);
+  padding:2px 6px;
+  border-radius:6px;
+}
+.match-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:6px;
+  padding-top:4px;
+  border-top:1px solid rgba(255,255,255,0.04);
+}
+.time{color:var(--muted);font-size:10px;font-weight:bold}
+.status{display:inline-block;background:#231c33;color:var(--light);border-radius:10px;padding:2px 7px;font-size:9.5px}
+.status.finished{background:#182e23;color:#86efac}
 
-/* مؤشر المباشر والاستراحة الدائري */
+/* شارات ومؤقت المباشر والاستراحة الصغير والمضغوط */
 .live-badge-wrapper {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 7px;
-  background: rgba(239, 68, 68, 0.16);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  padding: 4px 10px;
-  border-radius: 16px;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  padding: 2px 6px;
+  border-radius: 10px;
   animation: pulseLive 2s infinite ease-in-out;
 }
 .live-badge-wrapper.paused {
-  background: rgba(34, 197, 94, 0.16);
-  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
   animation: none;
 }
 @keyframes pulseLive {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(0.98); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
 }
 
 .live-badge-text {
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: bold;
-  color: #ffb4c0;
+  color: #fca5a5;
+  white-space: nowrap;
 }
 .live-badge-wrapper.paused .live-badge-text {
-  color: #a7f3c0;
+  color: #86efac;
 }
 
 .circle-timer {
   position: relative;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .circle-timer svg {
   transform: rotate(-90deg);
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 .circle-timer circle {
   fill: none;
-  stroke-width: 2.6;
+  stroke-width: 2.2;
 }
 .circle-timer .circle-bg {
-  stroke: rgba(255, 255, 255, 0.15);
+  stroke: rgba(255, 255, 255, 0.12);
 }
 .circle-timer .circle-bar {
   stroke: var(--red);
@@ -134,26 +193,26 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   stroke: var(--green);
 }
 
-.notice{color:var(--muted);font-size:12px;line-height:1.6;margin-top:10px}
-.message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:12px;padding:18px;text-align:center;color:var(--muted);line-height:1.7;font-size:13px}
+.notice{color:var(--muted);font-size:11px;line-height:1.5;margin-top:8px}
+.message{grid-column:1/-1;background:var(--panel);border:1px solid #29263a;border-radius:10px;padding:14px;text-align:center;color:var(--muted);font-size:12px}
 
 /* Stream Section */
 .stream-switchers {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 .btn-channel {
   background: #1b172a;
   border: 1px solid #372954;
   color: #ddd6fe;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: bold;
   cursor: pointer;
-  transition: .2s;
+  transition: .15s;
   white-space: nowrap;
 }
 .btn-channel:hover, .btn-channel.active {
@@ -162,17 +221,17 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
   border-color: var(--purple);
 }
 
-.player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:16px;overflow:hidden;padding:14px}
-.player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #28203d}
-.player-meta .match-name{font-weight:bold;font-size:15px;color:white}
-.player-meta .match-comp{color:var(--light);font-size:12px}
+.player-wrapper{background:#0a0a14;border:1px solid #332748;border-radius:12px;overflow:hidden;padding:10px}
+.player-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #28203d}
+.player-meta .match-name{font-weight:bold;font-size:14px;color:white}
+.player-meta .match-comp{color:var(--light);font-size:11px}
 
 .video-responsive{
   position:relative;
   width:100%;
   padding-top:56.25%;
   background:#020205;
-  border-radius:10px;
+  border-radius:8px;
   overflow:hidden;
 }
 
@@ -196,74 +255,70 @@ select,input[type="date"]{background:var(--panel);color:var(--text);border:1px s
 
 .fullscreen-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   background: rgba(17, 16, 28, 0.85);
   color: #ffffff;
   border: 1px solid rgba(139, 92, 246, 0.6);
-  border-radius: 8px;
-  width: 38px;
-  height: 38px;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 20;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-  transition: .2s;
+  transition: .15s;
 }
 .fullscreen-btn:hover {
   background: var(--purple);
-  transform: scale(1.05);
 }
 .fullscreen-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   fill: currentColor;
 }
 
-.stream-disclaimer{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid #28203d;border-radius:8px;font-size:11px;line-height:1.6;color:#a3a0b5;text-align:center}
+.stream-disclaimer{margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid #28203d;border-radius:6px;font-size:10.5px;line-height:1.5;color:#a3a0b5;text-align:center}
 .stream-disclaimer strong{color:#e2d9f3}
-.stream-disclaimer a{color:var(--light);text-decoration:underline;font-weight:bold;transition:.2s}
-.stream-disclaimer a:hover{color:#fff}
+.stream-disclaimer a{color:var(--light);text-decoration:underline;font-weight:bold}
 
-footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;color:var(--muted);border-top:1px solid #29223f;font-size:13px}
+footer{margin-top:30px;background:#11101c;padding:16px 5%;text-align:center;color:var(--muted);border-top:1px solid #29223f;font-size:12px}
 
 /* Modal Details */
-.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:14px}
 .modal.open{display:flex}
-.modal-box{width:100%;max-width:580px;max-height:90vh;overflow-y:auto;background:#141421;border:1px solid #443361;border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.7)}
-.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #28203d;padding-bottom:12px}
-.close-btn{background:#302642;font-size:18px;padding:4px 12px;border-radius:8px}
-.detail-teams{display:flex;align-items:center;justify-content:space-around;gap:10px;text-align:center;margin:18px 0}
-.detail-team{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:bold;font-size:13px}
-.detail-team img{width:52px;height:52px;object-fit:contain;display:block;margin:0 auto 8px}
-.detail-score{font-size:22px;font-weight:900}
+.modal-box{width:100%;max-width:540px;max-height:90vh;overflow-y:auto;background:#141421;border:1px solid #443361;border-radius:14px;padding:16px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #28203d;padding-bottom:10px}
+.close-btn{background:#302642;font-size:16px;padding:3px 10px;border-radius:6px}
+.detail-teams{display:flex;align-items:center;justify-content:space-around;gap:8px;text-align:center;margin:14px 0}
+.detail-team{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:bold;font-size:12px}
+.detail-team img{width:44px;height:44px;object-fit:contain;display:block;margin:0 auto 6px}
+.detail-score{font-size:18px;font-weight:900}
 
 .detail-row{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:12px 6px;
-  border-bottom:1px solid rgba(255, 255, 255, 0.06);
-  line-height:1.6;
-  font-size:13px;
-  gap:12px;
+  padding:9px 4px;
+  border-bottom:1px solid rgba(255, 255, 255, 0.05);
+  line-height:1.5;
+  font-size:12px;
+  gap:10px;
 }
-.detail-label{color:var(--light);font-size:13px;font-weight:bold;display:flex;align-items:center;gap:6px;flex-shrink:0}
-.channel-list{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.channel{background:#29213d;border:1px solid #493568;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:bold;color:#f5f3ff}
-.btn-watch-modal{width:100%;margin-top:15px;padding:12px;font-size:14px;background:#16a34a;border:none;border-radius:10px;color:white;font-weight:bold;cursor:pointer;transition:.2s}
-.btn-watch-modal:hover{background:#15803d}
+.detail-label{color:var(--light);font-size:12px;font-weight:bold;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.channel-list{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.channel{background:#29213d;border:1px solid #493568;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:bold;color:#f5f3ff}
+.btn-watch-modal{width:100%;margin-top:12px;padding:10px;font-size:13px;background:#16a34a;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer}
 
 .lineup-container {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 6px;
   background: rgba(0, 0, 0, 0.3);
-  padding: 12px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   border: 1px solid #302941;
   width: 100%;
 }
@@ -272,68 +327,71 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
 }
 .lineup-col strong {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--light);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   border-bottom: 1px solid #3a3150;
-  padding-bottom: 4px;
+  padding-bottom: 3px;
 }
 .lineup-col ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 11px;
+  font-size: 10.5px;
 }
 .lineup-col ul li {
-  padding: 3px 0;
+  padding: 2px 0;
   color: #ddd6fe;
   border-bottom: 1px dashed rgba(255,255,255,0.05);
 }
 .notice-lineup {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10.5px;
   font-style: italic;
   margin-top: 4px;
 }
 
-@media(max-width:800px){
-  header{justify-content:center}nav{justify-content:center}
-}
-
+/* تكيف ممتاز مع شاشات الهواتف */
 @media(max-width:650px){
-  #live.container {
-    width: 98% !important;
-    margin: 15px auto !important;
-    padding: 0 !important;
+  .matches{
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
   }
-  .player-wrapper {
-    padding: 6px !important;
-    border-radius: 10px !important;
-  }
-  .video-responsive {
-    padding-top: 66% !important;
+  .match{
+    padding: 6px 5px !important;
     border-radius: 8px !important;
   }
-  .fullscreen-btn {
-    top: 8px !important;
-    left: 8px !important;
-    width: 34px !important;
-    height: 34px !important;
+  .team-logo{
+    width: 22px !important;
+    height: 22px !important;
   }
-  .fullscreen-btn svg {
-    width: 18px !important;
-    height: 18px !important;
+  .team{
+    font-size: 10px !important;
   }
-  .stream-switchers {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 6px;
-    -webkit-overflow-scrolling: touch;
+  .score{
+    font-size: 12px !important;
+    padding: 1px 4px !important;
   }
-  .btn-channel {
-    flex: 0 0 auto;
-    font-size: 11px;
-    padding: 6px 10px;
+  .time{
+    font-size: 9px !important;
+  }
+  .status{
+    font-size: 8.5px !important;
+    padding: 1px 5px !important;
+  }
+  .live-badge-wrapper{
+    padding: 1px 4px !important;
+  }
+  .live-badge-text{
+    font-size: 8.5px !important;
+  }
+  .circle-timer{
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .circle-timer svg{
+    width: 12px !important;
+    height: 12px !important;
   }
   .hero-actions {
     flex-direction: column;
@@ -342,42 +400,14 @@ footer{margin-top:40px;background:#11101c;padding:22px 6%;text-align:center;colo
   .btn-action {
     width: 100%;
     justify-content: center;
-    padding: 11px;
-  }
-  .lineup-container {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .matches{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
-  }
-  .match{
-    padding: 10px 6px !important;
-  }
-  .team-logo{
-    width: 28px !important;
-    height: 28px !important;
-  }
-  .team{
-    font-size: 11px !important;
-  }
-  .score{
-    font-size: 15px !important;
+    padding: 9px;
   }
 }
 
-@media(max-width:400px){
+@media(max-width:340px){
   .matches{
     grid-template-columns: 1fr !important;
   }
-}
-
-@media(max-width:520px){
-  .hero{padding:26px 14px}
-  .section-head{align-items:flex-start}
-  .filters{width:100%}
-  .filters select,.filters input{flex:1;min-width:0}
 }
 </style>
 </head>
@@ -633,13 +663,11 @@ function getName(team) {
   return team?.name || (language === "ar" ? "فريق غير معروف" : "Équipe inconnue");
 }
 
-// 1. تصحيح وقت العرض ليتطابق تماماً مع توقيت الجزائر
 function formatTime(match) {
-  if (!match?.utcDate) return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
+  if (!match?.utcDate) return language === "ar" ? "—" : "—";
   const date = new Date(match.utcDate);
-  if (Number.isNaN(date.getTime())) return language === "ar" ? "التوقيت غير متوفر" : "Horaire indisponible";
+  if (Number.isNaN(date.getTime())) return language === "ar" ? "—" : "—";
 
-  // حسم ساعة فارق التوقيت لضبطه محلياً بدقة
   const adjustedTime = new Date(date.getTime() - (60 * 60 * 1000));
 
   return new Intl.DateTimeFormat(language === "ar" ? "ar-DZ" : "fr-FR", {
@@ -656,8 +684,8 @@ function statusLabel(status) {
     TIMED: ["مبرمجة", "Programmée"],
     IN_PLAY: ["مباشر", "En direct"],
     LIVE: ["مباشر", "En direct"],
-    "1H": ["مباشر (شوط 1)", "En direct (1MT)"],
-    "2H": ["مباشر (شوط 2)", "En direct (2MT)"],
+    "1H": ["مباشر 1", "Direct 1"],
+    "2H": ["مباشر 2", "Direct 2"],
     PAUSED: ["استراحة", "Mi-temps"],
     HT: ["استراحة", "Mi-temps"],
     HALF_TIME: ["استراحة", "Mi-temps"],
@@ -666,16 +694,15 @@ function statusLabel(status) {
     POSTPONED: ["مؤجلة", "Reportée"],
     SUSPENDED: ["متوقفة", "Suspendue"],
     CANCELLED: ["أُلغيت", "Annulée"],
-    AWARDED: ["نتيجة معتمدة", "Résultat homologué"]
+    AWARDED: ["معتمدة", "Homologué"]
   };
-  return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
+  return (labels[status] || ["—", "—"])[language === "ar" ? 0 : 1];
 }
 
-// 2. تصحيح حالة المباراة ومؤقت الدائرة وفق التوقيت الفعلي
 function renderMatchStatus(match) {
   const rawStatus = String(match.status || "").toUpperCase().trim();
   const ar = language === "ar";
-  const circumference = 37.7;
+  const circumference = 25.1; // 2 * PI * 4
 
   const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY", "PLAYING"].includes(rawStatus);
   const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
@@ -683,45 +710,38 @@ function renderMatchStatus(match) {
 
   let diffMins = -999;
   if (match.utcDate) {
-    // حساب الفارق الزمني الحقيقي بعد ضبط الساعة
     const startMs = new Date(match.utcDate).getTime() - (60 * 60 * 1000);
     diffMins = Math.floor((Date.now() - startMs) / 60000);
   }
 
-  // كشف الاستراحة بين الشوطين (بين دقيقة 45 و 60 تقريباً أو بحالة الـ API)
   const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 45 && diffMins <= 60);
-
-  // كشف المباشر (أثناء وقت المباراة الحقيقي)
   const isLive = !isHalfTime && !isFinishedExplicit && (
     isLiveExplicit || 
     (diffMins >= 0 && diffMins <= 118)
   );
 
-  // 1. استراحة بين الشوطين (أخضر + دائرة ثابتة)
   if (isHalfTime) {
     const strokeOffset = circumference * 0.5;
     return `
       <div class="live-badge-wrapper paused">
         <div class="circle-timer">
           <svg>
-            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
-            <circle class="circle-bar" cx="9" cy="9" r="6" 
+            <circle class="circle-bg" cx="7" cy="7" r="4"></circle>
+            <circle class="circle-bar" cx="7" cy="7" r="4" 
               stroke-dasharray="${circumference}" 
               stroke-dashoffset="${strokeOffset}">
             </circle>
           </svg>
         </div>
-        <span class="live-badge-text">${ar ? 'استراحة' : 'Mi-temps'}</span>
+        <span class="live-badge-text">${ar ? 'استراحة' : 'HT'}</span>
       </div>
     `;
   }
 
-  // 2. مباشر الآن (أحمر + الدائرة المتناقصة حسب وقت الشوط)
   if (isLive) {
     let min = parseInt(match.minute, 10);
     if (isNaN(min) || min < 1) {
       if (diffMins > 0) {
-        // حسم 15 دقيقة الاستراحة للشوط الثاني
         min = diffMins > 60 ? diffMins - 15 : Math.min(diffMins, 45);
       }
     }
@@ -735,8 +755,8 @@ function renderMatchStatus(match) {
       <div class="live-badge-wrapper">
         <div class="circle-timer">
           <svg>
-            <circle class="circle-bg" cx="9" cy="9" r="6"></circle>
-            <circle class="circle-bar" cx="9" cy="9" r="6" 
+            <circle class="circle-bg" cx="7" cy="7" r="4"></circle>
+            <circle class="circle-bar" cx="7" cy="7" r="4" 
               stroke-dasharray="${circumference}" 
               stroke-dashoffset="${strokeOffset}">
             </circle>
@@ -747,7 +767,6 @@ function renderMatchStatus(match) {
     `;
   }
 
-  // 3. الحالات العادية
   const isFinished = isFinishedExplicit || diffMins > 120;
   return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(rawStatus || (isFinished ? "FINISHED" : "SCHEDULED")))}</span>`;
 }
@@ -792,7 +811,7 @@ function teamMarkup(team) {
     ? `<img class="team-logo" src="${escapeHTML(team.crest)}" alt="" loading="lazy" onerror="this.style.display='none'">`
     : "";
 
-  return `<div class="team-side">
+  return `<div class="team-side" title="${escapeHTML(name)}">
     ${logo}
     <span class="team">${escapeHTML(name)}</span>
   </div>`;
@@ -810,8 +829,8 @@ function renderMatches() {
   if (!matches.length) {
     list.innerHTML = `<div class="message">${
       allMatches.length
-        ? (language === "ar" ? "لا توجد مباريات في هذا التصنيف." : "Aucun match dans cette catégorie.")
-        : (language === "ar" ? "لا توجد مباريات متاحة لهذا التاريخ." : "Aucun match disponible pour cette date.")
+        ? (language === "ar" ? "لا توجد مباريات في هذا التصنيف." : "Aucun match.")
+        : (language === "ar" ? "لا توجد مباريات متاحة لهذا التاريخ." : "Aucun match.")
     }</div>`;
     return;
   }
@@ -825,17 +844,21 @@ function renderMatches() {
     return `<article class="match" tabindex="0" role="button"
          aria-label="${escapeHTML(getName(home))} ضد ${escapeHTML(getName(away))}"
          data-match-index="${index}">
-      <div class="league">${escapeHTML(match.competition?.name || (language === "ar" ? "بطولة غير معروفة" : "Compétition inconnue"))}</div>
+      <div class="league">${escapeHTML(match.competition?.name || "—")}</div>
       <div class="teams">
         ${teamMarkup(home)}
-        <div>${hasScore
-          ? `<div class="score">${escapeHTML(score.home)} - ${escapeHTML(score.away)}</div>`
-          : `<div class="ball">VS</div>`
-        }</div>
+        <div class="center-meta">
+          ${hasScore
+            ? `<div class="score">${escapeHTML(score.home)} - ${escapeHTML(score.away)}</div>`
+            : `<div class="ball">VS</div>`
+          }
+        </div>
         ${teamMarkup(away)}
       </div>
-      <div class="time">${escapeHTML(formatTime(match))}</div>
-      ${renderMatchStatus(match)}
+      <div class="match-bottom">
+        <span class="time">${escapeHTML(formatTime(match))}</span>
+        ${renderMatchStatus(match)}
+      </div>
     </article>`;
   }).join("");
 
@@ -995,7 +1018,7 @@ async function loadMatches() {
     list.innerHTML = `<div class="message">${
       language === "ar"
         ? "تعذر تحميل المباريات. تحقق من الاتصال بالإنترنت وحاول مجددًا."
-        : "Impossible de charger les matchs. Vérifiez votre connexion et réessayez."
+        : "Impossible de charger les matchs."
     }<br><br><button type="button" onclick="loadMatches()">${language === "ar" ? "إعادة المحاولة" : "Réessayer"}</button></div>`;
   } finally {
     $("refreshBtn").disabled = false;
@@ -1046,7 +1069,7 @@ function toggleLanguage() {
 
   $("disclaimerBox").innerHTML = ar
     ? '⚠️ <strong>إخلاء مسؤولية:</strong> موقع <strong>ALA TV</strong> لا يستضيف أي بث على خوادمه الخاصة، والمشغلات مأخوذة من شبكات ومصادر خارجية متاحة للعامة. لإزالة أي محتوى يُرجى <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">مراسلتنا لحذف الرابط فوراً</a>.'
-    : '⚠️ <strong>Avertissement :</strong> Le site <strong>ALA TV</strong> n\'héberge aucun flux sur ses serveurs. Les lecteurs proviennent de sources externes publiques. Pour toute suppression de contenu, veuillez <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">nous contacter pour retirer le lien immédiatement</a>.';
+    : '⚠️ <strong>Avertissement :</strong> Le site <strong>ALA TV</strong> n\'héberge aucun flux sur ses serveurs. Pour toute suppression de contenu, veuillez <a href="mailto:contact@alatv.live?subject=DMCA%20Notice">nous contacter</a>.';
 
   $("leagueFilter").innerHTML = ar
     ? '<option value="all">كل المباريات</option><option value="cl">أبطال أوروبا</option><option value="pl">الدوري الإنجليزي</option><option value="la_liga">الدوري الإسباني</option><option value="serie_a">الدوري الإيطالي</option><option value="ligue_1">الدوري الفرنسي</option>'

@@ -667,10 +667,18 @@ function statusLabel(status) {
   return (labels[status] || ["غير معروف", "Inconnu"])[language === "ar" ? 0 : 1];
 }
 
+// دالة العرض الدقيقة مع مراعاة فارق التوقيت والشوطين
 function renderMatchStatus(match) {
   const rawStatus = String(match.status || "").toUpperCase().trim();
   const ar = language === "ar";
   const circumference = 37.7;
+
+  const score = match.score?.fullTime;
+  const hasScore = score?.home != null || score?.away != null;
+
+  const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY", "PLAYING"].includes(rawStatus);
+  const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
+  const isFinishedExplicit = ["FINISHED", "FT", "FULL_TIME", "AET", "PEN"].includes(rawStatus);
 
   let diffMins = -999;
   if (match.utcDate) {
@@ -678,13 +686,17 @@ function renderMatchStatus(match) {
     diffMins = Math.floor((Date.now() - startMs) / 60000);
   }
 
-  const isLiveExplicit = ["IN_PLAY", "LIVE", "1H", "2H", "IN-PLAY"].includes(rawStatus);
-  const isPauseExplicit = ["PAUSED", "HT", "HALF_TIME", "HALFTIME"].includes(rawStatus);
-  const isFinishedExplicit = ["FINISHED", "FT", "FULL_TIME"].includes(rawStatus);
+  // الكشف عن الاستراحة بين الشوطين بدقة
+  const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 47 && diffMins <= 62);
+  
+  // الكشف عن المباشر
+  const isLive = !isHalfTime && !isFinishedExplicit && (
+    isLiveExplicit || 
+    (diffMins >= 0 && diffMins <= 120) || 
+    (hasScore && !isFinishedExplicit && diffMins >= 0)
+  );
 
-  const isHalfTime = isPauseExplicit || (!isFinishedExplicit && diffMins >= 45 && diffMins <= 60);
-  const isLive = !isHalfTime && !isFinishedExplicit && (isLiveExplicit || (diffMins >= 0 && diffMins <= 125));
-
+  // 1. استراحة بين الشوطين
   if (isHalfTime) {
     const strokeOffset = circumference * 0.5;
     return `
@@ -703,10 +715,14 @@ function renderMatchStatus(match) {
     `;
   }
 
+  // 2. مباشر الآن
   if (isLive) {
     let min = parseInt(match.minute, 10);
     if (isNaN(min) || min < 1) {
-      if (diffMins > 0 && diffMins < 120) min = diffMins;
+      if (diffMins > 0 && diffMins <= 120) {
+        // حسم 15 دقيقة الاستراحة للشوط الثاني
+        min = diffMins > 60 ? diffMins - 15 : Math.min(diffMins, 45);
+      }
     }
 
     const currentMin = min || 1;
@@ -732,7 +748,8 @@ function renderMatchStatus(match) {
     `;
   }
 
-  const isFinished = isFinishedExplicit || diffMins > 125;
+  // 3. الحالات العادية
+  const isFinished = isFinishedExplicit || diffMins > 130;
   return `<span class="status ${isFinished ? 'finished' : ''}">${escapeHTML(statusLabel(rawStatus || (isFinished ? "FINISHED" : "SCHEDULED")))}</span>`;
 }
 
